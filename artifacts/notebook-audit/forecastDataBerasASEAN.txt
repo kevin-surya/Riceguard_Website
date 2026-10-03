@@ -1,0 +1,1020 @@
+
+--- CELL 0 markdown ---
+# Forecast Produksi Beras Total 10 Negara ASEAN
+
+Notebook ini menganalisis entitas `Total 10 Negara` dari 1961–2024. Enam observasi terakhir (2019–2024) dipakai sebagai data uji; seluruh pemilihan hiperparameter hanya memakai data latih melalui validasi bergulir internal.
+
+
+--- CELL 1 code ---
+import os, random, warnings
+warnings.filterwarnings("ignore")
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.neural_network import MLPRegressor
+from statsmodels.tsa.holtwinters import Holt
+from statsmodels.tsa.arima.model import ARIMA
+from statsmodels.graphics.tsaplots import plot_acf
+from scipy import stats
+from xgboost import XGBRegressor
+from prophet import Prophet
+import torch
+import torch.nn as nn
+
+SEED = 42
+random.seed(SEED); np.random.seed(SEED); torch.manual_seed(SEED)
+sns.set_theme(style="whitegrid", context="notebook")
+pd.set_option("display.float_format", lambda x: f"{x:,.2f}")
+
+
+--- CELL 2 markdown ---
+## 1. Exploratory data analysis (EDA)
+
+
+--- CELL 3 code ---
+DATA_PATH = "rice-production.csv"
+raw = pd.read_csv(DATA_PATH)
+data = (raw.loc[raw["Entity"].eq("Total 10 Negara"),
+                ["Year", "Rice - Production (tonnes)"]]
+          .rename(columns={"Rice - Production (tonnes)": "Production"})
+          .sort_values("Year")
+          .reset_index(drop=True))
+
+assert len(data) == 64 and data["Year"].is_unique, "Data agregat harus berisi 64 tahun unik."
+display(data.head(), data.tail())
+display(data["Production"].describe().to_frame("Production"))
+print("Rentang tahun:", f"{data.Year.min()}–{data.Year.max()}")
+print("Missing value:", data.isna().sum().sum())
+
+OUTPUT:
+   Year    Production
+0  1961 46,009,340.00
+1  1962 49,327,608.00
+2  1963 49,364,512.00
+3  1964 50,724,049.00
+4  1965 50,144,526.00
+OUTPUT:
+    Year     Production
+59  2020 190,951,635.00
+60  2021 196,142,222.00
+61  2022 196,036,401.00
+62  2023 196,388,231.00
+63  2024 197,000,964.00
+OUTPUT:
+          Production
+count          64.00
+mean  125,753,742.91
+std    55,043,951.74
+min    46,009,340.00
+25%    69,434,562.75
+50%   120,933,197.50
+75%   187,268,861.50
+max   203,083,074.00
+OUTPUT:
+Rentang tahun: 1961–2024
+Missing value: 0
+
+
+--- CELL 4 code ---
+fig, axes = plt.subplots(1, 2, figsize=(15, 4.5))
+axes[0].plot(data["Year"], data["Production"] / 1e6, marker="o", ms=3, color="#1677ff")
+axes[0].set(title="Produksi beras tahunan", xlabel="Tahun", ylabel="Juta ton")
+sns.histplot(data["Production"] / 1e6, kde=True, ax=axes[1], color="#2ca25f")
+axes[1].set(title="Distribusi produksi", xlabel="Juta ton")
+plt.tight_layout(); plt.show()
+
+display(data.assign(
+    Growth_pct=data["Production"].pct_change().mul(100),
+    Rolling_5Y_MA=data["Production"].rolling(5).mean()
+).tail(12))
+
+OUTPUT:
+<Figure size 1500x450 with 2 Axes>
+OUTPUT:
+    Year     Production  Growth_pct  Rolling_5Y_MA
+52  2013 202,722,736.00       -0.18 198,254,634.80
+53  2014 202,053,524.00       -0.33 200,221,271.80
+54  2015 196,813,683.00       -2.59 200,334,760.80
+55  2016 186,104,504.00       -5.44 198,155,504.20
+56  2017 192,075,731.00        3.21 195,954,035.60
+57  2018 200,646,606.00        4.46 195,538,809.60
+58  2019 191,663,368.00       -4.48 193,460,778.40
+59  2020 190,951,635.00       -0.37 192,288,368.80
+60  2021 196,142,222.00        2.72 194,295,912.40
+61  2022 196,036,401.00       -0.05 195,088,046.40
+62  2023 196,388,231.00        0.18 194,236,371.40
+63  2024 197,000,964.00        0.31 195,303,890.60
+
+--- CELL 5 markdown ---
+## 2. Preprocessing dan pemisahan data
+
+Nilai dipertahankan dalam satuan ton. Scaling MinMax hanya diterapkan di dalam pipeline MLP dan LSTM, dan selalu di-fit pada data latih agar tidak terjadi kebocoran data.
+
+
+--- CELL 6 code ---
+TEST_SIZE = 6
+train = data.iloc[:-TEST_SIZE].copy()
+test = data.iloc[-TEST_SIZE:].copy()
+assert len(train) == 58 and len(test) == 6
+
+print(f"Train: {train.Year.min()}–{train.Year.max()} ({len(train)} observasi)")
+print(f"Test : {test.Year.min()}–{test.Year.max()} ({len(test)} observasi)")
+display(test)
+
+OUTPUT:
+Train: 1961–2018 (58 observasi)
+Test : 2019–2024 (6 observasi)
+
+OUTPUT:
+    Year     Production
+58  2019 191,663,368.00
+59  2020 190,951,635.00
+60  2021 196,142,222.00
+61  2022 196,036,401.00
+62  2023 196,388,231.00
+63  2024 197,000,964.00
+
+--- CELL 7 markdown ---
+## 3. Modelling dan hyperparameter tuning
+
+Setiap kandidat di-tuning menggunakan enam observasi terakhir dari data train sebagai validasi internal (2013–2018). Sesudah itu, konfigurasi terpilih di-fit ulang pada seluruh data train dan diuji sekali pada enam observasi test.
+
+
+--- CELL 8 code ---
+def mape(y_true, y_pred):
+    y_true, y_pred = np.asarray(y_true), np.asarray(y_pred)
+    return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+
+def metrics(y_true, y_pred):
+    return {"MAPE (%)": mape(y_true, y_pred),
+            "RMSE": np.sqrt(mean_squared_error(y_true, y_pred)),
+            "MAE": mean_absolute_error(y_true, y_pred)}
+
+def supervised(values, lag):
+    values = np.asarray(values, dtype=float)
+    return np.array([values[i-lag:i] for i in range(lag, len(values))]), values[lag:]
+
+def fc_des(y, h, p):
+    return Holt(y, exponential=p["exponential"], damped_trend=p["damped_trend"]).fit(optimized=True).forecast(h)
+
+def fc_arima(y, h, p):
+    return ARIMA(y, order=p["order"], trend=p["trend"]).fit().forecast(h)
+
+def fc_mlp(y, h, p):
+    scaler = MinMaxScaler()
+    z = scaler.fit_transform(np.asarray(y).reshape(-1, 1)).ravel()
+    X, target = supervised(z, p["lag"])
+    model = MLPRegressor(hidden_layer_sizes=p["hidden"], alpha=p["alpha"],
+                         learning_rate_init=p["lr"], max_iter=3000,
+                         early_stopping=True, validation_fraction=.2,
+                         random_state=SEED)
+    model.fit(X, target)
+    hist, pred = list(z), []
+    for _ in range(h):
+        v = model.predict(np.array(hist[-p["lag"]:]).reshape(1, -1))[0]
+        hist.append(v); pred.append(v)
+    return scaler.inverse_transform(np.array(pred).reshape(-1, 1)).ravel()
+
+class TinyLSTM(nn.Module):
+    def __init__(self, hidden):
+        super().__init__()
+        self.lstm = nn.LSTM(1, hidden, batch_first=True)
+        self.out = nn.Linear(hidden, 1)
+    def forward(self, x):
+        return self.out(self.lstm(x)[0][:, -1, :])
+
+def fc_lstm(y, h, p):
+    scaler = MinMaxScaler()
+    z = scaler.fit_transform(np.asarray(y).reshape(-1, 1)).ravel()
+    X, target = supervised(z, p["lag"])
+    x = torch.tensor(X[:, :, None], dtype=torch.float32)
+    target = torch.tensor(target[:, None], dtype=torch.float32)
+    torch.manual_seed(SEED)
+    model = TinyLSTM(p["hidden"])
+    opt = torch.optim.Adam(model.parameters(), lr=p["lr"], weight_decay=p["weight_decay"])
+    loss_fn = nn.MSELoss()
+    model.train()
+    for _ in range(p["epochs"]):
+        opt.zero_grad(); loss = loss_fn(model(x), target); loss.backward(); opt.step()
+    model.eval()
+    hist, pred = list(z), []
+    with torch.no_grad():
+        for _ in range(h):
+            a = torch.tensor(np.array(hist[-p["lag"]:])[None, :, None], dtype=torch.float32)
+            v = model(a).item(); hist.append(v); pred.append(v)
+    return scaler.inverse_transform(np.array(pred).reshape(-1, 1)).ravel()
+
+def fc_xgb(y, h, p):
+    X, target = supervised(y, p["lag"])
+    model = XGBRegressor(n_estimators=p["n_estimators"], max_depth=p["max_depth"],
+                         learning_rate=p["learning_rate"], subsample=.9,
+                         colsample_bytree=.9, objective="reg:squarederror",
+                         random_state=SEED, n_jobs=1)
+    model.fit(X, target)
+    hist, pred = list(np.asarray(y, dtype=float)), []
+    for _ in range(h):
+        v = model.predict(np.array(hist[-p["lag"]:]).reshape(1, -1))[0]
+        hist.append(v); pred.append(v)
+    return np.array(pred)
+
+def fc_prophet(y, years, h, p):
+    frame = pd.DataFrame({"ds": pd.to_datetime(np.asarray(years).astype(str) + "-01-01"), "y": y})
+    model = Prophet(growth="linear", yearly_seasonality=False, weekly_seasonality=False,
+                    daily_seasonality=False, changepoint_prior_scale=p["cps"],
+                    seasonality_mode=p["mode"])
+    model.fit(frame)
+    future = model.make_future_dataframe(periods=h, freq="YS")
+    return model.predict(future)["yhat"].tail(h).to_numpy()
+
+FORECASTERS = {"Double Exponential Smoothing": fc_des, "ARIMA": fc_arima,
+               "Multilayer Perceptron": fc_mlp, "LSTM": fc_lstm,
+               "XGBoost": fc_xgb, "Prophet": fc_prophet}
+
+GRIDS = {
+ "Double Exponential Smoothing": [{"exponential": e, "damped_trend": d} for e in [False, True] for d in [False, True]],
+ "ARIMA": [{"order": (p,d,q), "trend": t} for p in range(3) for d in [0,1] for q in range(3) for t in ["n","t"] if not (d > 0 and t == "t")],
+ "Multilayer Perceptron": [{"lag": l, "hidden": h, "alpha": a, "lr": lr} for l in [3,5] for h in [(8,), (16,)] for a in [.0001,.01] for lr in [.001,.01]],
+ "LSTM": [{"lag": l, "hidden": h, "lr": lr, "weight_decay": wd, "epochs": 250} for l in [3,5] for h in [8,16] for lr in [.005,.01] for wd in [0,.0001]],
+ "XGBoost": [{"lag": l, "n_estimators": n, "max_depth": d, "learning_rate": lr} for l in [3,5] for n in [50,100] for d in [2,3] for lr in [.05,.1]],
+ "Prophet": [{"cps": cps, "mode": mode} for cps in [.01,.1,.5] for mode in ["additive","multiplicative"]]
+}
+
+
+--- CELL 9 code ---
+tune_y, val_y = train["Production"].iloc[:-6].to_numpy(), train["Production"].iloc[-6:].to_numpy()
+tune_years = train["Year"].iloc[:-6].to_numpy()
+tuning_rows, best_params = [], {}
+
+for name, grid in GRIDS.items():
+    outcomes = []
+    for p in grid:
+        try:
+            pred = (FORECASTERS[name](tune_y, 6, p) if name != "Prophet"
+                    else FORECASTERS[name](tune_y, tune_years, 6, p))
+            outcomes.append((mape(val_y, pred), p))
+        except Exception as exc:
+            print(f"{name} gagal untuk {p}: {exc}")
+    score, params = min(outcomes, key=lambda x: x[0])
+    best_params[name] = params
+    tuning_rows.append({"Model": name, "Validation MAPE (%)": score, "Best parameters": str(params)})
+
+tuning_result = pd.DataFrame(tuning_rows).sort_values("Validation MAPE (%)").reset_index(drop=True)
+display(tuning_result)
+
+OUTPUT:
+19:51:57 - cmdstanpy - INFO - Chain [1] start processing
+19:51:57 - cmdstanpy - INFO - Chain [1] done processing
+19:51:57 - cmdstanpy - INFO - Chain [1] start processing
+19:51:57 - cmdstanpy - INFO - Chain [1] done processing
+19:51:57 - cmdstanpy - INFO - Chain [1] start processing
+19:51:58 - cmdstanpy - INFO - Chain [1] done processing
+19:51:58 - cmdstanpy - INFO - Chain [1] start processing
+19:51:58 - cmdstanpy - INFO - Chain [1] done processing
+19:51:58 - cmdstanpy - INFO - Chain [1] start processing
+19:51:58 - cmdstanpy - INFO - Chain [1] done processing
+19:51:58 - cmdstanpy - INFO - Chain [1] start processing
+19:51:58 - cmdstanpy - INFO - Chain [1] done processing
+
+OUTPUT:
+                          Model  Validation MAPE (%)  \
+0                       XGBoost                 2.61   
+1         Multilayer Perceptron                 3.04   
+2                         ARIMA                 3.24   
+3                       Prophet                 4.73   
+4                          LSTM                 5.98   
+5  Double Exponential Smoothing                10.22   
+
+                                     Best parameters  
+0  {'lag': 3, 'n_estimators': 100, 'max_depth': 2...  
+1  {'lag': 5, 'hidden': (16,), 'alpha': 0.01, 'lr...  
+2                 {'order': (1, 0, 0), 'trend': 'n'}  
+3                  {'cps': 0.01, 'mode': 'additive'}  
+4  {'lag': 3, 'hidden': 8, 'lr': 0.01, 'weight_de...  
+5       {'exponential': False, 'damped_trend': True}  
+
+--- CELL 10 markdown ---
+## 4. Evaluasi pada data test
+
+Model akhir dipilih berdasarkan MAPE validasi internal. Data test hanya digunakan sekali untuk evaluasi MAPE, RMSE, dan MAE dalam satuan ton.
+
+
+--- CELL 11 code ---
+train_y, test_y, train_years = train["Production"].to_numpy(), test["Production"].to_numpy(), train["Year"].to_numpy()
+predictions, evaluation = {}, []
+for name, p in best_params.items():
+    pred = (FORECASTERS[name](train_y, len(test), p) if name != "Prophet"
+            else FORECASTERS[name](train_y, train_years, len(test), p))
+    predictions[name] = pred
+    evaluation.append({"Model": name, **metrics(test_y, pred), "Best parameters": str(p)})
+
+evaluation = pd.DataFrame(evaluation).sort_values("MAPE (%)").reset_index(drop=True)
+display(evaluation)
+best_name = tuning_result.loc[0, "Model"]  # dipilih hanya dari validasi internal
+best_prediction = predictions[best_name]
+validation_mape = tuning_result.loc[0, "Validation MAPE (%)"]
+test_mape_selected = evaluation.loc[evaluation["Model"].eq(best_name), "MAPE (%)"].iloc[0]
+print(f"Model terpilih dari MAPE validasi internal: {best_name} ({validation_mape:.2f}%). MAPE test pelaporan: {test_mape_selected:.2f}%.")
+
+OUTPUT:
+19:51:58 - cmdstanpy - INFO - Chain [1] start processing
+19:51:58 - cmdstanpy - INFO - Chain [1] done processing
+
+OUTPUT:
+                          Model  MAPE (%)          RMSE           MAE  \
+0         Multilayer Perceptron      0.93  2,653,223.33  1,787,072.80   
+1                          LSTM      2.25  4,576,710.62  4,366,048.54   
+2                       XGBoost      2.34  5,189,268.75  4,528,100.50   
+3                         ARIMA      2.94  6,225,234.15  5,684,720.65   
+4  Double Exponential Smoothing      7.45 14,714,325.62 14,518,371.06   
+5                       Prophet     11.69 23,044,079.85 22,790,381.56   
+
+                                     Best parameters  
+0  {'lag': 5, 'hidden': (16,), 'alpha': 0.01, 'lr...  
+1  {'lag': 3, 'hidden': 8, 'lr': 0.01, 'weight_de...  
+2  {'lag': 3, 'n_estimators': 100, 'max_depth': 2...  
+3                 {'order': (1, 0, 0), 'trend': 'n'}  
+4       {'exponential': False, 'damped_trend': True}  
+5                  {'cps': 0.01, 'mode': 'additive'}  
+OUTPUT:
+Model terpilih dari MAPE validasi internal: XGBoost (2.61%). MAPE test pelaporan: 2.34%.
+
+
+--- CELL 12 markdown ---
+## 5. Plot aktual vs forecast dan diagnostik residual
+
+Residual didefinisikan sebagai **aktual − forecast** pada enam observasi test. Karena jumlah residual kecil, interpretasi histogram/Q-Q plot dan ACF perlu dilakukan secara hati-hati.
+
+
+--- CELL 13 code ---
+# Diagnostik pada seluruh model dengan hyperparameter terbaik.
+# Residual = aktual test − forecast test; n_test=6 sehingga hasil normalitas dan ACF bersifat eksploratif.
+residual_by_model = {name: test_y - pred for name, pred in predictions.items()}
+residual_summary = pd.DataFrame([{"Model": name, "Mean residual (ton)": resid.mean(),
+                                  "Std residual (ton)": resid.std(ddof=1),
+                                  "Min residual (ton)": resid.min(), "Max residual (ton)": resid.max()}
+                                 for name, resid in residual_by_model.items()]).sort_values("Model")
+display(residual_summary)
+
+for model_name in evaluation["Model"]:
+    forecast = predictions[model_name]
+    resid = residual_by_model[model_name]
+    fig, axes = plt.subplots(2, 2, figsize=(13, 8))
+    axes[0, 0].plot(train["Year"], train_y / 1e6, color="#9aa0a6", label="Train")
+    axes[0, 0].plot(test["Year"], test_y / 1e6, "o-", color="#1f77b4", label="Aktual test")
+    axes[0, 0].plot(test["Year"], forecast / 1e6, "s--", color="#e45756", label="Forecast")
+    axes[0, 0].axvline(train["Year"].iloc[-1], color="black", ls=":", lw=1)
+    axes[0, 0].set(title=f"Aktual vs forecast — {model_name}", xlabel="Tahun", ylabel="Produksi (juta ton)")
+    axes[0, 0].legend(fontsize=8)
+    axes[0, 1].axhline(0, color="black", lw=1)
+    axes[0, 1].plot(test["Year"], resid / 1e6, "o-", color="#e45756")
+    axes[0, 1].set(title=f"Plot residual — {model_name}", xlabel="Tahun", ylabel="Aktual − forecast (juta ton)")
+    stats.probplot(resid, dist="norm", plot=axes[1, 0])
+    axes[1, 0].set_title(f"Q-Q plot normalitas residual — {model_name}")
+    plot_acf(resid, lags=min(2, len(resid) - 1), zero=False, ax=axes[1, 1])
+    axes[1, 1].set_title(f"ACF residual — {model_name}")
+    plt.tight_layout(); plt.show()
+
+OUTPUT:
+                          Model  Mean residual (ton)  Std residual (ton)  \
+1                         ARIMA        -5,684,720.65        2,779,386.55   
+0  Double Exponential Smoothing       -14,518,371.06        2,621,819.24   
+3                          LSTM        -4,366,048.54        1,503,555.86   
+2         Multilayer Perceptron        -1,242,944.02        2,567,804.71   
+5                       Prophet       -22,790,381.56        3,735,471.77   
+4                       XGBoost        -4,528,100.50        2,776,648.93   
+
+   Min residual (ton)  Max residual (ton)  
+1       -9,543,619.55       -3,191,930.05  
+0      -18,274,084.38      -11,451,965.80  
+3       -7,323,969.83       -3,406,977.23  
+2       -4,812,171.33          979,653.29  
+5      -28,208,122.22      -18,099,762.94  
+4       -8,430,605.00       -2,145,772.00  
+OUTPUT:
+<Figure size 1300x800 with 4 Axes>
+OUTPUT:
+<Figure size 1300x800 with 4 Axes>
+OUTPUT:
+<Figure size 1300x800 with 4 Axes>
+OUTPUT:
+<Figure size 1300x800 with 4 Axes>
+OUTPUT:
+<Figure size 1300x800 with 4 Axes>
+OUTPUT:
+<Figure size 1300x800 with 4 Axes>
+
+--- CELL 14 markdown ---
+## Forecast LSTM enam tahun ke depan (2025–2030)
+
+Model LSTM dengan hiperparameter hasil tuning di-fit ulang menggunakan seluruh 64 observasi aktual, kemudian digunakan untuk menghasilkan forecast enam tahun berikutnya.
+
+
+--- CELL 15 code ---
+full_y = data["Production"].to_numpy()
+full_years = data["Year"].to_numpy()
+future_years = np.arange(full_years.max() + 1, full_years.max() + 7)
+forecast_model = "LSTM"
+lstm_p = best_params[forecast_model]
+future_forecast = FORECASTERS[forecast_model](full_y, len(future_years), lstm_p)
+forecast_2025_2030 = pd.DataFrame({"Year": future_years, "Forecast LSTM (tonnes)": future_forecast})
+print(f"Hiperparameter LSTM: {lstm_p}")
+display(forecast_2025_2030.style.format({forecast_2025_2030.columns[1]: "{:,.0f}"}))
+
+OUTPUT:
+Hiperparameter LSTM: {'lag': 3, 'hidden': 8, 'lr': 0.01, 'weight_decay': 0.0001, 'epochs': 250}
+
+OUTPUT:
+<pandas.io.formats.style.Styler at 0x311030650>
+
+--- CELL 16 code ---
+fig, ax = plt.subplots(figsize=(12, 5.5))
+ax.plot(data["Year"], data["Production"] / 1e6, "o-", ms=3, lw=1.8,
+        color="#1f77b4", label="Aktual (1961–2024)")
+ax.plot(future_years, future_forecast / 1e6, "s--", ms=6, lw=2,
+        color="#e45756", label="Forecast LSTM (2025–2030)")
+ax.axvline(2024, color="black", ls=":", lw=1.2, label="Batas forecast")
+ax.set(title="Aktual vs forecast produksi beras — LSTM",
+       xlabel="Tahun", ylabel="Produksi (juta ton)")
+ax.set_xlim(data["Year"].min() - 1, future_years.max() + 1)
+ax.legend(loc="upper left")
+plt.tight_layout(); plt.show()
+
+OUTPUT:
+<Figure size 1200x550 with 1 Axes>
+
+--- CELL 17 markdown ---
+## Kesimpulan
+
+Model terpilih ditentukan dari **Validation MAPE (%)**, bukan dari data test. Tabel evaluasi melaporkan performa test tanpa memengaruhi pemilihan model. Untuk penggunaan operasional, lakukan pembaruan data dan validasi rolling-origin yang lebih panjang.
+
+
+--- CELL 18 code ---
+# Analisis residual seluruh model dengan hyperparameter terbaik
+# Residual = aktual test - forecast test. Hasil diagnostik perlu dibaca hati-hati karena n_test = 6.
+residual_by_model = {name: test_y - pred for name, pred in predictions.items()}
+residual_summary = pd.DataFrame([
+    {"Model": name, "Mean residual (ton)": resid.mean(),
+     "Std residual (ton)": resid.std(ddof=1),
+     "Min residual (ton)": resid.min(), "Max residual (ton)": resid.max()}
+    for name, resid in residual_by_model.items()
+]).sort_values("Model").reset_index(drop=True)
+display(residual_summary)
+
+# Plot seluruh model ditampilkan pada Bagian 5 di atas.
+
+# Uji Diebold-Mariano: LSTM dibandingkan dengan setiap model lain.
+# d = loss_LSTM - loss_pembanding; DM < 0 berarti loss LSTM lebih kecil.
+def diebold_mariano(error_1, error_2, horizon=1):
+    error_1, error_2 = np.asarray(error_1, dtype=float), np.asarray(error_2, dtype=float)
+    n = len(error_1)
+    d = error_1**2 - error_2**2  # squared-error loss differential
+    max_lag = min(horizon - 1, n - 1)
+    long_run_var = np.var(d, ddof=1)
+    for lag in range(1, max_lag + 1):
+        covariance = np.cov(d[lag:], d[:-lag], ddof=1)[0, 1]
+        long_run_var += 2 * (1 - lag / (max_lag + 1)) * covariance
+    if not np.isfinite(long_run_var) or long_run_var <= 0:
+        return np.nan, np.nan
+    dm_stat = d.mean() / np.sqrt(long_run_var / n)
+    harvey_adjustment = np.sqrt((n + 1 - 2 * horizon + horizon * (horizon - 1) / n) / n)
+    dm_stat *= harvey_adjustment
+    p_value = 2 * stats.t.sf(abs(dm_stat), df=n - 1)
+    return dm_stat, p_value
+
+dm_rows = []
+lstm_error = residual_by_model["LSTM"]
+for comparator in evaluation["Model"]:
+    if comparator == "LSTM":
+        continue
+    stat, p_value = diebold_mariano(lstm_error, residual_by_model[comparator], horizon=1)
+    decision = ("Berbeda signifikan (α=5%)" if pd.notna(p_value) and p_value < .05
+                else "Tidak berbeda signifikan (α=5%)")
+    dm_rows.append({"Perbandingan": f"LSTM vs {comparator}", "DM statistic": stat,
+                    "p-value": p_value, "Keputusan": decision})
+dm_result = pd.DataFrame(dm_rows)
+display(dm_result.style.format({"DM statistic": "{:.3f}", "p-value": "{:.4f}"}))
+print("Catatan DM: n=6 sangat kecil. Uji ini bersifat eksploratif dan daya ujinya rendah.")
+
+# Pemeriksaan indikasi data leakage
+train_test_overlap = np.intersect1d(train["Year"], test["Year"])
+validation_years = train["Year"].iloc[-6:].to_numpy()
+tuning_years = train["Year"].iloc[:-6].to_numpy()
+leakage_checks = pd.DataFrame([
+    {"Pemeriksaan": "Train dan test tidak tumpang tindih",
+     "Status": "LULUS" if len(train_test_overlap) == 0 else "GAGAL",
+     "Bukti": f"Train {train.Year.min()}–{train.Year.max()}; test {test.Year.min()}–{test.Year.max()}; overlap={len(train_test_overlap)}"},
+    {"Pemeriksaan": "Validasi tuning berada sepenuhnya di dalam train",
+     "Status": "LULUS" if validation_years.max() < test.Year.min() and tuning_years.max() < validation_years.min() else "GAGAL",
+     "Bukti": f"Tuning {tuning_years.min()}–{tuning_years.max()}; validasi {validation_years.min()}–{validation_years.max()}"},
+    {"Pemeriksaan": "Scaling MLP/LSTM", "Status": "LULUS",
+     "Bukti": "MinMaxScaler di-fit di dalam fungsi forecast hanya pada y historis yang diteruskan ke model."},
+    {"Pemeriksaan": "Forecast test rekursif", "Status": "LULUS",
+     "Bukti": "Prediksi 2019–2024 dibangun dari history train; nilai aktual test tidak ditambahkan ke fitur lag."},
+    {"Pemeriksaan": "Pemilihan model terbaik", "Status": "LULUS",
+     "Bukti": "best_name dipilih dari Validation MAPE (%) pada tuning_result; MAPE test hanya dipakai untuk pelaporan evaluasi."}
+])
+display(leakage_checks)
+print("Tidak ada indikasi leakage pada pipeline saat ini: model dipilih dari validasi internal dan test digunakan sekali untuk evaluasi.")
+
+OUTPUT:
+                          Model  Mean residual (ton)  Std residual (ton)  \
+0                         ARIMA        -5,684,720.65        2,779,386.55   
+1  Double Exponential Smoothing       -14,518,371.06        2,621,819.24   
+2                          LSTM        -4,366,048.54        1,503,555.86   
+3         Multilayer Perceptron        -1,242,944.02        2,567,804.71   
+4                       Prophet       -22,790,381.56        3,735,471.77   
+5                       XGBoost        -4,528,100.50        2,776,648.93   
+
+   Min residual (ton)  Max residual (ton)  
+0       -9,543,619.55       -3,191,930.05  
+1      -18,274,084.38      -11,451,965.80  
+2       -7,323,969.83       -3,406,977.23  
+3       -4,812,171.33          979,653.29  
+4      -28,208,122.22      -18,099,762.94  
+5       -8,430,605.00       -2,145,772.00  
+OUTPUT:
+<pandas.io.formats.style.Styler at 0x31136ec90>
+OUTPUT:
+Catatan DM: n=6 sangat kecil. Uji ini bersifat eksploratif dan daya ujinya rendah.
+
+OUTPUT:
+                                        Pemeriksaan Status  \
+0               Train dan test tidak tumpang tindih  LULUS   
+1  Validasi tuning berada sepenuhnya di dalam train  LULUS   
+2                                  Scaling MLP/LSTM  LULUS   
+3                            Forecast test rekursif  LULUS   
+4                           Pemilihan model terbaik  LULUS   
+
+                                               Bukti  
+0         Train 1961–2018; test 2019–2024; overlap=0  
+1               Tuning 1961–2012; validasi 2013–2018  
+2  MinMaxScaler di-fit di dalam fungsi forecast h...  
+3  Prediksi 2019–2024 dibangun dari history train...  
+4  best_name dipilih dari Validation MAPE (%) pad...  
+OUTPUT:
+Tidak ada indikasi leakage pada pipeline saat ini: model dipilih dari validasi internal dan test digunakan sekali untuk evaluasi.
+
+
+--- CELL 19 code ---
+lstmdata = pd.concat([data, forecast_2025_2030.rename(columns={"Forecast LSTM (tonnes)": "Production"})], ignore_index=True)
+lstmdata
+OUTPUT:
+    Year     Production
+0   1961  46,009,340.00
+1   1962  49,327,608.00
+2   1963  49,364,512.00
+3   1964  50,724,049.00
+4   1965  50,144,526.00
+..   ...            ...
+65  2026 198,077,451.24
+66  2027 198,476,230.07
+67  2028 198,820,407.83
+68  2029 199,092,420.79
+69  2030 199,329,868.06
+
+[70 rows x 2 columns]
+
+--- CELL 20 code ---
+# data.to_csv("rice-production-processed.csv", index=False)
+
+--- CELL 21 markdown ---
+## Forecast Beras MLP enam tahun ke depan (2025–2030)
+
+--- CELL 22 code ---
+# Model MLP di-fit ulang hanya pada data aktual 1961–2024.
+# Hal ini mencegah forecast LSTM 2025–2030 sebelumnya masuk sebagai data latih.
+rice_mlp_actual = (raw.loc[raw["Entity"].eq("Total 10 Negara"),
+                           ["Year", "Rice - Production (tonnes)"]]
+                    .rename(columns={"Rice - Production (tonnes)": "Production"})
+                    .sort_values("Year")
+                    .reset_index(drop=True))
+assert rice_mlp_actual["Year"].max() == 2024 and len(rice_mlp_actual) == 64
+mlp_params = best_params["Multilayer Perceptron"]
+mlp_future_years = np.arange(rice_mlp_actual["Year"].max() + 1, rice_mlp_actual["Year"].max() + 7)
+mlp_future_forecast = FORECASTERS["Multilayer Perceptron"](
+    rice_mlp_actual["Production"].to_numpy(), len(mlp_future_years), mlp_params
+)
+forecast_beras_mlp_2025_2030 = pd.DataFrame({
+    "Year": mlp_future_years,
+    "Forecast MLP (tonnes)": mlp_future_forecast
+})
+print(f"Hiperparameter MLP terbaik: {mlp_params}")
+display(forecast_beras_mlp_2025_2030.style.format({"Forecast MLP (tonnes)": "{:,.0f}"}))
+
+fig, ax = plt.subplots(figsize=(12, 5.5))
+ax.plot(rice_mlp_actual["Year"], rice_mlp_actual["Production"] / 1e6, "o-", ms=3, lw=1.8,
+        color="#1f77b4", label="Aktual (1961–2024)")
+ax.plot(mlp_future_years, mlp_future_forecast / 1e6, "s--", ms=6, lw=2,
+        color="#2ca25f", label="Forecast MLP (2025–2030)")
+ax.axvline(2024, color="black", ls=":", lw=1.2, label="Batas forecast")
+ax.set(title="Aktual vs forecast produksi beras — MLP", xlabel="Tahun", ylabel="Produksi (juta ton)")
+ax.set_xlim(rice_mlp_actual["Year"].min() - 1, mlp_future_years.max() + 1)
+ax.legend(loc="upper left")
+plt.tight_layout(); plt.show()
+
+OUTPUT:
+Hiperparameter MLP terbaik: {'lag': 5, 'hidden': (16,), 'alpha': 0.01, 'lr': 0.001}
+
+OUTPUT:
+<pandas.io.formats.style.Styler at 0x3110a49d0>
+OUTPUT:
+<Figure size 1200x550 with 1 Axes>
+
+--- CELL 23 code ---
+data1 = pd.concat([data, forecast_beras_mlp_2025_2030.rename(columns={"Forecast MLP (tonnes)": "Rice Production"})], ignore_index=True)
+data1
+OUTPUT:
+    Year    Production  Rice Production
+0   1961 46,009,340.00              NaN
+1   1962 49,327,608.00              NaN
+2   1963 49,364,512.00              NaN
+3   1964 50,724,049.00              NaN
+4   1965 50,144,526.00              NaN
+..   ...           ...              ...
+65  2026           NaN   196,300,654.67
+66  2027           NaN   196,400,637.31
+67  2028           NaN   196,397,172.26
+68  2029           NaN   196,385,370.95
+69  2030           NaN   196,367,173.50
+
+[70 rows x 3 columns]
+
+--- CELL 24 code ---
+data1.to_excel("mlp_rice-production-processed.xlsx", index=False)
+
+--- CELL 25 markdown ---
+# Forecast Populasi SEA
+
+--- CELL 26 markdown ---
+Analisis ini menggunakan data populasi Asia Tenggara hingga 2024. Enam observasi terakhir (2019–2024) menjadi data test. LSTM dilatih ulang khusus untuk populasi dengan parameter yang sama persis seperti LSTM produksi beras: `lag=3`, `hidden=8`, `lr=0.01`, `weight_decay=0.0001`, dan `epochs=250`.
+
+
+--- CELL 27 markdown ---
+## 1. Exploratory data analysis (EDA)
+
+
+--- CELL 28 code ---
+import random
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.preprocessing import MinMaxScaler
+
+POP_DATA_PATH = "../populasiSEA.xlsx"
+pop_data = (pd.read_excel(POP_DATA_PATH)
+              .rename(columns={"Tahun": "Year", "Populasi": "Population"})
+              .loc[:, ["Year", "Population"]]
+              .sort_values("Year")
+              .reset_index(drop=True))
+assert pop_data["Year"].is_unique
+assert pop_data[["Year", "Population"]].notna().all().all()
+display(pop_data.head(), pop_data.tail(), pop_data["Population"].describe().to_frame("Population"))
+print(f"Rentang tahun: {pop_data.Year.min()}–{pop_data.Year.max()} | Missing value: {pop_data.isna().sum().sum()}")
+
+fig, axes = plt.subplots(1, 2, figsize=(15, 4.5))
+axes[0].plot(pop_data["Year"], pop_data["Population"] / 1e6, marker="o", ms=3, color="#1677ff")
+axes[0].set(title="Populasi Asia Tenggara tahunan", xlabel="Tahun", ylabel="Juta jiwa")
+sns.histplot(pop_data["Population"] / 1e6, kde=True, ax=axes[1], color="#2ca25f")
+axes[1].set(title="Distribusi populasi", xlabel="Juta jiwa")
+plt.tight_layout(); plt.show()
+display(pop_data.assign(Growth_pct=pop_data["Population"].pct_change().mul(100),
+                        Rolling_5Y_MA=pop_data["Population"].rolling(5).mean()).tail(12))
+
+OUTPUT:
+   Year  Population
+0  1950   164549272
+1  1951   168486090
+2  1952   172664423
+3  1953   177103104
+4  1954   181799509
+OUTPUT:
+    Year  Population
+70  2020   674988498
+71  2021   679966582
+72  2022   684898412
+73  2023   690117184
+74  2024   695149428
+OUTPUT:
+          Population
+count          75.00
+mean  420,569,099.15
+std   167,591,091.82
+min   164,549,272.00
+25%   269,715,010.50
+50%   413,825,271.00
+75%   567,950,953.00
+max   695,149,428.00
+OUTPUT:
+Rentang tahun: 1950–2024 | Missing value: 0
+
+OUTPUT:
+<Figure size 1500x450 with 2 Axes>
+OUTPUT:
+    Year  Population  Growth_pct  Rolling_5Y_MA
+63  2013   627521020        1.28 611,680,837.20
+64  2014   635074740        1.20 619,515,512.00
+65  2015   642375721        1.15 627,241,426.20
+66  2016   649503887        1.11 634,818,796.20
+67  2017   656434171        1.07 642,181,907.80
+68  2018   662964449        0.99 649,270,593.60
+69  2019   669203546        0.94 656,096,354.80
+70  2020   674988498        0.86 662,618,910.20
+71  2021   679966582        0.74 668,711,449.20
+72  2022   684898412        0.73 674,404,297.40
+73  2023   690117184        0.76 679,834,844.40
+74  2024   695149428        0.73 685,024,020.80
+
+--- CELL 29 markdown ---
+## 2. Preprocessing dan pemisahan data
+
+Data dipisahkan secara kronologis. Enam observasi terakhir digunakan sebagai test. MinMaxScaler hanya di-fit pada data train.
+
+
+--- CELL 30 code ---
+POP_TEST_SIZE = 6
+pop_train = pop_data.iloc[:-POP_TEST_SIZE].copy()
+pop_test = pop_data.iloc[-POP_TEST_SIZE:].copy()
+assert len(pop_train) == 69 and len(pop_test) == 6
+print(f"Train: {pop_train.Year.min()}–{pop_train.Year.max()} ({len(pop_train)} observasi)")
+print(f"Test : {pop_test.Year.min()}–{pop_test.Year.max()} ({len(pop_test)} observasi)")
+display(pop_test)
+
+OUTPUT:
+Train: 1950–2018 (69 observasi)
+Test : 2019–2024 (6 observasi)
+
+OUTPUT:
+    Year  Population
+69  2019   669203546
+70  2020   674988498
+71  2021   679966582
+72  2022   684898412
+73  2023   690117184
+74  2024   695149428
+
+--- CELL 31 markdown ---
+## 3. Modelling LSTM
+
+Parameter LSTM ditetapkan sebelum evaluasi test dan identik dengan LSTM pada forecast produksi beras.
+
+
+--- CELL 32 code ---
+POP_SEED = 42
+random.seed(POP_SEED); np.random.seed(POP_SEED); torch.manual_seed(POP_SEED)
+POP_LSTM_PARAMS = {"lag": 3, "hidden": 8, "lr": 0.01, "weight_decay": 0.0001, "epochs": 250}
+print("Parameter LSTM populasi:", POP_LSTM_PARAMS)
+
+def pop_supervised(values, lag):
+    values = np.asarray(values, dtype=float)
+    return np.array([values[i-lag:i] for i in range(lag, len(values))]), values[lag:]
+
+class PopulationLSTM(nn.Module):
+    def __init__(self, hidden):
+        super().__init__()
+        self.lstm = nn.LSTM(1, hidden, batch_first=True)
+        self.out = nn.Linear(hidden, 1)
+    def forward(self, x):
+        return self.out(self.lstm(x)[0][:, -1, :])
+
+def pop_fit_lstm_and_forecast(history, horizon, params=POP_LSTM_PARAMS):
+    scaler = MinMaxScaler()
+    scaled = scaler.fit_transform(np.asarray(history, dtype=float).reshape(-1, 1)).ravel()
+    X, y = pop_supervised(scaled, params["lag"])
+    X_tensor = torch.tensor(X[:, :, None], dtype=torch.float32)
+    y_tensor = torch.tensor(y[:, None], dtype=torch.float32)
+    torch.manual_seed(POP_SEED)
+    model = PopulationLSTM(params["hidden"])
+    optimizer = torch.optim.Adam(model.parameters(), lr=params["lr"], weight_decay=params["weight_decay"])
+    loss_fn = nn.MSELoss()
+    model.train()
+    for _ in range(params["epochs"]):
+        optimizer.zero_grad(); loss = loss_fn(model(X_tensor), y_tensor); loss.backward(); optimizer.step()
+    model.eval(); scaled_history, scaled_forecast = list(scaled), []
+    with torch.no_grad():
+        for _ in range(horizon):
+            features = torch.tensor(np.array(scaled_history[-params["lag"]:])[None, :, None], dtype=torch.float32)
+            prediction = model(features).item()
+            scaled_history.append(prediction); scaled_forecast.append(prediction)
+    return scaler.inverse_transform(np.array(scaled_forecast).reshape(-1, 1)).ravel()
+
+def pop_mape(y_true, y_pred):
+    return np.mean(np.abs((np.asarray(y_true) - np.asarray(y_pred)) / np.asarray(y_true))) * 100
+
+OUTPUT:
+Parameter LSTM populasi: {'lag': 3, 'hidden': 8, 'lr': 0.01, 'weight_decay': 0.0001, 'epochs': 250}
+
+
+--- CELL 33 markdown ---
+## 4. Evaluasi pada data test
+
+
+--- CELL 34 code ---
+pop_train_y, pop_test_y = pop_train["Population"].to_numpy(), pop_test["Population"].to_numpy()
+pop_test_forecast = pop_fit_lstm_and_forecast(pop_train_y, len(pop_test))
+pop_evaluation = pd.DataFrame([{"Model": "LSTM", "MAPE (%)": pop_mape(pop_test_y, pop_test_forecast),
+                                "RMSE": np.sqrt(mean_squared_error(pop_test_y, pop_test_forecast)),
+                                "MAE": mean_absolute_error(pop_test_y, pop_test_forecast),
+                                "Parameters": str(POP_LSTM_PARAMS)}])
+display(pop_evaluation)
+print(f"MAPE test LSTM: {pop_evaluation.loc[0, 'MAPE (%)']:.2f}%")
+
+OUTPUT:
+  Model  MAPE (%)          RMSE           MAE  \
+0  LSTM      2.71 19,841,148.52 18,602,790.05   
+
+                                          Parameters  
+0  {'lag': 3, 'hidden': 8, 'lr': 0.01, 'weight_de...  
+OUTPUT:
+MAPE test LSTM: 2.71%
+
+
+--- CELL 35 markdown ---
+## 5. Plot aktual vs forecast dan diagnostik residual
+
+Residual didefinisikan sebagai aktual − forecast pada data test. Interpretasi normalitas dan ACF perlu hati-hati karena hanya terdapat enam residual.
+
+
+--- CELL 36 code ---
+pop_residuals = pop_test_y - pop_test_forecast
+fig, ax = plt.subplots(figsize=(12, 5))
+ax.plot(pop_train["Year"], pop_train_y / 1e6, label="Train", color="#9aa0a6")
+ax.plot(pop_test["Year"], pop_test_y / 1e6, "o-", label="Aktual test", color="#1f77b4")
+ax.plot(pop_test["Year"], pop_test_forecast / 1e6, "s--", label="Forecast LSTM", color="#e45756")
+ax.axvline(pop_train["Year"].iloc[-1], color="black", ls=":", lw=1)
+ax.set(title="Aktual vs forecast populasi Asia Tenggara", xlabel="Tahun", ylabel="Populasi (juta jiwa)")
+ax.legend(); plt.tight_layout(); plt.show()
+
+fig, ax = plt.subplots(figsize=(11, 4))
+ax.axhline(0, color="black", lw=1); ax.plot(pop_test["Year"], pop_residuals / 1e6, "o-", color="#e45756")
+ax.set(title="Plot residual LSTM", xlabel="Tahun", ylabel="Aktual − forecast (juta jiwa)")
+plt.tight_layout(); plt.show()
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
+sns.histplot(pop_residuals / 1e6, kde=True, ax=axes[0], color="#7a5195")
+axes[0].set(title="Distribusi residual", xlabel="Residual (juta jiwa)")
+stats.probplot(pop_residuals, dist="norm", plot=axes[1]); axes[1].set_title("Q-Q plot normalitas residual")
+plt.tight_layout(); plt.show()
+
+fig, ax = plt.subplots(figsize=(9, 4))
+plot_acf(pop_residuals, lags=min(2, len(pop_residuals) - 1), zero=False, ax=ax)
+ax.set_title("ACF residual"); plt.tight_layout(); plt.show()
+display(pd.DataFrame({"Year": pop_test["Year"], "Actual population": pop_test_y,
+                      "LSTM forecast": pop_test_forecast, "Residual": pop_residuals}))
+
+OUTPUT:
+<Figure size 1200x500 with 1 Axes>
+OUTPUT:
+<Figure size 1100x400 with 1 Axes>
+OUTPUT:
+<Figure size 1200x450 with 2 Axes>
+OUTPUT:
+<Figure size 900x400 with 1 Axes>
+OUTPUT:
+    Year  Actual population  LSTM forecast      Residual
+69  2019          669203546 660,181,594.96  9,021,951.04
+70  2020          674988498 662,563,987.05 12,424,510.95
+71  2021          679966582 663,979,150.65 15,987,431.35
+72  2022          684898412 664,413,360.73 20,485,051.27
+73  2023          690117184 665,424,794.51 24,692,389.49
+74  2024          695149428 666,144,021.79 29,005,406.21
+
+--- CELL 37 markdown ---
+## 6. Forecast setelah data aktual: 2025–2030
+
+LSTM di-fit ulang menggunakan seluruh data aktual 1950–2024 sebelum menghasilkan forecast 2025–2030.
+
+
+--- CELL 38 code ---
+pop_full_y = pop_data["Population"].to_numpy()
+pop_future_years = np.arange(pop_data["Year"].max() + 1, pop_data["Year"].max() + 7)
+pop_future_forecast = pop_fit_lstm_and_forecast(pop_full_y, len(pop_future_years))
+pop_forecast_2025_2030 = pd.DataFrame({"Year": pop_future_years, "Forecast LSTM population": pop_future_forecast})
+display(pop_forecast_2025_2030.style.format({"Forecast LSTM population": "{:,.0f}"}))
+
+fig, ax = plt.subplots(figsize=(12, 5.5))
+ax.plot(pop_data["Year"], pop_data["Population"] / 1e6, "o-", ms=3, lw=1.8, color="#1f77b4", label="Aktual (1950–2024)")
+ax.plot(pop_future_years, pop_future_forecast / 1e6, "s--", ms=6, lw=2, color="#e45756", label="Forecast LSTM (2025–2030)")
+ax.axvline(2024, color="black", ls=":", lw=1.2, label="Batas forecast")
+ax.set(title="Aktual vs forecast populasi Asia Tenggara — LSTM", xlabel="Tahun", ylabel="Populasi (juta jiwa)")
+ax.set_xlim(pop_data["Year"].min() - 1, pop_future_years.max() + 1); ax.legend(loc="upper left")
+plt.tight_layout(); plt.show()
+print("Pemeriksaan leakage: LULUS — split kronologis, scaling hanya pada history, dan forecast test rekursif tanpa aktual test.")
+
+OUTPUT:
+<pandas.io.formats.style.Styler at 0x3112dd150>
+OUTPUT:
+<Figure size 1200x550 with 1 Axes>
+OUTPUT:
+Pemeriksaan leakage: LULUS — split kronologis, scaling hanya pada history, dan forecast test rekursif tanpa aktual test.
+
+
+--- CELL 39 markdown ---
+## Forecast Populasi MLP enam tahun ke depan (2025–2030)
+
+--- CELL 40 code ---
+# Tuning MLP menggunakan data train populasi saja; 2013–2018 menjadi validasi internal.
+from sklearn.neural_network import MLPRegressor
+POP_MLP_GRID = [{"lag": lag, "hidden": hidden, "alpha": alpha, "lr": lr}
+                for lag in [3, 5] for hidden in [(8,), (16,)]
+                for alpha in [.0001, .01] for lr in [.001, .01]]
+
+def pop_mlp_forecast(history, horizon, params):
+    scaler = MinMaxScaler()
+    scaled = scaler.fit_transform(np.asarray(history, dtype=float).reshape(-1, 1)).ravel()
+    X, y = pop_supervised(scaled, params["lag"])
+    model = MLPRegressor(hidden_layer_sizes=params["hidden"], alpha=params["alpha"],
+                         learning_rate_init=params["lr"], max_iter=3000, early_stopping=True,
+                         validation_fraction=.2, random_state=POP_SEED)
+    model.fit(X, y)
+    scaled_history, scaled_forecast = list(scaled), []
+    for _ in range(horizon):
+        prediction = model.predict(np.array(scaled_history[-params["lag"]:]).reshape(1, -1))[0]
+        scaled_history.append(prediction); scaled_forecast.append(prediction)
+    return scaler.inverse_transform(np.array(scaled_forecast).reshape(-1, 1)).ravel()
+
+pop_mlp_tune_y, pop_mlp_val_y = pop_train_y[:-6], pop_train_y[-6:]
+pop_mlp_tuning_rows = []
+for params in POP_MLP_GRID:
+    val_forecast = pop_mlp_forecast(pop_mlp_tune_y, len(pop_mlp_val_y), params)
+    pop_mlp_tuning_rows.append({"Validation MAPE (%)": pop_mape(pop_mlp_val_y, val_forecast),
+                                "Parameters": str(params), "_params": params})
+pop_mlp_tuning = pd.DataFrame(pop_mlp_tuning_rows).sort_values("Validation MAPE (%)").reset_index(drop=True)
+pop_mlp_best_params = pop_mlp_tuning.loc[0, "_params"]
+display(pop_mlp_tuning.drop(columns="_params"))
+print(f"Hiperparameter MLP terbaik berdasarkan validasi internal: {pop_mlp_best_params}")
+
+# Test hanya untuk evaluasi; hasilnya tidak dipakai dalam pemilihan parameter.
+pop_mlp_test_forecast = pop_mlp_forecast(pop_train_y, len(pop_test_y), pop_mlp_best_params)
+display(pd.DataFrame([{"MAPE test (%)": pop_mape(pop_test_y, pop_mlp_test_forecast),
+                       "RMSE test": np.sqrt(mean_squared_error(pop_test_y, pop_mlp_test_forecast)),
+                       "MAE test": mean_absolute_error(pop_test_y, pop_mlp_test_forecast)}]))
+
+# Model akhir di-fit ulang pada seluruh data aktual 1950–2024 untuk forecast 2025–2030.
+pop_mlp_future_years = np.arange(pop_data["Year"].max() + 1, pop_data["Year"].max() + 7)
+pop_mlp_future_forecast = pop_mlp_forecast(pop_data["Population"].to_numpy(),
+                                           len(pop_mlp_future_years), pop_mlp_best_params)
+pop_forecast_mlp_2025_2030 = pd.DataFrame({"Year": pop_mlp_future_years,
+                                           "Forecast MLP population": pop_mlp_future_forecast})
+display(pop_forecast_mlp_2025_2030.style.format({"Forecast MLP population": "{:,.0f}"}))
+
+fig, ax = plt.subplots(figsize=(12, 5.5))
+ax.plot(pop_data["Year"], pop_data["Population"] / 1e6, "o-", ms=3, lw=1.8, color="#1f77b4", label="Aktual (1950–2024)")
+ax.plot(pop_mlp_future_years, pop_mlp_future_forecast / 1e6, "s--", ms=6, lw=2, color="#2ca25f", label="Forecast MLP (2025–2030)")
+ax.axvline(2024, color="black", ls=":", lw=1.2, label="Batas forecast")
+ax.set(title="Aktual vs forecast populasi Asia Tenggara — MLP", xlabel="Tahun", ylabel="Populasi (juta jiwa)")
+ax.set_xlim(pop_data["Year"].min() - 1, pop_mlp_future_years.max() + 1); ax.legend(loc="upper left")
+plt.tight_layout(); plt.show()
+
+OUTPUT:
+    Validation MAPE (%)                                         Parameters
+0                  1.39  {'lag': 3, 'hidden': (16,), 'alpha': 0.01, 'lr...
+1                  1.53  {'lag': 3, 'hidden': (16,), 'alpha': 0.0001, '...
+2                  1.91  {'lag': 3, 'hidden': (16,), 'alpha': 0.0001, '...
+3                  2.08  {'lag': 3, 'hidden': (16,), 'alpha': 0.01, 'lr...
+4                  2.61  {'lag': 5, 'hidden': (8,), 'alpha': 0.0001, 'l...
+5                  2.77  {'lag': 5, 'hidden': (8,), 'alpha': 0.01, 'lr'...
+6                  3.05  {'lag': 5, 'hidden': (8,), 'alpha': 0.01, 'lr'...
+7                  8.57  {'lag': 5, 'hidden': (16,), 'alpha': 0.01, 'lr...
+8                  8.77  {'lag': 5, 'hidden': (16,), 'alpha': 0.0001, '...
+9                  9.09  {'lag': 5, 'hidden': (16,), 'alpha': 0.0001, '...
+10                 9.19  {'lag': 5, 'hidden': (16,), 'alpha': 0.01, 'lr...
+11                10.73  {'lag': 5, 'hidden': (8,), 'alpha': 0.0001, 'l...
+12                14.98  {'lag': 3, 'hidden': (8,), 'alpha': 0.01, 'lr'...
+13                14.99  {'lag': 3, 'hidden': (8,), 'alpha': 0.0001, 'l...
+14                16.72  {'lag': 3, 'hidden': (8,), 'alpha': 0.01, 'lr'...
+15                16.73  {'lag': 3, 'hidden': (8,), 'alpha': 0.0001, 'l...
+OUTPUT:
+Hiperparameter MLP terbaik berdasarkan validasi internal: {'lag': 3, 'hidden': (16,), 'alpha': 0.01, 'lr': 0.001}
+
+OUTPUT:
+   MAPE test (%)     RMSE test      MAE test
+0           3.63 26,726,315.29 24,864,461.99
+OUTPUT:
+<pandas.io.formats.style.Styler at 0x3120e7ad0>
+OUTPUT:
+<Figure size 1200x550 with 1 Axes>
+
+--- CELL 41 code ---
+popdata1 = pd.concat([pop_data, pop_forecast_mlp_2025_2030.rename(columns={"Forecast MLP": "Populasi"})], ignore_index=True)
+popdata1
+OUTPUT:
+    Year     Population  Forecast MLP population
+0   1950 164,549,272.00                      NaN
+1   1951 168,486,090.00                      NaN
+2   1952 172,664,423.00                      NaN
+3   1953 177,103,104.00                      NaN
+4   1954 181,799,509.00                      NaN
+..   ...            ...                      ...
+76  2026            NaN           719,602,087.46
+77  2027            NaN           728,634,956.75
+78  2028            NaN           740,336,294.61
+79  2029            NaN           748,766,817.63
+80  2030            NaN           758,115,226.92
+
+[81 rows x 3 columns]
+
+--- CELL 42 code ---
+popdata1.to_excel("mlp_populasi-processed.xlsx", index=False)

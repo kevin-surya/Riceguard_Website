@@ -1,0 +1,515 @@
+{
+  "mode": "saved-notebook-outputs",
+  "provenance": [
+    {
+      "file": "forecastDataBerasASEAN.ipynb",
+      "sha256": "75b21690fd680d938af3de21abfbe13593f63645009e5e035ebf8523c1fee160",
+      "cells": 43
+    },
+    {
+      "file": "forecastPopulasiSEA.ipynb",
+      "sha256": "4877ab5b0a4a07771e83c75b50683248d21c9217c4093825192001cd0572cd46",
+      "cells": 17
+    },
+    {
+      "file": "spatioASEAN.ipynb",
+      "sha256": "d31a9e9400fefb5bc7c2c0aaee0894f1156fda28796a465673a36f2e1175f125",
+      "cells": 42
+    }
+  ],
+  "forecast": {
+    "future": {
+      "rice": {
+        "MLP": [
+          {
+            "year": 2025,
+            "value": 196269589.0
+          },
+          {
+            "year": 2026,
+            "value": 196300655.0
+          },
+          {
+            "year": 2027,
+            "value": 196400637.0
+          },
+          {
+            "year": 2028,
+            "value": 196397172.0
+          },
+          {
+            "year": 2029,
+            "value": 196385371.0
+          },
+          {
+            "year": 2030,
+            "value": 196367174.0
+          }
+        ],
+        "LSTM": [
+          {
+            "year": 2025,
+            "value": 197672306.0
+          },
+          {
+            "year": 2026,
+            "value": 198077451.0
+          },
+          {
+            "year": 2027,
+            "value": 198476230.0
+          },
+          {
+            "year": 2028,
+            "value": 198820408.0
+          },
+          {
+            "year": 2029,
+            "value": 199092421.0
+          },
+          {
+            "year": 2030,
+            "value": 199329868.0
+          }
+        ]
+      },
+      "population": {
+        "MLP": [
+          {
+            "year": 2025,
+            "value": 712261194.0
+          },
+          {
+            "year": 2026,
+            "value": 719602087.0
+          },
+          {
+            "year": 2027,
+            "value": 728634957.0
+          },
+          {
+            "year": 2028,
+            "value": 740336295.0
+          },
+          {
+            "year": 2029,
+            "value": 748766818.0
+          },
+          {
+            "year": 2030,
+            "value": 758115227.0
+          }
+        ],
+        "LSTM": [
+          {
+            "year": 2025,
+            "value": 692085858.0
+          },
+          {
+            "year": 2026,
+            "value": 693631559.0
+          },
+          {
+            "year": 2027,
+            "value": 694399760.0
+          },
+          {
+            "year": 2028,
+            "value": 694356938.0
+          },
+          {
+            "year": 2029,
+            "value": 694881617.0
+          },
+          {
+            "year": 2030,
+            "value": 695193894.0
+          }
+        ]
+      }
+    },
+    "riceMetrics": [
+      {
+        "Model": "Multilayer Perceptron",
+        "MAPE (%)": 0.9300485927365346,
+        "RMSE": 2653223.332021431,
+        "MAE": 1787072.7957472454,
+        "Best parameters": "{'lag': 5, 'hidden': (16,), 'alpha': 0.01, 'lr': 0.001}"
+      },
+      {
+        "Model": "LSTM",
+        "MAPE (%)": 2.250248282808507,
+        "RMSE": 4576710.617702192,
+        "MAE": 4366048.542956084,
+        "Best parameters": "{'lag': 3, 'hidden': 8, 'lr': 0.01, 'weight_decay': 0.0001, 'epochs': 250}"
+      },
+      {
+        "Model": "XGBoost",
+        "MAPE (%)": 2.3424343727012626,
+        "RMSE": 5189268.752561049,
+        "MAE": 4528100.5,
+        "Best parameters": "{'lag': 3, 'n_estimators': 100, 'max_depth': 2, 'learning_rate': 0.05}"
+      },
+      {
+        "Model": "ARIMA",
+        "MAPE (%)": 2.93659795649587,
+        "RMSE": 6225234.145561666,
+        "MAE": 5684720.647764608,
+        "Best parameters": "{'order': (1, 0, 0), 'trend': 'n'}"
+      },
+      {
+        "Model": "Double Exponential Smoothing",
+        "MAPE (%)": 7.450608277037378,
+        "RMSE": 14714325.61812074,
+        "MAE": 14518371.061631376,
+        "Best parameters": "{'exponential': False, 'damped_trend': True}"
+      },
+      {
+        "Model": "Prophet",
+        "MAPE (%)": 11.69370380055222,
+        "RMSE": 23044079.85444996,
+        "MAE": 22790381.564890757,
+        "Best parameters": "{'cps': 0.01, 'mode': 'additive'}"
+      }
+    ],
+    "populationMetrics": [
+      {
+        "Model": "LSTM",
+        "MAPE (%)": 2.713595776651921,
+        "RMSE": 19841148.51857698,
+        "MAE": 18602790.04951076,
+        "Parameters": "{'lag': 3, 'hidden': 8, 'lr': 0.01, 'weight_decay': 0.0001, 'epochs': 250}"
+      },
+      {
+        "Model": "Multilayer Perceptron",
+        "MAPE (%)": 3.6260055547435943,
+        "RMSE": 26726315.29077171,
+        "MAE": 24864461.985121388,
+        "Parameters": "{'lag': 3, 'hidden': (16,), 'alpha': 0.01, 'lr': 0.001}"
+      }
+    ],
+    "validation": [
+      {
+        "Model": "XGBoost",
+        "Validation MAPE (%)": 2.6078614949658356,
+        "Best parameters": "{'lag': 3, 'n_estimators': 100, 'max_depth': 2, 'learning_rate': 0.05}"
+      },
+      {
+        "Model": "Multilayer Perceptron",
+        "Validation MAPE (%)": 3.0448255133074915,
+        "Best parameters": "{'lag': 5, 'hidden': (16,), 'alpha': 0.01, 'lr': 0.001}"
+      },
+      {
+        "Model": "ARIMA",
+        "Validation MAPE (%)": 3.241724272749917,
+        "Best parameters": "{'order': (1, 0, 0), 'trend': 'n'}"
+      },
+      {
+        "Model": "Prophet",
+        "Validation MAPE (%)": 4.725641160963362,
+        "Best parameters": "{'cps': 0.01, 'mode': 'additive'}"
+      },
+      {
+        "Model": "LSTM",
+        "Validation MAPE (%)": 5.978453338785231,
+        "Best parameters": "{'lag': 3, 'hidden': 8, 'lr': 0.01, 'weight_decay': 0.0001, 'epochs': 250}"
+      },
+      {
+        "Model": "Double Exponential Smoothing",
+        "Validation MAPE (%)": 10.221817642522437,
+        "Best parameters": "{'exponential': False, 'damped_trend': True}"
+      }
+    ],
+    "populationMlpValidation": {
+      "Validation MAPE (%)": 1.3857599625352643,
+      "Parameters": "{'lag': 3, 'hidden': (16,), 'alpha': 0.01, 'lr': 0.001}"
+    },
+    "baseline2024": {
+      "rice": 197000964,
+      "population": 695149428
+    },
+    "sourceEntity": "Total 10 Negara",
+    "outputPrecision": "Forecast tables rounded to one tonne/person in notebook"
+  },
+  "spatio": {
+    "metrics": {
+      "model": "Dynamic hurdle BYM2(group year) + AR(1)",
+      "grid": "2 degree",
+      "evaluation": "Forward holdout 2012-2021; outcomes masked during fit",
+      "n_test": 4940,
+      "mae_ha": 16311.671155029,
+      "rmse_ha": 30737.9704037179,
+      "r2": 0.979163408121806,
+      "bias_actual_minus_pred_ha": -15549.3634874703,
+      "presence_roc_auc": 1
+    },
+    "residuals": [
+      {
+        "year": 2012,
+        "moran_i": 0.617187224335377,
+        "p_value": 0.005
+      },
+      {
+        "year": 2013,
+        "moran_i": 0.597326240339068,
+        "p_value": 0.005
+      },
+      {
+        "year": 2014,
+        "moran_i": 0.625962109032757,
+        "p_value": 0.005
+      },
+      {
+        "year": 2015,
+        "moran_i": 0.655642543988296,
+        "p_value": 0.005
+      },
+      {
+        "year": 2016,
+        "moran_i": 0.648050721596044,
+        "p_value": 0.005
+      },
+      {
+        "year": 2017,
+        "moran_i": 0.655915987604284,
+        "p_value": 0.005
+      },
+      {
+        "year": 2018,
+        "moran_i": 0.672508793673663,
+        "p_value": 0.005
+      },
+      {
+        "year": 2019,
+        "moran_i": 0.683409828289359,
+        "p_value": 0.005
+      },
+      {
+        "year": 2020,
+        "moran_i": 0.668502377619874,
+        "p_value": 0.005
+      },
+      {
+        "year": 2021,
+        "moran_i": 0.598942265448802,
+        "p_value": 0.005
+      }
+    ],
+    "gridSummary": [
+      {
+        "scenario": "ssp245",
+        "total_predicted_area_ha": 44379869.2195233,
+        "total_lower_ha": 19358512.5581793,
+        "total_upper_ha": 150261631.832455,
+        "mean_presence_probability": 0.375046338890843
+      },
+      {
+        "scenario": "ssp585",
+        "total_predicted_area_ha": 43729342.4211293,
+        "total_lower_ha": 19326437.3097109,
+        "total_upper_ha": 145722418.643569,
+        "mean_presence_probability": 0.375043296078229
+      }
+    ],
+    "countries": [
+      {
+        "scenario": "ssp245",
+        "GID_0": "THA",
+        "COUNTRY": "Thailand",
+        "predicted_area_ha": 7331302.589287922,
+        "predicted_lower_ha": 5490695.9146849485,
+        "predicted_upper_ha": 9633094.37044262
+      },
+      {
+        "scenario": "ssp245",
+        "GID_0": "MMR",
+        "COUNTRY": "Myanmar",
+        "predicted_area_ha": 3478275.7278123754,
+        "predicted_lower_ha": 2464511.4534355435,
+        "predicted_upper_ha": 4787235.150158645
+      },
+      {
+        "scenario": "ssp245",
+        "GID_0": "KHM",
+        "COUNTRY": "Cambodia",
+        "predicted_area_ha": 2901901.9953912627,
+        "predicted_lower_ha": 2221713.8510031174,
+        "predicted_upper_ha": 3732681.315198034
+      },
+      {
+        "scenario": "ssp245",
+        "GID_0": "IDN",
+        "COUNTRY": "Indonesia",
+        "predicted_area_ha": 2251881.603533023,
+        "predicted_lower_ha": 1684790.8711736454,
+        "predicted_upper_ha": 3118229.60567216
+      },
+      {
+        "scenario": "ssp245",
+        "GID_0": "VNM",
+        "COUNTRY": "Vietnam",
+        "predicted_area_ha": 2090958.8257137125,
+        "predicted_lower_ha": 1571827.414050426,
+        "predicted_upper_ha": 2745258.0240553203
+      },
+      {
+        "scenario": "ssp245",
+        "GID_0": "LAO",
+        "COUNTRY": "Laos",
+        "predicted_area_ha": 1529520.6823848162,
+        "predicted_lower_ha": 1147593.6402673388,
+        "predicted_upper_ha": 1998398.684092805
+      },
+      {
+        "scenario": "ssp245",
+        "GID_0": "PHL",
+        "COUNTRY": "Philippines",
+        "predicted_area_ha": 440180.8660483079,
+        "predicted_lower_ha": 317470.72945445403,
+        "predicted_upper_ha": 694975.559875308
+      },
+      {
+        "scenario": "ssp245",
+        "GID_0": "MYS",
+        "COUNTRY": "Malaysia",
+        "predicted_area_ha": 110723.942344276,
+        "predicted_lower_ha": 82561.23849375032,
+        "predicted_upper_ha": 157658.7308682473
+      },
+      {
+        "scenario": "ssp245",
+        "GID_0": "BRN",
+        "COUNTRY": "Brunei",
+        "predicted_area_ha": 885.4495627091204,
+        "predicted_lower_ha": 671.7385919786884,
+        "predicted_upper_ha": 1227.7830408162563
+      },
+      {
+        "scenario": "ssp245",
+        "GID_0": "SGP",
+        "COUNTRY": "Singapore",
+        "predicted_area_ha": 15.287231021442956,
+        "predicted_lower_ha": 5.651788273339045,
+        "predicted_upper_ha": 53.04489169182068
+      },
+      {
+        "scenario": "ssp585",
+        "GID_0": "THA",
+        "COUNTRY": "Thailand",
+        "predicted_area_ha": 7327153.375698891,
+        "predicted_lower_ha": 5477344.007758774,
+        "predicted_upper_ha": 9641529.158382768
+      },
+      {
+        "scenario": "ssp585",
+        "GID_0": "MMR",
+        "COUNTRY": "Myanmar",
+        "predicted_area_ha": 3477000.420083616,
+        "predicted_lower_ha": 2457880.3604560164,
+        "predicted_upper_ha": 4794291.955456022
+      },
+      {
+        "scenario": "ssp585",
+        "GID_0": "KHM",
+        "COUNTRY": "Cambodia",
+        "predicted_area_ha": 2901414.8077873737,
+        "predicted_lower_ha": 2217510.544599898,
+        "predicted_upper_ha": 3737364.5524626886
+      },
+      {
+        "scenario": "ssp585",
+        "GID_0": "IDN",
+        "COUNTRY": "Indonesia",
+        "predicted_area_ha": 2250759.2404466383,
+        "predicted_lower_ha": 1681996.8205371303,
+        "predicted_upper_ha": 3112700.9496217347
+      },
+      {
+        "scenario": "ssp585",
+        "GID_0": "VNM",
+        "COUNTRY": "Vietnam",
+        "predicted_area_ha": 2090614.2920947652,
+        "predicted_lower_ha": 1568722.297844982,
+        "predicted_upper_ha": 2748404.2385742557
+      },
+      {
+        "scenario": "ssp585",
+        "GID_0": "LAO",
+        "COUNTRY": "Laos",
+        "predicted_area_ha": 1528350.8682894104,
+        "predicted_lower_ha": 1144529.0476486958,
+        "predicted_upper_ha": 2000173.5541104232
+      },
+      {
+        "scenario": "ssp585",
+        "GID_0": "PHL",
+        "COUNTRY": "Philippines",
+        "predicted_area_ha": 439440.47547099966,
+        "predicted_lower_ha": 316941.25132777187,
+        "predicted_upper_ha": 689909.5691260259
+      },
+      {
+        "scenario": "ssp585",
+        "GID_0": "MYS",
+        "COUNTRY": "Malaysia",
+        "predicted_area_ha": 110645.50812204674,
+        "predicted_lower_ha": 82435.08819806759,
+        "predicted_upper_ha": 157155.73688922217
+      },
+      {
+        "scenario": "ssp585",
+        "GID_0": "BRN",
+        "COUNTRY": "Brunei",
+        "predicted_area_ha": 885.0549078674948,
+        "predicted_lower_ha": 670.8804227395708,
+        "predicted_upper_ha": 1224.7179872553656
+      },
+      {
+        "scenario": "ssp585",
+        "GID_0": "SGP",
+        "COUNTRY": "Singapore",
+        "predicted_area_ha": 15.093408437216086,
+        "predicted_lower_ha": 5.654995737611846,
+        "predicted_upper_ha": 51.50309789081646
+      }
+    ],
+    "figures": [
+      {
+        "name": "historical",
+        "title": "GloRice 1961 dan 2021",
+        "cell": 32,
+        "path": "/research/historical.png"
+      },
+      {
+        "name": "uncertainty",
+        "title": "Proyeksi 2° dan lebar interval",
+        "cell": 37,
+        "path": "/research/uncertainty.png"
+      },
+      {
+        "name": "country",
+        "title": "Perbandingan proyeksi negara",
+        "cell": 39,
+        "path": "/research/country.png"
+      },
+      {
+        "name": "fine-2030",
+        "title": "Disagregasi visual 2030 pada grid 5 arcminute",
+        "cell": 41,
+        "path": "/research/fine-2030.png"
+      }
+    ],
+    "modelGrid": "2 degree",
+    "climateModel": "ACCESS-CM2",
+    "climatePeriod": "2021–2040",
+    "training": "1981–2011",
+    "holdout": "2012–2021"
+  },
+  "unavailableInputs": [
+    "rice-production.csv (original aggregate)",
+    "../populasiSEA.xlsx",
+    "data/processed/glorice/glorice_sea_intensive_harvested_area_1961_2021.npz",
+    "data/processed/glorice/ (fitted BYM2, grid CSV and projected GeoTIFFs)",
+    "data/raw/ (GADM, CHIRPS and CMIP6)"
+  ]
+}

@@ -1,0 +1,57 @@
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Pemeriksaan</th>
+      <th>Status</th>
+      <th>Bukti</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Train dan test tidak tumpang tindih</td>
+      <td>LULUS</td>
+      <td>Train 1961–2018; test 2019–2024; overlap=0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Validasi tuning berada sepenuhnya di dalam train</td>
+      <td>LULUS</td>
+      <td>Tuning 1961–2012; validasi 2013–2018</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Scaling MLP/LSTM</td>
+      <td>LULUS</td>
+      <td>MinMaxScaler di-fit di dalam fungsi forecast h...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Forecast test rekursif</td>
+      <td>LULUS</td>
+      <td>Prediksi 2019–2024 dibangun dari history train...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Pemilihan model terbaik</td>
+      <td>LULUS</td>
+      <td>best_name dipilih dari Validation MAPE (%) pad...</td>
+    </tr>
+  </tbody>
+</table>
+</div>

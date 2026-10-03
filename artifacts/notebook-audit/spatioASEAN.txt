@@ -1,0 +1,785 @@
+
+--- CELL 0 markdown ---
+# Panel spatio-temporal produksi padi ASEAN
+
+Notebook ini memakai dua tingkat analisis: panel **ASEAN penuh** tingkat negara untuk sembilan negara anggota yang memproduksi padi, serta panel ADM1 Indonesia–Filipina sebagai analisis resolusi tinggi. FAOSTAT tidak melaporkan seri padi untuk Singapura; negara tersebut tidak boleh diberi nilai nol buatan dan karenanya tidak termasuk model produksi padi.
+
+Unit analisis ASEAN: `negara × tahun`, **2001–2023**; unit ADM1: `wilayah × tahun`, **2001–2018**. Produksi diukur dalam ton metrik, luas panen dalam hektare, dan yield dalam ton per hektare.
+
+--- CELL 1 markdown ---
+## Sumber dan batasan
+
+- Panel ASEAN: [FAOSTAT Crops and livestock products](https://www.fao.org/faostat/en/#data/QCL), komoditas `Rice`, elemen produksi dan luas panen.
+- Panel resolusi tinggi: [FAO Subnational Agricultural Production (ADM1)](https://data.fao.org/catalog/dataset/sub-national-agricultural-production-admin-level-1), komoditas `Rice`, metrik `Production (Metric Tonnes)` dan `Harvested Area (Hectares)`.
+- Poligon: [GADM 4.1](https://gadm.org/data.html), ADM1. Kode `GID_1` FAO dan GADM digunakan untuk join.
+- Kovariat iklim untuk ekstensi model: [CHIRPS](https://www.chc.ucsb.edu/data/chirps3), curah hujan grid 0,05° sejak 1981.
+
+Jangan mencampurkan *paddy/rice* (gabah) dengan beras giling. Perubahan batas wilayah dapat memengaruhi seri; sel di bawah hanya mempertahankan unit yang teramati setiap tahun estimasi.
+
+--- CELL 2 code ---
+# %pip install geopandas libpysal esda
+
+--- CELL 3 code ---
+# %pip install rasterio
+
+--- CELL 4 code ---
+from pathlib import Path
+import warnings
+import pandas as pd
+import numpy as np
+import requests
+import matplotlib.pyplot as plt
+
+warnings.filterwarnings('ignore', category=FutureWarning)
+pd.set_option('display.float_format', lambda x: f'{x:,.2f}')
+ROOT = Path.cwd()
+RAW_PRODUCTION = ROOT / 'data/raw/fao_adm1'
+RAW_HARVESTED = ROOT / 'data/raw/fao_adm1_harvested'
+GADM_DIR = ROOT / 'data/raw/gadm41'
+GADM_ADM0_DIR = ROOT / 'data/raw/gadm41_adm0'
+PROCESSED = ROOT / 'data/processed'
+PROCESSED.mkdir(parents=True, exist_ok=True)
+COUNTRIES = {'IDN': 'Indonesia', 'PHL': 'Philippines (the)'}
+START_YEAR, END_YEAR = 2001, 2018
+FAO_API = 'https://api.data.apps.fao.org/api/v2/bigquery'
+FAO_SQL = ('https://data.apps.fao.org/catalog/dataset/397cba06-8b6f-41bb-bef1-026af97efeaa/'
+           'resource/a8da849f-4fad-4ef3-b49d-0fd13d015cb6/download/sub-national-level-1-query.sql')
+
+
+--- CELL 5 markdown ---
+## 1. Panel ASEAN lengkap (tingkat negara)
+
+Panel ini mencakup Brunei Darussalam, Kamboja, Indonesia, Laos, Malaysia, Myanmar, Filipina, Thailand, dan Vietnam untuk setiap tahun 2001–2023. Singapura tidak memiliki observasi padi pada FAOSTAT, sehingga tidak dapat dipakai sebagai unit respons produksi. Bobot spasial memakai 3 negara tetangga terdekat dari centroid, bukan queen contiguity, karena negara kepulauan akan menjadi pulau terisolasi pada matriks batas bersama.
+
+--- CELL 6 code ---
+ASEAN_PANEL_PATH = PROCESSED / 'asean_rice_country_panel_2001_2023.csv'
+asean = pd.read_csv(ASEAN_PANEL_PATH)
+required = {'iso3', 'country', 'year', 'production_mt', 'harvested_area_ha', 'yield_t_ha'}
+assert required.issubset(asean.columns)
+assert asean.groupby('iso3')['year'].nunique().eq(23).all(), 'Panel ASEAN harus lengkap 2001–2023'
+assert asean[['production_mt', 'harvested_area_ha', 'yield_t_ha']].notna().all().all()
+display(asean.groupby(['iso3', 'country']).agg(tahun=('year', 'nunique'), produksi_min=('production_mt', 'min'), produksi_maks=('production_mt', 'max')).reset_index())
+
+OUTPUT:
+  iso3                           country  tahun  produksi_min  produksi_maks
+0  BRN                 Brunei Darussalam     23        481.00       4,100.00
+1  IDN                         Indonesia     23 50,460,800.00  61,031,000.00
+2  KHM                          Cambodia     23  3,822,509.00  13,186,400.00
+3  LAO  Lao People's Democratic Republic     23  2,334,700.00   4,148,800.00
+4  MMR                           Myanmar     23 21,805,449.00  32,681,246.00
+5  MYS                          Malaysia     23  2,094,995.00   2,844,983.00
+6  PHL                       Philippines     23 12,954,870.00  20,059,561.96
+7  THA                          Thailand     23 27,510,307.00  39,469,250.00
+8  VNM                          Viet Nam     23 32,108,400.00  45,090,561.89
+
+--- CELL 7 code ---
+from libpysal.weights import KNN
+from esda import Moran
+import geopandas as gpd
+
+def read_gadm_adm0(iso3):
+    path = GADM_ADM0_DIR / f'gadm41_{iso3}_0.json.zip'
+    if not path.exists(): raise FileNotFoundError(path)
+    return gpd.read_file(path)[['GID_0', 'COUNTRY', 'geometry']].rename(columns={'GID_0': 'iso3'})
+
+asean_geo = pd.concat([read_gadm_adm0(iso3) for iso3 in sorted(asean.iso3.unique())], ignore_index=True)
+asean_geo = gpd.GeoDataFrame(asean_geo, geometry='geometry', crs='EPSG:4326').to_crs('EPSG:6933')
+centroids = np.c_[asean_geo.geometry.centroid.x, asean_geo.geometry.centroid.y]
+w_asean = KNN.from_array(centroids, k=3, ids=asean_geo.iso3.tolist()); w_asean.transform = 'R'
+assert set(w_asean.id_order) == set(asean.iso3.unique())
+
+moran_asean = []
+for year, values in asean.groupby('year'):
+    y = values.set_index('iso3').reindex(w_asean.id_order)['log_yield']
+    stat = Moran(y.to_numpy(), w_asean, permutations=999)
+    moran_asean.append({'year': year, 'moran_I': stat.I, 'p_sim': stat.p_sim, 'n': len(y)})
+moran_asean = pd.DataFrame(moran_asean)
+moran_asean.to_csv(PROCESSED / 'asean_country_moran_log_yield_2001_2023.csv', index=False)
+display(moran_asean.describe())
+
+OUTPUT:
+          year  moran_I  p_sim     n
+count    23.00    23.00  23.00 23.00
+mean  2,012.00    -0.27   0.17  9.00
+std       6.78     0.03   0.05  0.00
+min   2,001.00    -0.33   0.07  9.00
+25%   2,006.50    -0.29   0.16  9.00
+50%   2,012.00    -0.27   0.18  9.00
+75%   2,017.50    -0.25   0.21  9.00
+max   2,023.00    -0.22   0.23  9.00
+
+--- CELL 8 markdown ---
+### Heatmap pertanian ASEAN
+
+Tiga CSV heatmap-ready telah dibuat di `data/processed/`. Baris adalah negara dan kolom adalah tahun; seluruh 207 sel pada setiap matriks terisi. Produksi dan luas panen ditampilkan pada skala log agar Brunei tetap terlihat bersama produsen besar.
+
+--- CELL 9 code ---
+heatmap_metrics = {
+    'production_mt': ('Produksi padi (log10 ton metrik)', True),
+    'harvested_area_ha': ('Luas panen padi (log10 ha)', True),
+    'yield_t_ha': ('Yield padi (ton/ha)', False),
+}
+fig, axes = plt.subplots(3, 1, figsize=(15, 10), constrained_layout=True)
+for ax, (metric, (label, use_log)) in zip(axes, heatmap_metrics.items()):
+    matrix = asean.pivot(index='country', columns='year', values=metric).sort_index()
+    plotted = np.log10(matrix) if use_log else matrix
+    image = ax.imshow(plotted, aspect='auto', cmap='YlGn')
+    ax.set(title=label, xlabel='Tahun', ylabel='Negara')
+    ax.set_xticks(range(len(matrix.columns))); ax.set_xticklabels(matrix.columns, rotation=45)
+    ax.set_yticks(range(len(matrix.index))); ax.set_yticklabels(matrix.index)
+    fig.colorbar(image, ax=ax, shrink=.8)
+    matrix.to_csv(PROCESSED / f'asean_rice_heatmap_{metric}_2001_2023.csv')
+plt.show()
+
+OUTPUT:
+<Figure size 1500x1000 with 6 Axes>
+
+--- CELL 10 markdown ---
+## Raster padi APRA500 untuk model grid × waktu
+
+APRA500 menyediakan klasifikasi biner sawah/padi tahunan Asia monsun, 2000–2020, resolusi 500 m dan CRS EPSG:4326. Seluruh 21 GeoTIFF telah diunduh ke `data/raw/apra500/tif/`; nilai `1` berarti padi dan `0` berarti bukan padi, sedangkan `3` adalah NoData. Raster adalah *outcome/land-use*, bukan ton produksi; untuk model produksi gunakan sebagai luas/proporsi sawah atau gabungkan dengan produksi FAOSTAT dan covariat hujan.
+
+--- CELL 11 code ---
+from rasterio.enums import Resampling
+import rasterio
+
+RASTER_DIR = ROOT / 'data/raw/apra500/tif'
+raster_index = pd.read_csv(PROCESSED / 'apra500_raster_index_2000_2020.csv')
+assert raster_index.year.nunique() == 21
+assert raster_index.year.min() == 2000 and raster_index.year.max() == 2020
+# Batas seluruh 10 negara ASEAN, termasuk Singapura yang tidak menjadi unit respons padi.
+ASEAN_BOUNDARY_ISO3 = ['BRN', 'KHM', 'IDN', 'LAO', 'MYS', 'MMR', 'PHL', 'SGP', 'THA', 'VNM']
+asean_boundaries = gpd.GeoDataFrame(pd.concat([read_gadm_adm0(iso3) for iso3 in ASEAN_BOUNDARY_ISO3], ignore_index=True), crs='EPSG:4326')
+MAP_BACKGROUND = '#edf2f4'
+RASTER_CMAP = plt.colormaps['YlGn'].copy(); RASTER_CMAP.set_bad(MAP_BACKGROUND)
+def draw_asean_boundaries(ax):
+    ax.set_facecolor(MAP_BACKGROUND)
+    asean_boundaries.boundary.plot(ax=ax, color='#2b2b2b', linewidth=.55, zorder=3)
+    return ax
+display(raster_index[['year', 'file', 'width', 'height', 'crs', 'nodata']].head())
+
+OUTPUT:
+   year                                    file  width  height        crs  \
+0  2000  data/raw/apra500/tif/paddyRice2000.tif  20550   14650  EPSG:4326   
+1  2001  data/raw/apra500/tif/paddyRice2001.tif  20550   14650  EPSG:4326   
+2  2002  data/raw/apra500/tif/paddyRice2002.tif  20550   14650  EPSG:4326   
+3  2003  data/raw/apra500/tif/paddyRice2003.tif  20550   14650  EPSG:4326   
+4  2004  data/raw/apra500/tif/paddyRice2004.tif  20550   14650  EPSG:4326   
+
+   nodata  
+0    3.00  
+1    3.00  
+2    3.00  
+3    3.00  
+4    3.00  
+
+--- CELL 12 code ---
+# Bandingkan raster awal dan akhir periode secara downsampled; file asli tidak diubah.
+scale = 20
+rasters = {}
+for year in (2000, 2020):
+    with rasterio.open(RASTER_DIR / f'paddyRice{year}.tif') as src:
+        rasters[year] = src.read(1, out_shape=(src.height // scale, src.width // scale),
+                                 resampling=Resampling.nearest, masked=True)
+        extent = [src.bounds.left, src.bounds.right, src.bounds.bottom, src.bounds.top]
+
+fig, axes = plt.subplots(1, 2, figsize=(16, 7), sharex=True, sharey=True, constrained_layout=True)
+for ax, year in zip(axes, (2000, 2020)):
+    image = ax.imshow(rasters[year], extent=extent, cmap=RASTER_CMAP, interpolation='nearest', vmin=0, vmax=1)
+    draw_asean_boundaries(ax)
+    ax.set(title=f'Sebaran padi APRA500, {year} (tampilan downsampled)', xlabel='Bujur', ylabel='Lintang')
+fig.colorbar(image, ax=axes, shrink=.8, label='0 = non-padi; 1 = padi')
+plt.show()
+
+OUTPUT:
+<Figure size 1600x700 with 3 Axes>
+
+--- CELL 13 markdown ---
+Untuk pemodelan spatio-temporal raster, bentuk panel dari piksel valid atau grid yang lebih kasar: `rice_cell_it ~ rain_cell_it + temperature_cell_it + rice_cell_i,t-1`. Agregasi dulu ke grid 5–10 km atau provinsi agar komputasi realistis; raster asli tiap tahun berukuran 20.550 × 14.650 piksel.
+
+--- CELL 14 markdown ---
+## Baseline legacy 2030 (tidak digunakan untuk inferensi)
+
+Forecast ini memakai proporsi padi grid 0,1° tahun 2000–2020. Komponen temporal adalah tren linear pada skala logit; komponen spasial adalah penghalusan Gaussian tetangga (aproksimasi ringan terhadap efek CAR). Ini adalah baseline *business-as-usual*, sehingga **bukan prediksi kausal** dan tidak memasukkan proyeksi hujan/suhu 2030. Untuk proyeksi berbasis skenario iklim, ganti atau tambahkan kovariat CMIP6/CHIRPS pada model.
+
+--- CELL 15 code ---
+from scipy.ndimage import gaussian_filter
+from scipy.special import expit
+
+MODEL_DIR = PROCESSED / 'raster_model'
+historical = np.load(MODEL_DIR / 'apra500_sea_grid_0p1deg_2000_2020.npz')
+years = historical['years']
+rice_proportion = historical['rice_proportion']
+assert rice_proportion.shape[0] == len(years) == 21
+
+# Tren temporal grid-wise pada skala logit. Nilai kecil menjaga logit terdefinisi.
+p = np.clip(rice_proportion, 1e-3, 1 - 1e-3)
+z = np.log(p / (1 - p)); x = years - years.mean(); valid = np.isfinite(z)
+n = valid.sum(axis=0); z_mean = np.nansum(z, axis=0) / np.maximum(n, 1)
+slope = (np.nansum(np.where(valid, z - z_mean, 0) * x[:, None, None], axis=0) /
+         np.maximum(np.nansum(valid * x[:, None, None]**2, axis=0), 1))
+forecast_2030 = expit(z_mean + slope * (2030 - years.mean()))
+forecast_2030[n < 15] = np.nan
+
+# Efek spasial: rata-rata bertetangga berbobot Gaussian, tanpa mengisi laut/NoData.
+mask = np.isfinite(forecast_2030).astype(float)
+forecast_2030 = gaussian_filter(np.nan_to_num(forecast_2030) * mask, sigma=1, mode='nearest') / np.maximum(gaussian_filter(mask, sigma=1, mode='nearest'), 1e-6)
+forecast_2030[mask == 0] = np.nan
+
+summary_2030 = pd.read_csv(MODEL_DIR / 'apra500_sea_rice_grid_bau_2030_summary.csv')
+display(summary_2030[['mean_rice_2000_2020', 'rice_probability_bau_2030']].describe())
+
+OUTPUT:
+       mean_rice_2000_2020  rice_probability_bau_2030
+count             1,777.00                   1,777.00
+mean                  0.47                       0.32
+std                   0.36                       0.30
+min                   0.05                       0.00
+25%                   0.14                       0.02
+50%                   0.38                       0.25
+75%                   0.86                       0.56
+max                   1.00                       0.99
+
+--- CELL 16 code ---
+# Peta probabilitas keberadaan padi pada 2030, skenario BAU.
+with rasterio.open(RASTER_DIR / 'paddyRice2020.tif') as src:
+    extent_2030 = [92.0, 142.5, -11.5, 25.0]
+fig, ax = plt.subplots(figsize=(12, 7))
+image = ax.imshow(forecast_2030, extent=extent_2030, cmap=RASTER_CMAP, vmin=0, vmax=1, interpolation='nearest')
+draw_asean_boundaries(ax)
+ax.set(title='Probabilitas padi 2030 — skenario business-as-usual', xlabel='Bujur', ylabel='Lintang')
+fig.colorbar(image, ax=ax, label='Probabilitas padi')
+plt.show()
+print('GeoTIFF hasil:', MODEL_DIR / 'apra500_sea_rice_probability_bau_2030_0p1deg.tif')
+
+OUTPUT:
+<Figure size 1200x700 with 2 Axes>
+OUTPUT:
+GeoTIFF hasil: /Users/martleoalfiansyah/00. Kompe/RASIO 10.0/spatio_temporal_Rasio/data/processed/raster_model/apra500_sea_rice_probability_bau_2030_0p1deg.tif
+
+
+--- CELL 17 markdown ---
+## Model APRA500 legacy (tidak digunakan untuk Indonesia/ASEAN)
+
+Model final menggunakan grid 0,25° aktif (186 grid), respons `Y_it ~ Binomial(N_it,p_it)`, efek spasial proper-CAR pada graph 4-tetangga, dan efek waktu AR(1) dengan rho=0,7. Parameter diestimasi melalui penalized likelihood/MAP; ini adalah implementasi frequentist dari struktur CAR–AR(1), bukan Gaussian smoothing. Proyeksi 2030 masih skenario BAU tanpa kovariat iklim masa depan.
+
+--- CELL 18 code ---
+CAR_AR1_PATH = MODEL_DIR / 'apra500_car_ar1_bau_2030_0p25deg.tif'
+car_ar1_summary = pd.read_csv(MODEL_DIR / 'apra500_car_ar1_bau_2030_grid_summary.csv')
+with rasterio.open(CAR_AR1_PATH) as src:
+    car_ar1 = src.read(1, masked=True); extent_car_ar1 = [src.bounds.left, src.bounds.right, src.bounds.bottom, src.bounds.top]
+fig, ax = plt.subplots(figsize=(12, 7))
+image = ax.imshow(car_ar1, extent=extent_car_ar1, cmap=RASTER_CMAP, vmin=0, vmax=1)
+draw_asean_boundaries(ax)
+ax.set(title='Probabilitas padi 2030 — penalized binomial CAR–AR(1), BAU', xlabel='Bujur', ylabel='Lintang')
+fig.colorbar(image, ax=ax, label='Probabilitas padi')
+plt.show()
+display(car_ar1_summary['p2030_car_ar1'].describe())
+
+OUTPUT:
+<Figure size 1200x700 with 2 Axes>
+OUTPUT:
+count   186.00
+mean      0.41
+std       0.28
+min       0.03
+25%       0.19
+50%       0.35
+75%       0.63
+max       1.00
+Name: p2030_car_ar1, dtype: float64
+
+--- CELL 19 markdown ---
+Model ASEAN dapat memakai `log_yield_it = beta X_it + gamma_i + delta_t + rho W(log_yield)_it + epsilon_it`, dengan `W = w_asean`. Tambahkan CHIRPS (curah hujan) atau TerraClimate (suhu/defisit air) sebagai `X_it`; outcome, geometri, unit, waktu, dan matriks bobot sudah lengkap dan tervalidasi.
+
+--- CELL 20 markdown ---
+## 1. Ambil atau perbarui data FAO
+
+File mentah 2001–2023 sudah disertakan di `data/raw/`. Jalankan sel berikut hanya untuk mengunduh ulang dari API FAO. API mengembalikan semua negara yang tersedia per tahun, kemudian notebook menyaring Indonesia dan Filipina secara transparan.
+
+--- CELL 21 code ---
+DOWNLOAD_RAW = False  # ubah menjadi True untuk refresh dari FAO
+
+def download_fao_metric(metric, destination, years=range(2001, 2024)):
+    destination.mkdir(parents=True, exist_ok=True)
+    for year in years:
+        out = destination / f"rice_{metric.split()[0].lower()}_{year}.csv"
+        params = {'crop': 'Rice', 'year': str(year), 'metric': metric,
+                  'sql_url': FAO_SQL, 'download': 'true'}
+        response = requests.get(FAO_API, params=params, timeout=120)
+        response.raise_for_status()
+        if not response.text.startswith('gid_1,'):
+            raise ValueError(f'Format FAO tak dikenali pada {year}: {response.text[:100]}')
+        out.write_text(response.text, encoding='utf-8')
+
+if DOWNLOAD_RAW:
+    download_fao_metric('Production (Metric Tonnes)', RAW_PRODUCTION)
+    download_fao_metric('Harvested Area (Hectares)', RAW_HARVESTED)
+
+
+--- CELL 22 code ---
+def read_metric(folder, value_name):
+    files = sorted(folder.glob('*.csv'))
+    if not files:
+        raise FileNotFoundError(f'Tidak ada CSV di {folder}. Jalankan unduh dengan DOWNLOAD_RAW=True.')
+    frame = pd.concat((pd.read_csv(file) for file in files), ignore_index=True)
+    needed = {'gid_1', 'region_name', 'country_name', 'year', 'value'}
+    missing = needed - set(frame.columns)
+    if missing: raise ValueError(f'Kolom FAO hilang: {missing}')
+    frame['iso3'] = frame['gid_1'].str.split('.').str[0]
+    frame = frame[frame['iso3'].isin(COUNTRIES)].copy()
+    # FAO kadang memuat revisi dari beberapa sumber untuk gid-tahun yang sama.
+    # Prioritas Indonesia: BPS, lalu Kementerian Pertanian, lalu BDSP; Filipina: PSA.
+    frame['source_rank'] = np.select([frame.source.str.contains('bps.go.id', na=False),
+                                      frame.source.str.contains('pertanian.go.id', na=False),
+                                      frame.source.str.contains('bdsp', na=False)], [0, 1, 2], default=0)
+    frame = (frame.sort_values(['gid_1', 'year', 'source_rank'])
+                  .drop_duplicates(['gid_1', 'year'], keep='first'))
+    frame = frame.rename(columns={'value': value_name})
+    return frame[['gid_1', 'region_name', 'country_name', 'iso3', 'year', value_name]]
+
+production = read_metric(RAW_PRODUCTION, 'production_mt')
+harvested = read_metric(RAW_HARVESTED, 'harvested_area_ha')
+for name, frame in {'production': production, 'harvested area': harvested}.items():
+    assert frame.duplicated(['gid_1', 'year']).sum() == 0, f'{name}: duplikat wilayah-tahun'
+panel_all = production.merge(harvested[['gid_1', 'year', 'harvested_area_ha']],
+                             on=['gid_1', 'year'], how='inner', validate='one_to_one')
+panel_all['yield_t_ha'] = panel_all['production_mt'] / panel_all['harvested_area_ha']
+panel_all = panel_all.replace([np.inf, -np.inf], np.nan)
+panel_all.head()
+
+OUTPUT:
+      gid_1  region_name country_name iso3  year  production_mt  \
+0  IDN.10_1  Jawa Tengah    Indonesia  IDN  2001   8,289,927.00   
+1  IDN.10_1  Jawa Tengah    Indonesia  IDN  2002   8,503,523.00   
+2  IDN.10_1  Jawa Tengah    Indonesia  IDN  2003   8,123,839.00   
+3  IDN.10_1  Jawa Tengah    Indonesia  IDN  2004   8,512,555.00   
+4  IDN.10_1  Jawa Tengah    Indonesia  IDN  2005   8,424,096.00   
+
+   harvested_area_ha  yield_t_ha  
+0       1,650,625.00        5.02  
+1       1,653,442.00        5.14  
+2       1,535,625.00        5.29  
+3       1,635,922.00        5.20  
+4       1,611,107.00        5.23  
+
+--- CELL 23 code ---
+# Audit cakupan sebelum memilih periode dan unit analisis.
+coverage = (panel_all.groupby('iso3').agg(wilayah=('gid_1', 'nunique'), tahun=('year', 'nunique'),
+    tahun_awal=('year', 'min'), tahun_akhir=('year', 'max'), observasi=('year', 'size')).sort_index())
+display(coverage)
+by_year = panel_all.pivot_table(index='year', columns='iso3', values='gid_1', aggfunc='nunique')
+display(by_year.loc[START_YEAR:END_YEAR])
+
+OUTPUT:
+      wilayah  tahun  tahun_awal  tahun_akhir  observasi
+iso3                                                    
+IDN        33     20        2001         2023        624
+PHL        80     23        2001         2023       1819
+OUTPUT:
+iso3   IDN   PHL
+year            
+2001 28.00 76.00
+2002 28.00 78.00
+2003 29.00 78.00
+2004 29.00 78.00
+2005 31.00 78.00
+2006 31.00 78.00
+2007 31.00 78.00
+2008 31.00 78.00
+2009 31.00 79.00
+2010 31.00 79.00
+2011 31.00 79.00
+2012 31.00 80.00
+2013 31.00 80.00
+2014 33.00 80.00
+2015 33.00 80.00
+2016 33.00 80.00
+2017 33.00 80.00
+2018 33.00 80.00
+
+--- CELL 24 markdown ---
+## 2. Bentuk panel seimbang
+
+Panel seimbang mencegah hasil didorong oleh unit yang hanya muncul setelah pemekaran administratif. Seleksi dilakukan **terpisah per negara**; tidak ada matriks bobot lintas negara karena Indonesia dan Filipina tidak berbagi batas darat.
+
+--- CELL 25 code ---
+analysis_years = list(range(START_YEAR, END_YEAR + 1))
+window = panel_all.query('@START_YEAR <= year <= @END_YEAR').copy()
+expected_n_years = len(analysis_years)
+valid = window.dropna(subset=['production_mt', 'harvested_area_ha', 'yield_t_ha'])
+complete_units = (valid.groupby(['iso3', 'gid_1'])['year'].nunique().loc[lambda s: s.eq(expected_n_years)]
+                  .reset_index()[['iso3', 'gid_1']])
+panel = (window.merge(complete_units, on=['iso3', 'gid_1'], how='inner', validate='many_to_one')
+         .sort_values(['iso3', 'gid_1', 'year']).reset_index(drop=True))
+assert panel.groupby(['iso3', 'gid_1'])['year'].nunique().eq(expected_n_years).all()
+assert (panel[['production_mt', 'harvested_area_ha', 'yield_t_ha']] > 0).all().all(), 'Periksa nol/negatif'
+panel['log_yield'] = np.log(panel['yield_t_ha'])
+panel['log_production'] = np.log(panel['production_mt'])
+panel.to_csv(PROCESSED / 'rice_adm1_balanced_panel_2001_2018.csv', index=False)
+summary = panel.groupby('iso3').agg(wilayah=('gid_1', 'nunique'), tahun=('year', 'nunique'), observasi=('year', 'size'),
+    produksi_rata2_mt=('production_mt', 'mean'), yield_rata2_t_ha=('yield_t_ha', 'mean'))
+display(summary)
+print(f"Tersimpan: {PROCESSED / 'rice_adm1_balanced_panel_2001_2018.csv'}")
+
+OUTPUT:
+      wilayah  tahun  observasi  produksi_rata2_mt  yield_rata2_t_ha
+iso3                                                                
+IDN        28     18        504       2,284,155.77              4.43
+PHL        76     18       1368         103,035.28             11.98
+OUTPUT:
+Tersimpan: /Users/martleoalfiansyah/00. Kompe/RASIO 10.0/spatio_temporal_Rasio/data/processed/rice_adm1_balanced_panel_2001_2018.csv
+
+
+--- CELL 26 code ---
+fig, ax = plt.subplots(figsize=(10, 4))
+for iso3, group in panel.groupby('iso3'):
+    group.groupby('year')['yield_t_ha'].mean().plot(ax=ax, marker='o', label=iso3)
+ax.set(title='Rata-rata yield padi ADM1', xlabel='Tahun', ylabel='ton/ha')
+ax.legend(title='Negara'); ax.grid(alpha=.25); plt.show()
+
+OUTPUT:
+<Figure size 1000x400 with 1 Axes>
+
+--- CELL 27 markdown ---
+## 3. Tambahkan geometri dan uji autokorelasi spasial
+
+Sel ini membutuhkan `geopandas`, `libpysal`, dan `esda`. Instal sekali dengan `%pip install geopandas libpysal esda` bila belum tersedia. GADM dipilih karena `GID_1` sejalan dengan identifier FAO.
+
+--- CELL 28 code ---
+try:
+    import geopandas as gpd
+    from libpysal.weights import Queen
+    from esda import Moran
+except ImportError as error:
+    raise ImportError('Jalankan: %pip install geopandas libpysal esda') from error
+
+def read_gadm_adm1(iso3):
+    path = GADM_DIR / f'gadm41_{iso3}_1.json.zip'
+    if not path.exists():
+        raise FileNotFoundError(f'Batas GADM tidak ditemukan: {path}')
+    return gpd.read_file(path)[['GID_1', 'NAME_1', 'geometry']].rename(columns={'GID_1': 'gid_1'})
+
+geometries = {iso3: read_gadm_adm1(iso3) for iso3 in COUNTRIES}
+moran_rows = []
+for iso3, gdf in geometries.items():
+    country = panel[panel.iso3.eq(iso3)]
+    available = gdf[gdf.gid_1.isin(country.gid_1.unique())].copy()
+    w = Queen.from_dataframe(available, ids=available.gid_1.tolist()); w.transform = 'R'
+    for year, values in country.groupby('year'):
+        y = values.set_index('gid_1').reindex(w.id_order)['log_yield']
+        if y.notna().all() and len(y) > 2:
+            stat = Moran(y.to_numpy(), w, permutations=999)
+            moran_rows.append({'iso3': iso3, 'year': year, 'moran_I': stat.I, 'p_sim': stat.p_sim, 'n': len(y)})
+moran = pd.DataFrame(moran_rows)
+display(moran.groupby('iso3')[['moran_I', 'p_sim', 'n']].mean())
+moran.to_csv(PROCESSED / 'moran_log_yield_2001_2018.csv', index=False)
+
+OUTPUT:
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/libpysal/weights/contiguity.py:347: UserWarning: The weights matrix is not fully connected: 
+ There are 9 disconnected components.
+ There are 5 islands with ids: IDN.2_1, IDN.19_1, IDN.20_1, IDN.21_1, IDN.23_1.
+  W.__init__(self, neighbors, ids=ids, **kw)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/libpysal/weights/contiguity.py:347: UserWarning: The weights matrix is not fully connected: 
+ There are 21 disconnected components.
+ There are 14 islands with ids: PHL.9_1, PHL.14_1, PHL.15_1, PHL.21_1, PHL.23_1, PHL.25_1, PHL.32_1, PHL.45_1, PHL.46_1, PHL.59_1, PHL.65_1, PHL.68_1, PHL.73_1, PHL.77_1.
+  W.__init__(self, neighbors, ids=ids, **kw)
+
+OUTPUT:
+('WARNING: ', 'IDN.2_1', ' is an island (no neighbors)')
+('WARNING: ', 'IDN.19_1', ' is an island (no neighbors)')
+('WARNING: ', 'IDN.20_1', ' is an island (no neighbors)')
+('WARNING: ', 'IDN.21_1', ' is an island (no neighbors)')
+('WARNING: ', 'IDN.23_1', ' is an island (no neighbors)')
+('WARNING: ', 'PHL.9_1', ' is an island (no neighbors)')
+('WARNING: ', 'PHL.14_1', ' is an island (no neighbors)')
+('WARNING: ', 'PHL.15_1', ' is an island (no neighbors)')
+('WARNING: ', 'PHL.21_1', ' is an island (no neighbors)')
+('WARNING: ', 'PHL.23_1', ' is an island (no neighbors)')
+('WARNING: ', 'PHL.25_1', ' is an island (no neighbors)')
+('WARNING: ', 'PHL.32_1', ' is an island (no neighbors)')
+('WARNING: ', 'PHL.45_1', ' is an island (no neighbors)')
+('WARNING: ', 'PHL.46_1', ' is an island (no neighbors)')
+('WARNING: ', 'PHL.59_1', ' is an island (no neighbors)')
+('WARNING: ', 'PHL.65_1', ' is an island (no neighbors)')
+('WARNING: ', 'PHL.68_1', ' is an island (no neighbors)')
+('WARNING: ', 'PHL.73_1', ' is an island (no neighbors)')
+('WARNING: ', 'PHL.77_1', ' is an island (no neighbors)')
+
+OUTPUT:
+      moran_I  p_sim     n
+iso3                      
+IDN      0.63   0.03 27.00
+PHL     -0.05   0.28 76.00
+
+--- CELL 29 markdown ---
+## 4. Kerangka model
+
+Baseline memakai fixed effects wilayah dan tahun. Untuk inferensi spasial, estimasikan model terpisah per negara dengan bobot `w` di atas. Tambahkan ringkasan CHIRPS per wilayah-musim sebagai kovariat iklim sebelum model akhir.
+
+--- CELL 30 code ---
+import statsmodels.formula.api as smf
+fe_result = smf.ols('log_yield ~ C(gid_1) + C(year)', data=panel).fit(
+    cov_type='cluster', cov_kwds={'groups': panel['gid_1']})
+print(fe_result.summary().tables[0])
+# Spesifikasi target setelah kovariat tersedia (per negara):
+# log_yield_it = beta * rainfall_it + gamma_i + delta_t + rho * W(log_yield)_it + epsilon_it
+# Estimasikan rho memakai spreg/PySAL atau Bayesian CAR-AR(1), lalu uji residual Moran.
+
+OUTPUT:
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              log_yield   R-squared:                       0.084
+Model:                            OLS   Adj. R-squared:                  0.021
+Method:                 Least Squares   F-statistic:                     1.695
+Date:                Fri, 18 Sep 2026   Prob (F-statistic):             0.0554
+Time:                        15:16:24   Log-Likelihood:                -2985.5
+No. Observations:                1872   AIC:                             6213.
+Df Residuals:                    1751   BIC:                             6883.
+Df Model:                         120                                         
+Covariance Type:              cluster                                         
+==============================================================================
+
+OUTPUT:
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/statsmodels/base/model.py:1894: ValueWarning: covariance of constraints does not have full rank. The number of constraints is 120, but rank is 17
+  warnings.warn('covariance of constraints does not have full '
+
+
+--- CELL 31 markdown ---
+## Raster utama pengganti: GloRice
+
+APRA500 tidak lagi digunakan untuk interpretasi Indonesia karena terbukti under-represented. Raster utama adalah **GloRice intensive harvested area**, yang memetakan luas panen padi tahunan (ha) pada resolusi 5 arcminute untuk 2000–2021. Nilainya kontinu dan selaras secara konsep dengan statistik luas panen, sehingga model berikutnya harus menggunakan log-area/Gamma, bukan binomial padi/non-padi.
+
+--- CELL 32 code ---
+glorice = np.load(PROCESSED / 'glorice/glorice_sea_intensive_harvested_area_1961_2021.npz')
+glorice_years, glorice_area = glorice['years'], glorice['area_ha']
+glorice_lon, glorice_lat = glorice['lon'], glorice['lat']
+assert glorice_area.shape[0] == len(glorice_years) == 61
+from matplotlib.colors import LogNorm
+import rasterio
+pixel_5arc = abs(glorice_lon[1] - glorice_lon[0])
+# Batas luar piksel, bukan hanya titik pusat: identik dengan extent GeoTIFF visual 2030 5 arcminute.
+extent_glorice = [glorice_lon.min()-pixel_5arc/2, glorice_lon.max()+pixel_5arc/2, glorice_lat.min()-pixel_5arc/2, glorice_lat.max()+pixel_5arc/2]
+area_1961 = glorice_area[np.where(glorice_years == 1961)[0][0]]
+area_2021 = glorice_area[np.where(glorice_years == 2021)[0][0]]
+# Skala bersama 5 arcminute: juga mencakup maksimum visual 2030 yang telah didisagregasi.
+vmax_5arc = np.nanmax(np.stack([area_1961, area_2021]))
+for scenario in ('ssp245', 'ssp585'):
+    with rasterio.open(PROCESSED / 'glorice/model' / f'glorice_pattern_disaggregated_{scenario}_2030_5arcmin.tif') as src:
+        vmax_5arc = max(vmax_5arc, float(src.read(1, masked=True).max()))
+norm_5arc = LogNorm(vmin=1, vmax=vmax_5arc)
+cmap_5arc = plt.get_cmap('YlGn').copy()
+cmap_5arc.set_bad('#edf2f4')
+fig, axes = plt.subplots(1, 2, figsize=(16, 7), sharex=True, sharey=True, constrained_layout=True, facecolor='#edf2f4')
+for ax, year, area in zip(axes, (1961, 2021), (area_1961, area_2021)):
+    image_area = ax.imshow(np.ma.masked_less_equal(area, 0), extent=extent_glorice, origin='upper', cmap=cmap_5arc, norm=norm_5arc, interpolation='nearest')
+    draw_asean_boundaries(ax)
+    ax.set(title=f'GloRice luas panen padi, {year} (5 arcminute)', xlabel='Bujur', ylabel='Lintang', facecolor='#edf2f4')
+fig.colorbar(image_area, ax=axes, shrink=.8, label='Luas panen padi (ha per piksel 5 arcminute; skala log)')
+plt.show()
+print('GloRice menggantikan APRA500 untuk visualisasi dan model Indonesia/ASEAN.')
+
+OUTPUT:
+<Figure size 1600x700 with 3 Axes>
+OUTPUT:
+GloRice menggantikan APRA500 untuk visualisasi dan model Indonesia/ASEAN.
+
+
+--- CELL 33 markdown ---
+## Reproduksibilitas
+
+Produk yang dibuat: `data/processed/rice_adm1_balanced_panel_2001_2018.csv` dan, setelah sel spasial dijalankan, `data/processed/moran_log_yield_2001_2018.csv`. Simpan tanggal unduh, versi batas GADM, aturan musim tanam, dan faktor konversi bila target kelak diubah dari gabah menjadi beras giling.
+
+--- CELL 34 markdown ---
+## 5. Evaluasi model spatio-temporal dinamis (GloRice)
+
+Model hurdle ini mengestimasi (1) peluang sel memiliki padi dan (2) luas panen bersyarat pada keberadaan padi. Medan spasial BYM2 dibuat untuk setiap tahun dan dihubungkan oleh AR(1). Data 1981–2011 adalah latih; seluruh outcome 2012–2021 dimask sebelum estimasi sehingga evaluasinya merupakan *forward temporal holdout*. Grid analisis 2° dipakai agar medan BYM2 dinamis stabil secara komputasional; raster GloRice 5 arcminute tetap dipakai untuk visualisasi.
+
+--- CELL 35 code ---
+from pathlib import Path
+import pandas as pd
+import matplotlib.pyplot as plt
+
+MODEL_DIR = Path('data/processed/glorice/model')
+metrics_dynamic = pd.read_csv(MODEL_DIR / 'glorice_dynamic_hurdle_bym2_ar1_2deg_test_metrics.csv')
+moran_dynamic = pd.read_csv(MODEL_DIR / 'glorice_dynamic_hurdle_bym2_ar1_2deg_test_moran_residual.csv')
+display(metrics_dynamic)
+display(moran_dynamic)
+
+fig, ax = plt.subplots(figsize=(8, 3.5), facecolor='#edf2f4')
+ax.set_facecolor('#edf2f4')
+ax.plot(moran_dynamic['year'], moran_dynamic['moran_i'], marker='o', color='#8c2d04')
+ax.axhline(0, color='black', lw=.8)
+ax.set(title="Moran's I residual: BYM2 dinamis + AR(1)", xlabel='Tahun uji', ylabel="Moran's I")
+plt.show()
+print('Interpretasi: Moran I residual yang masih positif menunjukkan kovariat iklim dan struktur BYM2-AR(1) belum menjelaskan seluruh pola spasial; proyeksi 2030 perlu diberi interval ketidakpastian dan tidak diperlakukan sebagai peta deterministik.')
+OUTPUT:
+                                     model      grid  \
+0  Dynamic hurdle BYM2(group year) + AR(1)  2 degree   
+
+                                          evaluation  n_test    mae_ha  \
+0  Forward holdout 2012-2021; outcomes masked dur...    4940 16,311.67   
+
+    rmse_ha   r2  bias_actual_minus_pred_ha  presence_roc_auc  
+0 30,737.97 0.98                 -15,549.36                 1  
+OUTPUT:
+   year  moran_i  p_value
+0  2012     0.62     0.01
+1  2013     0.60     0.01
+2  2014     0.63     0.01
+3  2015     0.66     0.01
+4  2016     0.65     0.01
+5  2017     0.66     0.01
+6  2018     0.67     0.01
+7  2019     0.68     0.01
+8  2020     0.67     0.01
+9  2021     0.60     0.01
+OUTPUT:
+<Figure size 800x350 with 1 Axes>
+OUTPUT:
+Interpretasi: Moran I residual yang masih positif menunjukkan kovariat iklim dan struktur BYM2-AR(1) belum menjelaskan seluruh pola spasial; proyeksi 2030 perlu diberi interval ketidakpastian dan tidak diperlakukan sebagai peta deterministik.
+
+
+--- CELL 36 markdown ---
+## 6. Proyeksi 2030 berbasis CMIP6
+
+Proyeksi memakai model hurdle BYM2 dinamis + AR(1) yang dilatih kembali dengan data GloRice 1981–2021. Kovariat hujan berasal dari ACCESS-CM2 CMIP6, rerata periode 2021–2040; jadi "2030" berarti kondisi iklim representatif di sekitar 2030. Interval pada peta adalah interval posterior aproksimatif komponen luas panen bersyarat dan belum mencakup seluruh sumber ketidakpastian skenario iklim.
+
+--- CELL 37 code ---
+import numpy as np
+from matplotlib.colors import LogNorm
+
+summary_2030 = pd.read_csv(MODEL_DIR / 'glorice_dynamic_bym2_ar1_cmip6_2030_2deg_summary.csv')
+display(summary_2030)
+scenarios = ['ssp245', 'ssp585']
+maps_2030 = {s: pd.read_csv(MODEL_DIR / f'glorice_dynamic_bym2_ar1_{s}_2030_2deg.csv') for s in scenarios}
+# Tepi piksel disusun dari raster GloRice 5-arcminute; ini menjaga lokasi grid model 2° tetap geografis, termasuk sel tepi yang parsial.
+fine = np.load(PROCESSED / 'glorice/glorice_sea_intensive_harvested_area_1961_2021.npz')
+lon_fine, lat_fine = fine['lon'], fine['lat']
+step = abs(lon_fine[1] - lon_fine[0])
+lon_edges = np.r_[ [lon_fine[i] - step/2 for i in range(0, len(lon_fine), 24)], lon_fine[-1] + step/2 ]
+lat_edges = np.r_[ [lat_fine[i] + step/2 for i in range(0, len(lat_fine), 24)], lat_fine[-1] - step/2 ]
+vmax = max(x['predicted_area_ha'].max() for x in maps_2030.values())
+fig, axes = plt.subplots(1, 3, figsize=(16, 5), constrained_layout=True, facecolor='#edf2f4')
+for ax, scenario in zip(axes[:2], scenarios):
+    d = maps_2030[scenario]
+    grid = d.pivot(index='row', columns='col', values='predicted_area_ha').sort_index().values
+    img = ax.pcolormesh(lon_edges, lat_edges, grid, cmap='YlGn', norm=LogNorm(vmin=1, vmax=vmax), shading='flat')
+    draw_asean_boundaries(ax)
+    ax.set(title=f'Raster prediksi luas panen 2030: {scenario.upper()}', xlabel='Bujur', ylabel='Lintang', facecolor='#edf2f4')
+fig.colorbar(img, ax=axes[:2], shrink=.78, label='Prediksi luas panen (ha; skala log)')
+u = maps_2030['ssp245']
+uncertainty = u.assign(width=u.predicted_upper_ha-u.predicted_lower_ha).pivot(index='row', columns='col', values='width').sort_index().values
+img_u = axes[2].pcolormesh(lon_edges, lat_edges, uncertainty, cmap='magma', norm=LogNorm(vmin=1, vmax=uncertainty.max()), shading='flat')
+draw_asean_boundaries(axes[2])
+axes[2].set(title='Raster lebar interval: SSP2-4.5', xlabel='Bujur', ylabel='Lintang', facecolor='#edf2f4')
+fig.colorbar(img_u, ax=axes[2], shrink=.78, label='Lebar interval (ha; skala log)')
+plt.show()
+print('Catatan: interpretasikan perbedaan SSP2-4.5 versus SSP5-8.5 secara hati-hati karena perbedaan kovariat CMIP6 pada horizon ini lebih kecil daripada ketidakpastian posterior model.')
+OUTPUT:
+  scenario  total_predicted_area_ha  total_lower_ha  total_upper_ha  \
+0   ssp245            44,379,869.22   19,358,512.56  150,261,631.83   
+1   ssp585            43,729,342.42   19,326,437.31  145,722,418.64   
+
+   mean_presence_probability  
+0                       0.38  
+1                       0.38  
+OUTPUT:
+<Figure size 1600x500 with 5 Axes>
+OUTPUT:
+Catatan: interpretasikan perbedaan SSP2-4.5 versus SSP5-8.5 secara hati-hati karena perbedaan kovariat CMIP6 pada horizon ini lebih kecil daripada ketidakpastian posterior model.
+
+
+--- CELL 38 markdown ---
+## 7. Ringkasan proyeksi per negara ASEAN
+
+Nilai sel 2° dialokasikan ke negara menurut fraksi irisan area dengan batas GADM dalam proyeksi equal-area. Dengan demikian, sel yang melintasi batas negara tidak dihitung penuh untuk satu negara. Ringkasan ini hanya mencakup negara ASEAN, berbeda dari total seluruh grid regional yang juga mencakup daratan di luar ASEAN.
+
+--- CELL 39 code ---
+country_2030 = pd.read_csv(MODEL_DIR / 'glorice_dynamic_bym2_ar1_cmip6_2030_country_summary.csv')
+display(country_2030.sort_values(['scenario', 'predicted_area_ha'], ascending=[True, False]))
+fig, ax = plt.subplots(figsize=(10, 5), facecolor='#edf2f4')
+ax.set_facecolor('#edf2f4')
+wide = country_2030.pivot(index='COUNTRY', columns='scenario', values='predicted_area_ha').sort_values('ssp245')
+wide.plot.barh(ax=ax, color=['#74a9cf', '#2b8cbe'])
+ax.set(xlabel='Prediksi luas panen 2030 (ha)', ylabel='', title='Ringkasan negara ASEAN: proyeksi satu-GCM ACCESS-CM2')
+ax.legend(title='Skenario')
+plt.show()
+print('Peringatan resolusi: hasil negara kecil/kepulauan (khususnya Singapura dan Brunei) sangat sensitif terhadap grid model 2° dan tidak boleh dipakai untuk keputusan tingkat nasional.')
+OUTPUT:
+   scenario GID_0      COUNTRY  predicted_area_ha  predicted_lower_ha  \
+0    ssp245   THA     Thailand       7,331,302.59        5,490,695.91   
+1    ssp245   MMR      Myanmar       3,478,275.73        2,464,511.45   
+2    ssp245   KHM     Cambodia       2,901,902.00        2,221,713.85   
+3    ssp245   IDN    Indonesia       2,251,881.60        1,684,790.87   
+4    ssp245   VNM      Vietnam       2,090,958.83        1,571,827.41   
+5    ssp245   LAO         Laos       1,529,520.68        1,147,593.64   
+6    ssp245   PHL  Philippines         440,180.87          317,470.73   
+7    ssp245   MYS     Malaysia         110,723.94           82,561.24   
+8    ssp245   BRN       Brunei             885.45              671.74   
+9    ssp245   SGP    Singapore              15.29                5.65   
+10   ssp585   THA     Thailand       7,327,153.38        5,477,344.01   
+11   ssp585   MMR      Myanmar       3,477,000.42        2,457,880.36   
+12   ssp585   KHM     Cambodia       2,901,414.81        2,217,510.54   
+13   ssp585   IDN    Indonesia       2,250,759.24        1,681,996.82   
+14   ssp585   VNM      Vietnam       2,090,614.29        1,568,722.30   
+15   ssp585   LAO         Laos       1,528,350.87        1,144,529.05   
+16   ssp585   PHL  Philippines         439,440.48          316,941.25   
+17   ssp585   MYS     Malaysia         110,645.51           82,435.09   
+18   ssp585   BRN       Brunei             885.05              670.88   
+19   ssp585   SGP    Singapore              15.09                5.65   
+
+    predicted_upper_ha  
+0         9,633,094.37  
+1         4,787,235.15  
+2         3,732,681.32  
+3         3,118,229.61  
+4         2,745,258.02  
+5         1,998,398.68  
+6           694,975.56  
+7           157,658.73  
+8             1,227.78  
+9                53.04  
+10        9,641,529.16  
+11        4,794,291.96  
+12        3,737,364.55  
+13        3,112,700.95  
+14        2,748,404.24  
+15        2,000,173.55  
+16          689,909.57  
+17          157,155.74  
+18            1,224.72  
+19               51.50  
+OUTPUT:
+<Figure size 1000x500 with 1 Axes>
+OUTPUT:
+Peringatan resolusi: hasil negara kecil/kepulauan (khususnya Singapura dan Brunei) sangat sensitif terhadap grid model 2° dan tidak boleh dipakai untuk keputusan tingkat nasional.
+
+
+--- CELL 40 markdown ---
+## 8. Visual raster 2030 bergaya GloRice (5 arcminute)
+
+Peta berikut memakai grid GloRice 5 arcminute agar tampilan spasialnya sebanding dengan GloRice. Nilai 2030 setiap sel model 2° dialokasikan menurut proporsi pola luas panen GloRice 2021 di dalam sel yang sama. Ini adalah **disagregasi visual terbatasi**, bukan prediksi baru pada resolusi 5 arcminute. Sel model tanpa dukungan piksel padi GloRice 2021 dibiarkan kosong agar tidak menciptakan lokasi padi baru tanpa bukti.
+
+--- CELL 41 code ---
+import rasterio
+
+tif_2030 = {s: MODEL_DIR / f'glorice_pattern_disaggregated_{s}_2030_5arcmin.tif' for s in scenarios}
+with rasterio.open(tif_2030['ssp245']) as src:
+    x2030 = src.read(1, masked=True)
+    extent_2030 = (src.bounds.left, src.bounds.right, src.bounds.bottom, src.bounds.top)
+with rasterio.open(tif_2030['ssp585']) as src:
+    y2030 = src.read(1, masked=True)
+vmax_2030 = max(x2030.max(), y2030.max())
+fig, axes = plt.subplots(1, 2, figsize=(15, 6), constrained_layout=True, facecolor='#edf2f4')
+for ax, values, scenario in zip(axes, [x2030, y2030], scenarios):
+    img = ax.imshow(values, extent=extent_2030, origin='upper', cmap='YlGn', norm=LogNorm(vmin=1, vmax=vmax_2030), interpolation='nearest')
+    draw_asean_boundaries(ax)
+    ax.set(title=f'Visual 2030 pola GloRice: {scenario.upper()}', xlabel='Bujur', ylabel='Lintang', facecolor='#edf2f4')
+fig.colorbar(img, ax=axes, shrink=.78, label='Luas panen teralokasi (ha; skala log)')
+plt.show()
+print('Interpretasi: detail lokasi mengikuti GloRice 2021; perubahan total luas panen berasal dari model 2°. Peta ini tidak membuktikan pergeseran lokasi sawah baru pada 2030.')
+OUTPUT:
+<Figure size 1500x600 with 3 Axes>
+OUTPUT:
+Interpretasi: detail lokasi mengikuti GloRice 2021; perubahan total luas panen berasal dari model 2°. Peta ini tidak membuktikan pergeseran lokasi sawah baru pada 2030.

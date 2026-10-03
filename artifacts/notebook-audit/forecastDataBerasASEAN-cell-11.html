@@ -1,0 +1,77 @@
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Model</th>
+      <th>MAPE (%)</th>
+      <th>RMSE</th>
+      <th>MAE</th>
+      <th>Best parameters</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Multilayer Perceptron</td>
+      <td>0.93</td>
+      <td>2,653,223.33</td>
+      <td>1,787,072.80</td>
+      <td>{'lag': 5, 'hidden': (16,), 'alpha': 0.01, 'lr...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>LSTM</td>
+      <td>2.25</td>
+      <td>4,576,710.62</td>
+      <td>4,366,048.54</td>
+      <td>{'lag': 3, 'hidden': 8, 'lr': 0.01, 'weight_de...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>XGBoost</td>
+      <td>2.34</td>
+      <td>5,189,268.75</td>
+      <td>4,528,100.50</td>
+      <td>{'lag': 3, 'n_estimators': 100, 'max_depth': 2...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>ARIMA</td>
+      <td>2.94</td>
+      <td>6,225,234.15</td>
+      <td>5,684,720.65</td>
+      <td>{'order': (1, 0, 0), 'trend': 'n'}</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Double Exponential Smoothing</td>
+      <td>7.45</td>
+      <td>14,714,325.62</td>
+      <td>14,518,371.06</td>
+      <td>{'exponential': False, 'damped_trend': True}</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Prophet</td>
+      <td>11.69</td>
+      <td>23,044,079.85</td>
+      <td>22,790,381.56</td>
+      <td>{'cps': 0.01, 'mode': 'additive'}</td>
+    </tr>
+  </tbody>
+</table>
+</div>

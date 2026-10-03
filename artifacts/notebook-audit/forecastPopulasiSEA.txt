@@ -1,0 +1,322 @@
+
+--- CELL 0 markdown ---
+# Forecast Populasi Asia Tenggara
+
+Notebook ini menganalisis data populasi Asia Tenggara hingga 2024. Enam observasi terakhir (2019–2024) digunakan sebagai data test. Model LSTM dilatih ulang khusus untuk populasi dengan parameter yang sama persis seperti forecast produksi beras: lag=3, hidden=8, lr=0.01, weight_decay=0.0001, dan epochs=250.
+
+
+--- CELL 1 code ---
+import random, warnings
+warnings.filterwarnings("ignore")
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.preprocessing import MinMaxScaler
+from statsmodels.graphics.tsaplots import plot_acf
+import torch
+import torch.nn as nn
+
+SEED = 42
+random.seed(SEED); np.random.seed(SEED); torch.manual_seed(SEED)
+sns.set_theme(style="whitegrid", context="notebook")
+pd.set_option("display.float_format", lambda x: f"{x:,.2f}")
+
+
+--- CELL 2 markdown ---
+## 1. Exploratory data analysis (EDA)
+
+
+--- CELL 3 code ---
+DATA_PATH = "../populasiSEA.xlsx"
+data = (pd.read_excel(DATA_PATH)
+          .rename(columns={"Tahun": "Year", "Populasi": "Population"})
+          .loc[:, ["Year", "Population"]]
+          .sort_values("Year")
+          .reset_index(drop=True))
+
+assert data["Year"].is_unique, "Tahun harus unik."
+assert data[["Year", "Population"]].notna().all().all(), "Data tidak boleh memiliki nilai hilang."
+display(data.head(), data.tail())
+display(data["Population"].describe().to_frame("Population"))
+print(f"Rentang tahun: {data.Year.min()}–{data.Year.max()}")
+print("Missing value:", data.isna().sum().sum())
+
+OUTPUT:
+   Year  Population
+0  1950   164549272
+1  1951   168486090
+2  1952   172664423
+3  1953   177103104
+4  1954   181799509
+OUTPUT:
+    Year  Population
+70  2020   674988498
+71  2021   679966582
+72  2022   684898412
+73  2023   690117184
+74  2024   695149428
+OUTPUT:
+          Population
+count          75.00
+mean  420,569,099.15
+std   167,591,091.82
+min   164,549,272.00
+25%   269,715,010.50
+50%   413,825,271.00
+75%   567,950,953.00
+max   695,149,428.00
+OUTPUT:
+Rentang tahun: 1950–2024
+Missing value: 0
+
+
+--- CELL 4 code ---
+fig, axes = plt.subplots(1, 2, figsize=(15, 4.5))
+axes[0].plot(data["Year"], data["Population"] / 1e6, marker="o", ms=3, color="#1677ff")
+axes[0].set(title="Populasi Asia Tenggara tahunan", xlabel="Tahun", ylabel="Juta jiwa")
+sns.histplot(data["Population"] / 1e6, kde=True, ax=axes[1], color="#2ca25f")
+axes[1].set(title="Distribusi populasi", xlabel="Juta jiwa")
+plt.tight_layout(); plt.show()
+
+display(data.assign(
+    Growth_pct=data["Population"].pct_change().mul(100),
+    Rolling_5Y_MA=data["Population"].rolling(5).mean()
+).tail(12))
+
+OUTPUT:
+<Figure size 1500x450 with 2 Axes>
+OUTPUT:
+    Year  Population  Growth_pct  Rolling_5Y_MA
+63  2013   627521020        1.28 611,680,837.20
+64  2014   635074740        1.20 619,515,512.00
+65  2015   642375721        1.15 627,241,426.20
+66  2016   649503887        1.11 634,818,796.20
+67  2017   656434171        1.07 642,181,907.80
+68  2018   662964449        0.99 649,270,593.60
+69  2019   669203546        0.94 656,096,354.80
+70  2020   674988498        0.86 662,618,910.20
+71  2021   679966582        0.74 668,711,449.20
+72  2022   684898412        0.73 674,404,297.40
+73  2023   690117184        0.76 679,834,844.40
+74  2024   695149428        0.73 685,024,020.80
+
+--- CELL 5 markdown ---
+## 2. Preprocessing dan pemisahan data
+
+Data dipisahkan secara kronologis. Enam observasi terakhir digunakan sebagai test. MinMaxScaler hanya di-fit pada data train untuk menghindari data leakage.
+
+
+--- CELL 6 code ---
+TEST_SIZE = 6
+train = data.iloc[:-TEST_SIZE].copy()
+test = data.iloc[-TEST_SIZE:].copy()
+assert len(train) == 69 and len(test) == 6
+
+print(f"Train: {train.Year.min()}–{train.Year.max()} ({len(train)} observasi)")
+print(f"Test : {test.Year.min()}–{test.Year.max()} ({len(test)} observasi)")
+display(test)
+
+OUTPUT:
+Train: 1950–2018 (69 observasi)
+Test : 2019–2024 (6 observasi)
+
+OUTPUT:
+    Year  Population
+69  2019   669203546
+70  2020   674988498
+71  2021   679966582
+72  2022   684898412
+73  2023   690117184
+74  2024   695149428
+
+--- CELL 7 markdown ---
+## 3. Modelling LSTM
+
+LSTM berikut memakai parameter yang identik dengan model LSTM forecast produksi beras. Parameter tersebut ditetapkan sebelum evaluasi test; model tetap di-fit menggunakan data populasi.
+
+
+--- CELL 8 code ---
+LSTM_PARAMS = {"lag": 3, "hidden": 8, "lr": 0.01, "weight_decay": 0.0001, "epochs": 250}
+print("Parameter LSTM:", LSTM_PARAMS)
+
+def supervised(values, lag):
+    values = np.asarray(values, dtype=float)
+    X = np.array([values[i-lag:i] for i in range(lag, len(values))])
+    y = values[lag:]
+    return X, y
+
+class TinyLSTM(nn.Module):
+    def __init__(self, hidden):
+        super().__init__()
+        self.lstm = nn.LSTM(1, hidden, batch_first=True)
+        self.out = nn.Linear(hidden, 1)
+    def forward(self, x):
+        return self.out(self.lstm(x)[0][:, -1, :])
+
+def fit_lstm_and_forecast(history, horizon, params=LSTM_PARAMS):
+    scaler = MinMaxScaler()
+    scaled = scaler.fit_transform(np.asarray(history, dtype=float).reshape(-1, 1)).ravel()
+    X, y = supervised(scaled, params["lag"])
+    X_tensor = torch.tensor(X[:, :, None], dtype=torch.float32)
+    y_tensor = torch.tensor(y[:, None], dtype=torch.float32)
+
+    torch.manual_seed(SEED)
+    model = TinyLSTM(params["hidden"])
+    optimizer = torch.optim.Adam(model.parameters(), lr=params["lr"],
+                                 weight_decay=params["weight_decay"])
+    loss_fn = nn.MSELoss()
+    model.train()
+    for _ in range(params["epochs"]):
+        optimizer.zero_grad()
+        loss = loss_fn(model(X_tensor), y_tensor)
+        loss.backward()
+        optimizer.step()
+
+    model.eval()
+    scaled_history, scaled_forecast = list(scaled), []
+    with torch.no_grad():
+        for _ in range(horizon):
+            features = torch.tensor(np.array(scaled_history[-params["lag"]:])[None, :, None],
+                                    dtype=torch.float32)
+            prediction = model(features).item()
+            scaled_history.append(prediction)
+            scaled_forecast.append(prediction)
+    return scaler.inverse_transform(np.array(scaled_forecast).reshape(-1, 1)).ravel()
+
+def mape(y_true, y_pred):
+    y_true, y_pred = np.asarray(y_true), np.asarray(y_pred)
+    return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+
+OUTPUT:
+Parameter LSTM: {'lag': 3, 'hidden': 8, 'lr': 0.01, 'weight_decay': 0.0001, 'epochs': 250}
+
+
+--- CELL 9 markdown ---
+## 4. Evaluasi pada data test
+
+
+--- CELL 10 code ---
+train_y, test_y = train["Population"].to_numpy(), test["Population"].to_numpy()
+test_forecast = fit_lstm_and_forecast(train_y, len(test))
+
+evaluation = pd.DataFrame([{
+    "Model": "LSTM",
+    "MAPE (%)": mape(test_y, test_forecast),
+    "RMSE": np.sqrt(mean_squared_error(test_y, test_forecast)),
+    "MAE": mean_absolute_error(test_y, test_forecast),
+    "Parameters": str(LSTM_PARAMS),
+}])
+display(evaluation)
+print(f"MAPE test LSTM: {evaluation.loc[0, 'MAPE (%)']:.2f}%")
+
+OUTPUT:
+  Model  MAPE (%)          RMSE           MAE  \
+0  LSTM      2.71 19,841,148.52 18,602,790.05   
+
+                                          Parameters  
+0  {'lag': 3, 'hidden': 8, 'lr': 0.01, 'weight_de...  
+OUTPUT:
+MAPE test LSTM: 2.71%
+
+
+--- CELL 11 markdown ---
+## 5. Plot aktual vs forecast dan diagnostik residual
+
+Residual didefinisikan sebagai aktual − forecast pada data test. Interpretasi uji normalitas dan ACF perlu berhati-hati karena hanya tersedia enam residual.
+
+
+--- CELL 12 code ---
+residuals = test_y - test_forecast
+
+fig, ax = plt.subplots(figsize=(12, 5))
+ax.plot(train["Year"], train_y / 1e6, label="Train", color="#9aa0a6")
+ax.plot(test["Year"], test_y / 1e6, "o-", label="Aktual test", color="#1f77b4")
+ax.plot(test["Year"], test_forecast / 1e6, "s--", label="Forecast LSTM", color="#e45756")
+ax.axvline(train["Year"].iloc[-1], color="black", ls=":", lw=1)
+ax.set(title="Aktual vs forecast populasi Asia Tenggara", xlabel="Tahun", ylabel="Populasi (juta jiwa)")
+ax.legend(); plt.tight_layout(); plt.show()
+
+fig, ax = plt.subplots(figsize=(11, 4))
+ax.axhline(0, color="black", lw=1)
+ax.plot(test["Year"], residuals / 1e6, "o-", color="#e45756")
+ax.set(title="Plot residual LSTM", xlabel="Tahun", ylabel="Aktual − forecast (juta jiwa)")
+plt.tight_layout(); plt.show()
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
+sns.histplot(residuals / 1e6, kde=True, ax=axes[0], color="#7a5195")
+axes[0].set(title="Distribusi residual", xlabel="Residual (juta jiwa)")
+stats.probplot(residuals, dist="norm", plot=axes[1])
+axes[1].set_title("Q-Q plot normalitas residual")
+plt.tight_layout(); plt.show()
+
+fig, ax = plt.subplots(figsize=(9, 4))
+plot_acf(residuals, lags=min(2, len(residuals) - 1), zero=False, ax=ax)
+ax.set_title("ACF residual")
+plt.tight_layout(); plt.show()
+
+display(pd.DataFrame({
+    "Year": test["Year"], "Actual population": test_y,
+    "LSTM forecast": test_forecast, "Residual": residuals
+}))
+
+OUTPUT:
+<Figure size 1200x500 with 1 Axes>
+OUTPUT:
+<Figure size 1100x400 with 1 Axes>
+OUTPUT:
+<Figure size 1200x450 with 2 Axes>
+OUTPUT:
+<Figure size 900x400 with 1 Axes>
+OUTPUT:
+    Year  Actual population  LSTM forecast      Residual
+69  2019          669203546 660,181,594.96  9,021,951.04
+70  2020          674988498 662,563,987.05 12,424,510.95
+71  2021          679966582 663,979,150.65 15,987,431.35
+72  2022          684898412 664,413,360.73 20,485,051.27
+73  2023          690117184 665,424,794.51 24,692,389.49
+74  2024          695149428 666,144,021.79 29,005,406.21
+
+--- CELL 13 markdown ---
+## 6. Forecast setelah data aktual: 2025–2026
+
+Model LSTM di-fit ulang menggunakan seluruh data aktual 1950–2024, lalu menghasilkan forecast untuk 2025 dan 2026. Parameter LSTM tetap sama persis.
+
+
+--- CELL 14 code ---
+full_y = data["Population"].to_numpy()
+future_years = np.arange(data["Year"].max() + 1, data["Year"].max() + 3)
+future_forecast = fit_lstm_and_forecast(full_y, len(future_years))
+
+forecast_2025_2026 = pd.DataFrame({
+    "Year": future_years,
+    "Forecast LSTM population": future_forecast
+})
+display(forecast_2025_2026.style.format({"Forecast LSTM population": "{:,.0f}"}))
+
+OUTPUT:
+<pandas.io.formats.style.Styler at 0x126579d30>
+
+--- CELL 15 code ---
+fig, ax = plt.subplots(figsize=(12, 5.5))
+ax.plot(data["Year"], data["Population"] / 1e6, "o-", ms=3, lw=1.8,
+        color="#1f77b4", label="Aktual (1950–2024)")
+ax.plot(future_years, future_forecast / 1e6, "s--", ms=6, lw=2,
+        color="#e45756", label="Forecast LSTM (2025–2026)")
+ax.axvline(2024, color="black", ls=":", lw=1.2, label="Batas forecast")
+ax.set(title="Aktual vs forecast populasi Asia Tenggara — LSTM",
+       xlabel="Tahun", ylabel="Populasi (juta jiwa)")
+ax.set_xlim(data["Year"].min() - 1, future_years.max() + 1)
+ax.legend(loc="upper left")
+plt.tight_layout(); plt.show()
+
+OUTPUT:
+<Figure size 1200x550 with 1 Axes>
+
+--- CELL 16 markdown ---
+## Pemeriksaan leakage dan kesimpulan
+
+Tidak ada kebocoran data: data train dan test dipisahkan secara kronologis, scaling diterapkan hanya pada data train, serta forecast test dibangun secara rekursif tanpa memasukkan aktual test sebagai fitur. Forecast 2025–2026 hanya dibuat setelah model di-fit ulang pada seluruh data aktual yang tersedia hingga 2024.

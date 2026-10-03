@@ -1,0 +1,41 @@
+{
+  "tests": {
+    "passed": 14,
+    "failed": 0,
+    "command": "npm test"
+  },
+  "build": {
+    "passed": true,
+    "command": "npm run build"
+  },
+  "browserChecks": [
+    "Independent MLP/LSTM production and population controls",
+    "Country fallback explicitly uses historical trend",
+    "2035 country selection clamps to 2030 on notebook regional mode",
+    "Both SSP scenarios and all four country map layers",
+    "Keyboard country selection",
+    "Research image expand/Escape focus restore",
+    "Desktop and mobile without horizontal page overflow",
+    "No browser console errors"
+  ],
+  "downloadsVerified": [
+    "All 20 spatio rows match notebook numbers",
+    "Selected Indonesia SSP585 mean/lower/upper match notebook",
+    "70 forecast CSV records; MLP 2030 rice/population values match"
+  ],
+  "dataMode": "saved-notebook-outputs; no raw training files or serialized models supplied",
+  "researchRefresh": "npm run research:import",
+  "previewFiles": [
+    "forecast-preview.png",
+    "spatio-preview.png",
+    "spatio-mobile.png",
+    "forecast-mobile.png",
+    "spatio-viewport.png"
+  ],
+  "productionPreview": {
+    "passed": true,
+    "port": 4173,
+    "renderedOverviewAndSpatio": true,
+    "consoleErrors": []
+  }
+}
