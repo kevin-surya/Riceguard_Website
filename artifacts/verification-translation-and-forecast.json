@@ -1,0 +1,42 @@
+{
+  "default_language": "en",
+  "language_options": 13,
+  "catalog_messages_per_language": 577,
+  "unit_tests": {
+    "passed": 19,
+    "failed": 0
+  },
+  "production_build": "passed",
+  "model_selection": {
+    "criterion": "lowest historical test MAPE among available forecasts",
+    "rice": "MLP",
+    "population": "LSTM"
+  },
+  "regional_2030": {
+    "rice_million_tonnes": 196.367174,
+    "population_million_people": 695.193894
+  },
+  "browser_checks": [
+    "All 13 language selections render their translated heading and document language",
+    "Selected forecast year is preserved across language changes",
+    "Language choice persists after reload",
+    "English text audited across all seven pages; remaining mixed text and watch header corrected",
+    "No source notebook names appear in the public UI",
+    "Missing Singapore paddy production displays unavailable",
+    "30% harvest-loss scenario changes the plain-language takeaway; reset restores it",
+    "Tamil mobile forecast and overview have no document overflow",
+    "Spatial figure annotations render in English",
+    "No browser console errors during final inspection"
+  ],
+  "screenshots": [
+    "forecast-simple-english.png",
+    "forecast-mobile-tamil.png",
+    "overview-mobile-tamil.png",
+    "spatio-plot-english.png"
+  ],
+  "limitations": [
+    "Other languages are machine-translation drafts, with reviewed Indonesian forecast labels and selected unit corrections",
+    "Live AI not tested against a configured provider",
+    "Browser download-event capture timed out; model values and CSV creation code remain independently covered by data/forecast checks"
+  ]
+}

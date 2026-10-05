@@ -1,0 +1,69 @@
+{
+  "id": {
+    "RICE GUARD /": "RICE GUARD /",
+    "Rice Guard Workspace": "Ruang Kerja Rice Guard",
+    "RICE GUARD INSIGHT": "WAWASAN RICE GUARD",
+    "Rice Guard · Food security in view": "Rice Guard · Pantau ketahanan pangan",
+    "A clear view of the years ahead.": "Pahami perkiraan pangan di masa depan.",
+    "See how much paddy may be produced, how many people it may support, and what needs attention.": "Lihat perkiraan produksi padi, jumlah penduduk, dan hal yang perlu diperhatikan.",
+    "YOUR {p0} OUTLOOK": "PERKIRAAN TAHUN {p0}",
+    "RECOMMENDED FORECAST": "PERKIRAAN PILIHAN",
+    "Recommended forecast": "Perkiraan pilihan",
+    "HARVEST-LOSS SCENARIO": "SIMULASI PENURUNAN PANEN",
+    "Expected paddy production": "Perkiraan produksi padi",
+    "Expected population": "Perkiraan jumlah penduduk",
+    "Paddy produced per person": "Produksi padi per orang",
+    "kg per year": "kg per tahun",
+    "million people": "juta penduduk",
+    "WHAT THIS MEANS": "APA ARTINYA?",
+    "Production per person is expected to stay broadly stable.": "Produksi padi per orang diperkirakan relatif stabil.",
+    "Production per person may fall.": "Produksi padi per orang berpotensi menurun.",
+    "Production per person may rise.": "Produksi padi per orang berpotensi meningkat.",
+    "More data is needed for this outlook.": "Data belum cukup untuk menilai perkiraan ini.",
+    "Population can be estimated, but missing paddy data prevents a supply comparison.": "Jumlah penduduk dapat diperkirakan, tetapi data produksi padi belum tersedia untuk membandingkan pasokan.",
+    "There may be less paddy produced for each person. Keep an eye on harvests, food reserves, and imports.": "Produksi padi untuk setiap orang mungkin berkurang. Pantau hasil panen, cadangan pangan, dan kebutuhan impor.",
+    "Keep monitoring harvests, weather, and food reserves to maintain a reliable supply.": "Terus pantau hasil panen, cuaca, dan cadangan pangan untuk menjaga ketersediaan pasokan.",
+    "How the outlook changes": "Perubahan produksi dan penduduk",
+    "Solid lines show the past. Dashed lines show the forecast.": "Garis utuh menunjukkan data masa lalu. Garis putus-putus menunjukkan perkiraan.",
+    "Download forecast": "Unduh hasil perkiraan",
+    "Forecast": "Perkiraan",
+    "Past data": "Data masa lalu",
+    "{p0}: past data and future estimates": "{p0}: data masa lalu dan perkiraan masa depan",
+    "Paddy is rice before milling. Production per person is a supply indicator, not the amount each person eats. Imports, exports, reserves, and consumption also affect food availability.": "Padi di sini berarti gabah sebelum digiling menjadi beras. Produksi per orang menunjukkan pasokan, bukan jumlah yang dikonsumsi setiap orang. Impor, ekspor, cadangan, dan konsumsi juga memengaruhi ketersediaan pangan.",
+    "The regional outlook uses the available forecasts that performed best against past data.": "Perkiraan kawasan memakai model dengan hasil terbaik saat diuji terhadap data masa lalu, dari hasil perkiraan yang tersedia.",
+    "This country outlook follows recent production and population trends. It may differ from the regional outlook.": "Perkiraan negara mengikuti tren produksi dan penduduk dalam beberapa tahun terakhir. Hasilnya dapat berbeda dari perkiraan kawasan.",
+    "What if the harvest is smaller?": "Bagaimana jika hasil panen berkurang?",
+    "Try a possible harvest loss and see how the outlook changes. This is a scenario, not a prediction of damage.": "Coba simulasikan penurunan hasil panen untuk melihat pengaruhnya. Ini simulasi, bukan prediksi kerusakan.",
+    "Harvest loss": "Penurunan hasil panen",
+    "Harvest loss by {p0}": "Penurunan hasil panen pada {p0}",
+    "Reset harvest loss": "Atur ulang penurunan panen",
+    "This view includes a {p0}% harvest-loss scenario by {p1}.": "Tampilan ini mencakup simulasi penurunan hasil panen {p0}% pada {p1}.",
+    "About the same as 2024": "Hampir sama dengan 2024",
+    "{p0}% less than 2024": "{p0}% lebih rendah dibanding 2024",
+    "{p0}% more than 2024": "{p0}% lebih tinggi dibanding 2024",
+    "Production data is unavailable for this country.": "Data produksi padi negara ini belum tersedia.",
+    "Data unavailable": "Data tidak tersedia",
+    "Forecast coverage": "Cakupan perkiraan",
+    "Regional outlook · 2025–2030": "Perkiraan kawasan · 2025–2030",
+    "Harvested-area projections cover 10 ASEAN countries for 2030. Timor-Leste is not included in this analysis.": "Perkiraan luas panen tahun 2030 mencakup 10 negara ASEAN. Timor-Leste belum tercakup dalam analisis ini."
+  },
+  "ms": {
+    "Download forecast": "Muat turun hasil unjuran",
+    "Forecast": "Unjuran",
+    "Solid lines show the past. Dashed lines show the forecast.": "Garis penuh menunjukkan data lalu. Garis putus-putus menunjukkan unjuran."
+  },
+  "zh": {
+    "dari 2024": "较2024年",
+    "Padi per kapita": "人均稻谷产量",
+    "Produksi padi per kapita": "人均稻谷产量"
+  },
+  "ta": {
+    "dari 2024": "2024 உடன் ஒப்பிடுகையில்",
+    "on demand": "தேவைக்கேற்ப",
+    "relatif terhadap pilihan": "தேர்ந்தெடுக்கப்பட்ட நிலையை ஒப்பிடுகையில்",
+    "kg per year": "ஆண்டுக்கு கிலோ"
+  },
+  "my": {
+    "kg per year": "ကီလိုဂရမ်/နှစ်"
+  }
+}

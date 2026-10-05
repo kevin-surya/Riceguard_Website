@@ -1,4 +1,16 @@
-/** Saved research results are explicitly scoped to the notebook's regional aggregate. */
+/** Choose the lowest historical test error among models with available future results. */
+export function recommendedModels(research) {
+  const select = (metrics, forecasts) => metrics
+    .map(row => ({ model: row.Model === 'Multilayer Perceptron' ? 'MLP' : row.Model, error: row['MAPE (%)'] }))
+    .filter(row => forecasts[row.model]?.length && Number.isFinite(row.error))
+    .sort((a, b) => a.error - b.error)[0]?.model;
+  const riceModel = select(research.forecast.riceMetrics, research.forecast.future.rice);
+  const populationModel = select(research.forecast.populationMetrics, research.forecast.future.population);
+  if (!riceModel || !populationModel) throw new TypeError('No evaluated forecast is available');
+  return { riceModel, populationModel };
+}
+
+/** Saved research results are explicitly scoped to the regional aggregate. */
 export function notebookForecast(research, endYear, riceModel = 'MLP', populationModel = 'MLP', stress = 0) {
   if (!Number.isInteger(endYear) || endYear < 2025 || endYear > 2030) throw new RangeError('Notebook horizon is 2025–2030');
   const rice = research.forecast.future.rice[riceModel];

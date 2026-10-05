@@ -1,3 +1,4 @@
+import { t, formatNumber } from './i18n-core.mjs';
 /** Baseline models. These are exploratory indicators, not food-security classifications. */
 export const countries = [
   { code: 'IDN', name: 'Indonesia', flag: '🇮🇩', location: 'Karawang, Jawa Barat', lat: -6.30, lon: 107.30, label: [118, -4], temperature: 1.4, rain: -18 },
@@ -80,14 +81,14 @@ export function changePercent(current, previous) {
 
 export function insights(country, risk, climate, year) {
   const actions = [];
-  if (climate.temperature >= 1.3) actions.push('Evaluasi kalender tanam dan varietas toleran panas bersama penyuluh setempat.');
-  if (climate.rain < -15) actions.push('Prioritaskan audit ketersediaan air, efisiensi irigasi, dan cadangan air di sentra produksi.');
-  if (climate.rain > 15) actions.push('Periksa drainase dan kesiapan penanganan genangan di lahan yang rentan banjir.');
-  if (risk.change != null && risk.change < 0) actions.push('Tinjau cadangan serta distribusi pangan; proyeksi produksi padi per kapita menurun.');
-  if (!actions.length) actions.push('Lanjutkan pemantauan hasil panen, kondisi air, dan distribusi pangan secara berkala.');
+  if (climate.temperature >= 1.3) actions.push(t("Evaluasi kalender tanam dan varietas toleran panas bersama penyuluh setempat."));
+  if (climate.rain < -15) actions.push(t("Prioritaskan audit ketersediaan air, efisiensi irigasi, dan cadangan air di sentra produksi."));
+  if (climate.rain > 15) actions.push(t("Periksa drainase dan kesiapan penanganan genangan di lahan yang rentan banjir."));
+  if (risk.change != null && risk.change < 0) actions.push(t("Tinjau cadangan serta distribusi pangan; proyeksi produksi padi per kapita menurun."));
+  if (!actions.length) actions.push(t("Lanjutkan pemantauan hasil panen, kondisi air, dan distribusi pangan secara berkala."));
   return {
-    summary: risk.score == null ? `Data produksi padi ${country} belum tersedia. Analisis kecukupan produksi belum dapat dihitung.`
-      : `Pada skenario ${year}, ${country} memiliki skor pantauan ${risk.score}/100. Produksi padi per kapita diproyeksikan ${risk.change < 0 ? 'turun' : 'naik'} ${Math.abs(risk.change).toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}% dari 2024.`,
+    summary: risk.score == null ? t("Data produksi padi {p0} belum tersedia. Analisis kecukupan produksi belum dapat dihitung.", {p0: country})
+      : t("Pada skenario {p0}, {p1} memiliki skor pantauan {p2}/100. Produksi padi per kapita diproyeksikan {p3} {p4}% dari 2024.", {p0: year, p1: country, p2: risk.score, p3: risk.change < 0 ? 'turun' : 'naik', p4: formatNumber(Math.abs(risk.change), 1)}),
     actions,
   };
 }
