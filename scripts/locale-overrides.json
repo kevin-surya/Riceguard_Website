@@ -45,25 +45,80 @@
     "Data unavailable": "Data tidak tersedia",
     "Forecast coverage": "Cakupan perkiraan",
     "Regional outlook · 2025–2030": "Perkiraan kawasan · 2025–2030",
-    "Harvested-area projections cover 10 ASEAN countries for 2030. Timor-Leste is not included in this analysis.": "Perkiraan luas panen tahun 2030 mencakup 10 negara ASEAN. Timor-Leste belum tercakup dalam analisis ini."
+    "Harvested-area projections cover 10 ASEAN countries for 2030. Timor-Leste is not included in this analysis.": "Perkiraan luas panen tahun 2030 mencakup 10 negara ASEAN. Timor-Leste belum tercakup dalam analisis ini.",
+    "SPATIO-TEMPORAL / GLORICE": "SPATIO-TEMPORAL / GLORICE",
+    "Watch harvested area change over time.": "Lihat perubahan luas panen dari tahun ke tahun.",
+    "Play": "Putar",
+    "Pause": "Jeda",
+    "Play timeline": "Putar perubahan tahun",
+    "Pause timeline": "Jeda perubahan tahun",
+    "Harvested area": "Luas panen",
+    "Harvested area layer": "Lapisan luas panen",
+    "Historical harvested area": "Luas panen historis",
+    "Annual model projection": "Proyeksi model tahunan",
+    "Spatio-temporal year": "Tahun spatio-temporal",
+    "Choose timeline year": "Pilih tahun",
+    "Previous year": "Tahun sebelumnya",
+    "Next year": "Tahun berikutnya",
+    "Uncertainty range width": "Lebar rentang ketidakpastian",
+    "Lower estimate": "Batas bawah",
+    "Upper estimate": "Batas atas",
+    "Export this year": "Ekspor tahun ini",
+    "All years CSV": "CSV semua tahun",
+    "The annual trend": "Tren perubahan tahunan",
+    "Smaller area": "Luas lebih kecil",
+    "Larger area": "Luas lebih besar",
+    "Country results · {p0}": "Ringkasan negara · {p0}",
+    "Harvested-area map · {p0}": "Peta luas panen · {p0}",
+    "Model evaluation and data sources": "Evaluasi model dan sumber data",
+    "How to read the projected years": "Cara membaca tahun proyeksi",
+    "Map colors use a fixed scale across years. Future detail follows the 2021 rice-field pattern.": "Warna peta memakai skala yang sama untuk semua tahun. Detail proyeksi mengikuti pola sawah pada 2021."
   },
   "ms": {
     "Download forecast": "Muat turun hasil unjuran",
     "Forecast": "Unjuran",
-    "Solid lines show the past. Dashed lines show the forecast.": "Garis penuh menunjukkan data lalu. Garis putus-putus menunjukkan unjuran."
+    "Solid lines show the past. Dashed lines show the forecast.": "Garis penuh menunjukkan data lalu. Garis putus-putus menunjukkan unjuran.",
+    "SPATIO-TEMPORAL / GLORICE": "SPATIO-TEMPORAL / GLORICE"
   },
   "zh": {
     "dari 2024": "较2024年",
     "Padi per kapita": "人均稻谷产量",
-    "Produksi padi per kapita": "人均稻谷产量"
+    "Produksi padi per kapita": "人均稻谷产量",
+    "SPATIO-TEMPORAL / GLORICE": "时空 / GLORICE"
   },
   "ta": {
     "dari 2024": "2024 உடன் ஒப்பிடுகையில்",
     "on demand": "தேவைக்கேற்ப",
     "relatif terhadap pilihan": "தேர்ந்தெடுக்கப்பட்ட நிலையை ஒப்பிடுகையில்",
-    "kg per year": "ஆண்டுக்கு கிலோ"
+    "kg per year": "ஆண்டுக்கு கிலோ",
+    "SPATIO-TEMPORAL / GLORICE": "ஸ்பேடியோ-டெம்போரல் / GLORICE"
   },
   "my": {
-    "kg per year": "ကီလိုဂရမ်/နှစ်"
+    "kg per year": "ကီလိုဂရမ်/နှစ်",
+    "SPATIO-TEMPORAL / GLORICE": "SPATIO-TEMPORAL / GLORICE"
+  },
+  "en": {
+    "SPATIO-TEMPORAL / GLORICE": "SPATIO-TEMPORAL / GLORICE"
+  },
+  "th": {
+    "SPATIO-TEMPORAL / GLORICE": "พื้นที่ชั่วคราว / GLORICE"
+  },
+  "vi": {
+    "SPATIO-TEMPORAL / GLORICE": "KHÔNG GIAN-THỜI GIAN / GLORICE"
+  },
+  "km": {
+    "SPATIO-TEMPORAL / GLORICE": "SPATIO-TEMPORAL / GLORICE"
+  },
+  "lo": {
+    "SPATIO-TEMPORAL / GLORICE": "SPATIO-TEMPORAL / GLORICE"
+  },
+  "fil": {
+    "SPATIO-TEMPORAL / GLORICE": "SPATIO-TEMPORAL / GLORICE"
+  },
+  "tet": {
+    "SPATIO-TEMPORAL / GLORICE": "ESPASIU-TEMPORAL / GLORICE"
+  },
+  "pt": {
+    "SPATIO-TEMPORAL / GLORICE": "ESPAÇO-TEMPORAL / GLORICE"
   }
 }

@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-08",
+  "annual_axis": "1961-2030",
+  "historical_years": 61,
+  "future_years_per_scenario": 9,
+  "frames": 79,
+  "rasters": 133,
+  "country_records": 790,
+  "tests_passed": 24,
+  "browser_checks": [
+    "Slider keyboard end selects 2030 and updates raster URL",
+    "Year dropdown selects historical 2000 with climate scenarios disabled",
+    "SSP5-8.5 uses the matching forecast raster and numeric output",
+    "Indonesia selection updates country details without changing year",
+    "Uncertainty layer switches to width raster",
+    "Returning to 2021 resets the layer to mean and hides model bounds",
+    "Play advances from 2021 to 2022; Pause stops progression",
+    "Language selection preserves year, country and scenario",
+    "Mobile page has no horizontal overflow at a 390px viewport override",
+    "Keyboard activation of the Thailand map region selects THA",
+    "Final English view restored to all countries, SSP2-4.5, 2030",
+    "No browser console errors during final inspection"
+  ],
+  "model_note": "A new documented regularized MAP spatial/temporal implementation was fitted because the original notebook does not contain its training implementation. It is not an exact reproduction of the original saved model.",
+  "production_build": "passed",
+  "notebook_rerun": {
+    "executed_original_cells": [
+      32,
+      37,
+      39,
+      41
+    ],
+    "errors": 0,
+    "file": "spatio-glorice-executed.ipynb",
+    "original_notebooks": "unchanged"
+  }
+}

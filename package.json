@@ -9,7 +9,12 @@
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --test tests/*.test.mjs",
     "data:refresh": "python scripts/prepare_data.py",
-    "research:import": "python scripts/import_notebooks.py"
+    "research:import": "python scripts/import_notebooks.py",
+    "spatio:download": "node scripts/run_spatio.mjs download",
+    "spatio:prepare": "node scripts/run_spatio.mjs prepare",
+    "spatio:train": "node scripts/run_spatio.mjs train",
+    "spatio:render": "node scripts/run_spatio.mjs render",
+    "spatio:notebook": "node scripts/run_spatio.mjs notebook"
   },
   "dependencies": {
     "react": "^19.1.0",

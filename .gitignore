@@ -4,3 +4,10 @@ dist/
 .env.local
 .env.*.local
 *.tsbuildinfo
+
+.venv-spatio/
+data/raw/
+data/processed/
+
+__pycache__/
+*.pyc

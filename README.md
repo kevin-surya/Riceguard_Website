@@ -54,7 +54,7 @@ Paddy means unmilled rice. Production per person is not consumption or proof of 
 - Forecasting: simplified regional and country outlooks, CSV export, and reports.
 - Climate Monitor: clearly labeled demo anomalies, recommendations, and on-demand seven-day Open-Meteo forecasts at representative points.
 - Risk Map and Early Warning: country-level exploratory scores, interactive layers, and a browser-saved watchlist. They do not send operational alerts.
-- Spatio-temporal: GloRice harvested-area estimates for 2030, climate scenarios, country maps and tables, conditional ranges, and historical/projected figures.
+- Spatio-temporal: an annual slider from 1961 to 2030, play/pause, raster maps, country selection, trend chart, two climate scenarios, conditional ranges, and selected-year/all-year CSV exports.
 - Integrated Data: source attribution and coverage without source-code provenance in the UI.
 
 `src/data.json` contains real annual observations:
@@ -78,9 +78,9 @@ npm test
 npm run build
 ```
 
-The spatial module uses the final GloRice dynamic hurdle BYM2–AR(1) results, a 2° model grid, training 1981–2011, and forward holdout 2012–2021. R² is 0.9791634, MAE 16,311.67 ha, RMSE 30,737.97 ha; residual spatial clustering remains (Moran's I about 0.60–0.68). R² is not percentage accuracy. Future projections use ACCESS-CM2 and average 2021–2040 climate. Conditional ranges do not include all climate uncertainty. Summing country bounds does not create a regional posterior interval.
+Archived single-year outputs remain in `src/research.json` and the original PNG/CSV files. The annual website module now uses the newly computed timeline described below. The archived evaluation and new evaluation belong to different implementations and should not be compared as identical reruns.
 
-The 5-arcminute future maps allocate coarse-grid estimates according to the 2021 harvested-area pattern. They are not new pixel-level inference or forecasts of new rice fields. Raw grid/GeoTIFF data, training weights, and some climate inputs are not available, so no retraining or invented pixel tooltips are provided. Country interactions use the supplied tables.
+Both the archived and annual future maps allocate coarse-grid estimates according to the 2021 harvested-area pattern. They are not new pixel-level inference or forecasts of new rice fields. Raw source archives, regional data, and newly fitted annual parameters are cached locally in `data/`; public website assets contain the exported annual results. The unavailable original training implementation is not claimed to have been reproduced exactly.
 
 Country risk scores use the projected decline in paddy per person, illustrative temperature anomalies, and rainfall changes. The formula is `min(100, 4 × max(0, -per-capita change %) + 13 × max(0, temperature anomaly) + 0.55 × abs(rainfall change %))`, with low <30, watch 30–54, high ≥55. This is an uncalibrated monitoring signal, not a food-shortage probability.
 
@@ -91,3 +91,46 @@ Copy `.env.example` to `.env.local`, configure `AI_API_URL`, `AI_API_KEY`, and `
 ## Verification
 
 `npm test` checks source coverage, missing data, projections, units, model selection, original research outputs, every locale catalog, preserved placeholders, and locale formatting. Desktop/mobile screenshots and interaction checks are saved in `artifacts`.
+
+
+## Annual spatio-temporal model and slider
+
+The original spatial notebook reads precomputed tables and rasters; it does not contain the original model-fitting implementation. A new, documented MAP pipeline was therefore reconstructed using a regularized, scaled spatial CAR + independent-component mixture (BYM2-style) and AR(1) temporal dependence. It is an approximation with different domain/prior settings, not an exact reproduction of the original fitted model. Original notebooks and their saved outputs remain unchanged.
+
+The sources supplied for this rerun were downloaded:
+
+- [GloRice intensive harvested area, 1961–2021](https://figshare.com/articles/dataset/GloRice_I_Gridded_paddy_rice_distribution_for_the_years_1961_to_2021/25752207), with the archive MD5 verified against Figshare metadata.
+- [CHIRPS v3](https://chc.ucsb.edu/data/chirps3): actual annual rainfall subsets for 1981–2021, aggregated to the model grid. Negative NoData values are masked before aggregation.
+- [WorldClim CMIP6, 10 arcminutes](https://worldclim.org/data/cmip6/cmip6_clim10m.html): ACCESS-CM2 precipitation under SSP2-4.5 and SSP5-8.5, 2021–2040, plus the WorldClim historical precipitation baseline.
+- [GADM 4.1](https://gadm.org/data.html): country boundaries projected to EPSG:6933 for grid-intersection area fractions.
+
+The timeline includes 61 historical years and nine projected years under each scenario: **79 frames, 133 raster/layer images, and 790 country records**. Moving the slider updates the map, totals, uncertainty, country details, table, graph marker, and selected-year export. Historical years have no artificial model intervals. Scenario controls and uncertainty layers are enabled for projected years. Play/pause advances by one year. The original country-production forecasting page is unchanged.
+
+Model resolution is 2°, covering 255 country-intersecting cells. Mixing is fixed at 0.5; proper-CAR ridge regularization is 0.05 before marginal-variance scaling. Rho and precision are selected using 2007–2011 validation after fitting 1981–2006. The selected rho is 0.99 and precision 0.1. Refitting through 2011 precedes the independent 2012–2021 holdout. New test results: **R² 0.970226, MAE 20,333.91 ha, RMSE 60,918.43 ha, n = 2,550**. Test covariates use observed CHIRPS rainfall, so this evaluates conditional harvested-area forecasts rather than a joint weather/harvest forecasting service. The full model is subsequently refitted through 2021. Forty-one missing rainfall values in one boundary cell are imputed from training-period rainfall statistics.
+
+Every 2022–2030 harvested-area value is calculated from the fitted spatial/temporal model; outputs are not interpolated between two endpoint maps. Rainfall covariates follow an assumed gradual path from the 2012–2021 CHIRPS mean to the WorldClim future/historical precipitation ratio. WorldClim supplies 20-year climate averages, not actual weather for each projected year. Temporal dynamics propagate using AR(1), alongside fixed rainfall and year covariates.
+
+Approximate conditional log-area ranges hold the presence probability fixed. They exclude uncertainty in the presence model, hyperparameter selection, climate ensemble, and annual climate-path assumption. Summed cell/country lower and upper bounds are not regional posterior confidence intervals. Small countries are especially sensitive to the coarse grid. Country totals in **both historical and projected periods** use the same equal-area grid fractions; they are grid-allocated estimates, not official national statistics or exact sums of fine pixels clipped to each country. Fine projected patterns follow 2021 rice pixels; cells without 2021 support are not assigned new rice-field locations. Timor-Leste is outside the ten-country spatial domain.
+
+### Recompute locally
+
+Python 3.11 is used for this pipeline. The website itself only needs Node; it does not require scientific Python at runtime.
+
+```powershell
+python -m venv .venv-spatio
+.\.venv-spatio\Scripts\python.exe -m pip install -r requirements-spatio.txt
+npm run spatio:download
+npm run spatio:prepare
+npm run spatio:train
+npm test
+npm run build
+```
+
+Downloads are cached; the GloRice archive supports resumable range downloads. `spatio:prepare` saves cropped GloRice arrays, climate grids, equal-area country fractions, and display boundaries. `spatio:train` performs selection, holdout evaluation, full refitting, and all yearly exports. `npm run spatio:render` recolors cached model results with a fixed map scale without refitting. Raw and processed caches plus the virtual environment are excluded from Git.
+
+The website loads `public/research/spatio-timeline.json`, `gadm-spatio.geojson`, and the images in `public/research/timeline/`. Complete numeric outputs are in `spatio-annual-countries.csv`. The model-selection/evaluation report is in `artifacts/spatio-rerun-report.json`; fitted coefficients and grid outputs are in `data/processed/glorice/`. Source file hashes are preserved in the download metadata/report. `npm run research:import` refreshes only the archived notebook outputs and does not replace the new annual timeline.
+
+
+### Executed notebook visualization cells
+
+`npm run spatio:notebook` executes the supplied notebook’s GloRice visualization cells 32, 37, 39, and 41 against the newly fitted 2030 outputs. It saves `artifacts/spatio-glorice-executed.ipynb`, containing the unchanged selected source cells and their freshly executed figures/tables. The setup uses downloaded GADM boundaries and new grid/country CSVs and projected GeoTIFFs. The unrelated FAO ADM1 and APRA500 legacy sections are excluded. Kernel configuration is temporary; no persistent user kernel registration is created. This reruns the original visualization code, while model fitting remains the documented reconstructed pipeline described above.

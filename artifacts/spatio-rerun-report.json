@@ -1,0 +1,122 @@
+{
+  "candidates": [
+    {
+      "rho": 0.8,
+      "lambda": 0.1,
+      "r2": 0.19095684270771884,
+      "mae_ha": 134916.0630263974,
+      "rmse_ha": 327505.49831912643,
+      "bias_actual_minus_pred_ha": 130435.57282548591,
+      "n_test": 1275
+    },
+    {
+      "rho": 0.8,
+      "lambda": 1,
+      "r2": 0.11620953342492668,
+      "mae_ha": 142798.6852941063,
+      "rmse_ha": 342300.4004904306,
+      "bias_actual_minus_pred_ha": 135970.01390514805,
+      "n_test": 1275
+    },
+    {
+      "rho": 0.8,
+      "lambda": 10,
+      "r2": 0.13049919659941378,
+      "mae_ha": 147092.1156202542,
+      "rmse_ha": 339521.8626474064,
+      "bias_actual_minus_pred_ha": 104830.81880231266,
+      "n_test": 1275
+    },
+    {
+      "rho": 0.95,
+      "lambda": 0.1,
+      "r2": 0.7354369767385218,
+      "mae_ha": 69406.76786178045,
+      "rmse_ha": 187282.554051947,
+      "bias_actual_minus_pred_ha": 68281.50029436371,
+      "n_test": 1275
+    },
+    {
+      "rho": 0.95,
+      "lambda": 1,
+      "r2": 0.6195797104892153,
+      "mae_ha": 85615.588707339,
+      "rmse_ha": 224576.64362666314,
+      "bias_actual_minus_pred_ha": 83500.23326133663,
+      "n_test": 1275
+    },
+    {
+      "rho": 0.95,
+      "lambda": 10,
+      "r2": 0.4252002250737118,
+      "mae_ha": 107885.23100248819,
+      "rmse_ha": 276052.0939110793,
+      "bias_actual_minus_pred_ha": 91652.24571371266,
+      "n_test": 1275
+    },
+    {
+      "rho": 0.99,
+      "lambda": 0.1,
+      "r2": 0.9599593674950722,
+      "mae_ha": 25354.580787100913,
+      "rmse_ha": 72859.0015798386,
+      "bias_actual_minus_pred_ha": 24377.17980230755,
+      "n_test": 1275
+    },
+    {
+      "rho": 0.99,
+      "lambda": 1,
+      "r2": 0.9104756126184155,
+      "mae_ha": 38950.49570487156,
+      "rmse_ha": 108944.02836247046,
+      "bias_actual_minus_pred_ha": 37121.2213814693,
+      "n_test": 1275
+    },
+    {
+      "rho": 0.99,
+      "lambda": 10,
+      "r2": 0.7156765365188194,
+      "mae_ha": 72745.79804253082,
+      "rmse_ha": 194150.76290365413,
+      "bias_actual_minus_pred_ha": 57437.77374618091,
+      "n_test": 1275
+    }
+  ],
+  "selection": {
+    "rho": 0.99,
+    "lambda": 0.1,
+    "r2": 0.9599593674950722,
+    "mae_ha": 25354.580787100913,
+    "rmse_ha": 72859.0015798386,
+    "bias_actual_minus_pred_ha": 24377.17980230755,
+    "n_test": 1275
+  },
+  "test": {
+    "r2": 0.9702259239089809,
+    "mae_ha": 20333.906658379663,
+    "rmse_ha": 60918.434182206845,
+    "bias_actual_minus_pred_ha": 15855.771352081574,
+    "n_test": 2550
+  },
+  "source_files": [
+    {
+      "name": "GloRice intensive harvested area",
+      "url": "https://figshare.com/articles/dataset/GloRice_I_Gridded_paddy_rice_distribution_for_the_years_1961_to_2021/25752207",
+      "file": "data/raw/glorice/GloRice-hvst-In.zip",
+      "sha256": "487d25102479265f7c8a333bd222e386526213b7b6abbbb1626c83f78c499020"
+    },
+    {
+      "name": "CHIRPS v3 annual rainfall",
+      "url": "https://chc.ucsb.edu/data/chirps3"
+    },
+    {
+      "name": "WorldClim ACCESS-CM2",
+      "url": "https://worldclim.org/data/cmip6/cmip6_clim10m.html"
+    },
+    {
+      "name": "GADM 4.1",
+      "url": "https://gadm.org/data.html"
+    }
+  ],
+  "implementation_sha256": "754048df8c08481e2507f161204e8e1ba62f7e839dc42861c69e942161e47dd2"
+}
