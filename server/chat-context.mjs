@@ -3,8 +3,10 @@ import { countries, seriesFor, forecast, indicator, climateFor } from '../src/mo
 import { notebookForecast, recommendedModels } from '../src/research-model.mjs';
 import { annualRows, annualTotal } from '../src/spatio-timeline.mjs';
 
-const load = path => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
-const snapshot = load('../src/data.json'), research = load('../src/research.json'), spatial = load('../public/research/spatio-timeline.json');
+// Literal paths allow Vercel's file tracer to include the runtime datasets.
+const snapshot = JSON.parse(readFileSync(new URL('../src/data.json', import.meta.url), 'utf8'));
+const research = JSON.parse(readFileSync(new URL('../src/research.json', import.meta.url), 'utf8'));
+const spatial = JSON.parse(readFileSync(new URL('../public/research/spatio-timeline.json', import.meta.url), 'utf8'));
 const models = recommendedModels(research);
 const pages = ['overview','forecast','climate','map','warnings','spatio','sources'];
 const outlooks = ['notebook','trend','infographic','resilient'];

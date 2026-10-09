@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-09",
+  "tests": {
+    "passed": 42,
+    "failed": 0
+  },
+  "productionBuild": "passed",
+  "functionRoutes": [
+    "/api/chat",
+    "/api/chat/status",
+    "/api/analyze"
+  ],
+  "vercelParsedBodyHttpTests": "passed",
+  "isolatedRuntimeImports": "passed",
+  "nodeFileTrace": {
+    "chat": true,
+    "status": true,
+    "analyze": true,
+    "datasets": [
+      "src/data.json",
+      "src/research.json",
+      "public/research/spatio-timeline.json"
+    ]
+  },
+  "localChatConfigured": true,
+  "hostedDeploymentTested": false,
+  "secretsKeptServerSide": true
+}

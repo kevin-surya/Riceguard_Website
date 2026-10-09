@@ -1,5 +1,6 @@
 /** Optional server-only AI connector. API keys never enter the browser bundle. */
-export function aiConnector(env) {
+import { readJsonBody, RequestBodyError } from './http.mjs';
+export function aiConnector(env, { fetchImpl = fetch } = {}) {
   env = { ...env, AI_API_KEY: env.AI_API_KEY || env.OPENAI_API_KEY, AI_API_URL: env.AI_API_URL || 'https://api.openai.com/v1/chat/completions', AI_MODEL: env.AI_MODEL || env.OPENAI_MODEL || 'gpt-6-luna' };
   const languageNames = { en: 'English', id: 'Indonesian', ms: 'Malay', th: 'Thai', vi: 'Vietnamese', my: 'Burmese', km: 'Khmer', lo: 'Lao', fil: 'Filipino', zh: 'Mandarin Chinese', ta: 'Tamil', tet: 'Tetum', pt: 'Portuguese' };
   const respond = (res, status, payload) => {
@@ -13,20 +14,11 @@ export function aiConnector(env) {
     if (req.method !== 'POST') return respond(res, 405, { error: 'POST required' });
     if (!env.AI_API_KEY || !env.AI_API_URL || !env.AI_MODEL) return respond(res, 503, { error: 'AI not configured. Local transparent analysis is available.' });
     try {
-      const chunks = [];
-      let length = 0;
-      for await (const chunk of req) {
-        length += chunk.length;
-        if (length > 8000) return respond(res, 413, { error: 'Request too large' });
-        chunks.push(chunk);
-      }
-      let input;
-      try { input = JSON.parse(Buffer.concat(chunks).toString('utf-8')); }
-      catch { return respond(res, 400, { error: 'Invalid JSON' }); }
-      if (typeof input.country !== 'string' || input.country.length > 50 || !Number.isInteger(input.year) || input.year < 2025 || input.year > 2035 || typeof input.scenario !== 'string' || input.scenario.length > 64) return respond(res, 400, { error: 'Invalid scenario context' });
+      const input = await readJsonBody(req,8000);
+      if (!input || typeof input.country !== 'string' || input.country.length > 50 || !Number.isInteger(input.year) || input.year < 2025 || input.year > 2035 || typeof input.scenario !== 'string' || input.scenario.length > 64) return respond(res, 400, { error: 'Invalid scenario context' });
       const language = Object.hasOwn(languageNames, input.language || '') ? input.language : 'en';
       const context = { country: input.country, year: input.year, scenario: input.scenario, stress: input.stress, risk: input.risk, climate: input.climate };
-      const response = await fetch(env.AI_API_URL, {
+      const response = await fetchImpl(env.AI_API_URL, {
         method: 'POST', signal: AbortSignal.timeout(25000),
         headers: { Authorization: `Bearer ${env.AI_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ model: env.AI_MODEL, ...(env.AI_MODEL==='gpt-6-luna'?{reasoning_effort:'none'}:{}), messages: [
@@ -41,6 +33,6 @@ export function aiConnector(env) {
       const parsed = JSON.parse(content.replace(/^```(?:json)?\s*/, '').replace(/\s*```$/, ''));
       if (typeof parsed.summary !== 'string' || parsed.summary.length > 1800 || !Array.isArray(parsed.actions) || !parsed.actions.length || parsed.actions.length > 4 || parsed.actions.some(action => typeof action !== 'string' || action.length > 600)) throw new Error('Invalid analysis');
       return respond(res, 200, { summary: parsed.summary, actions: parsed.actions });
-    } catch { return respond(res, 502, { error: 'AI analysis could not be completed; use local analysis' }); }
+    } catch(error) { if(error instanceof RequestBodyError)return respond(res,error.status,{error:error.status===413?'Request too large':'Invalid JSON'});return respond(res, 502, { error: 'AI analysis could not be completed; use local analysis' }); }
   };
 }

@@ -1,0 +1,9 @@
+.env
+.env.*
+!.env.example
+.venv-spatio/
+data/raw/
+data/processed/
+artifacts/
+__pycache__/
+**/__pycache__/

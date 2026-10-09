@@ -19,7 +19,28 @@ npm run build
 npm run preview
 ```
 
-Preview uses http://127.0.0.1:4173. The `dist` folder can be hosted as a static site. Live AI requires server routes equivalent to `server/chat.mjs` and `server/ai.mjs`; local rule-based Climate Monitor recommendations also work on static deployments.
+Preview uses http://127.0.0.1:4173. The `dist` folder can be hosted as a static site. Live AI runs through the included Vercel Functions or the local Vite middleware; local rule-based Climate Monitor recommendations also work on static deployments.
+
+## Deploy on Vercel
+
+1. Commit and push these changes, including the `api/` folder and `vercel.json`, to the connected GitHub repository.
+2. Set **Root Directory** to the folder containing this `package.json` and `vercel.json`. For a repository rooted in `riceguard_web`, use the repository root (`.`). If your repository contains a parent folder, select `riceguard_web` instead.
+3. Choose **Vite** as the framework. `vercel.json` sets **Build Command** to `npm run build` and **Output Directory** to `dist`; remove any conflicting dashboard overrides.
+4. In **Settings → Environment Variables**, add `OPENAI_API_KEY` as a Secret and `OPENAI_MODEL=gpt-6-luna` for Production and, if needed, Preview. Do not add a `VITE_` prefix. The functions read `process.env` at runtime; the local `.env` is not deployed.
+5. Trigger a new deployment or redeploy the updated commit. Environment variable changes apply to new deployments.
+6. Open `https://YOUR-DOMAIN/api/chat/status`: a configured deployment returns `{"configured":true}`. This checks configuration, not API quota. Then send a question through **Panel RiceGuard AI** to verify provider access.
+
+The frontend calls relative same-origin URLs, so no API base URL or CORS configuration is needed:
+
+| Endpoint | Function | Method |
+| --- | --- | --- |
+| `/api/chat` | `api/chat.js` | POST |
+| `/api/chat/status` | `api/chat/status.js` | GET |
+| `/api/analyze` | `api/analyze.js` | POST |
+
+The functions share the local middleware. `server/http.mjs` accepts both request streams and the already-parsed JSON body supplied by Vercel. Input-size limits also apply to parsed bodies. Each AI function has a 60-second deployment timeout, longer than the provider timeout; the status function is lightweight and does not load research datasets. The deployment file tracer uses literal dataset paths, with explicit `includeFiles` for the three JSON datasets used by chat. `.vercelignore` excludes local secrets, training caches, and development artifacts from CLI uploads. There is no catch-all rewrite that could send API requests to `index.html`.
+
+This follows Vercel's [Node.js Functions guide](https://vercel.com/docs/functions/runtimes/node-js) and [runtime file packaging guide](https://vercel.com/kb/guide/how-can-i-use-files-in-serverless-functions). Run `npm test` and `npm run build` before pushing. Tests exercise the actual API entry modules with Vercel-style consumed/parsed requests and verify imports/data in an isolated deployment directory; provider responses in tests are mocked. A real hosted deployment still needs checking on your Vercel domain.
 
 ## RiceGuard AI farmer chat
 
@@ -34,11 +55,11 @@ OPENAI_MODEL=gpt-6-luna
 
 After saving your key, restart `npm run dev` (or `npm run preview`). Do not put the key in React code, chat messages, or a variable beginning with `VITE_`. If `.env` is missing, copy `.env.example` to `.env`. Existing `.env.local` settings override `.env`; operating-system environment variables override both. The existing Climate Monitor AI analysis also accepts these OpenAI settings, while its optional `AI_*` settings remain available.
 
-The chat uses the [OpenAI Responses API](https://developers.openai.com/api/docs/guides/migrate-to-responses) with `store: false`; it sends a bounded recent conversation and fresh dashboard context through the local server. The selected default is [GPT-6 Luna](https://developers.openai.com/api/docs/models/gpt-6-luna), using `reasoning.effort: none` for concise chat replies within the output budget. The model can be changed in `.env` to one available to your API account that supports Responses. API access/billing is separate from using the ChatGPT website. No API call is made just by opening the panel; the connection indicator checks local configuration, not key validity or quota. Missing keys, authentication failures, quota limits, timeouts, and incomplete replies have separate messages; the chat does not present canned text as an AI answer.
+The chat uses the [OpenAI Responses API](https://developers.openai.com/api/docs/guides/migrate-to-responses) with `store: false`; it sends a bounded recent conversation and fresh dashboard context through server-side API routes. The selected default is [GPT-6 Luna](https://developers.openai.com/api/docs/models/gpt-6-luna), using `reasoning.effort: none` for concise chat replies within the output budget. The model can be changed in `.env` to one available to your API account that supports Responses. API access/billing is separate from using the ChatGPT website. No API call is made just by opening the panel; the connection indicator checks local configuration, not key validity or quota. Missing keys, authentication failures, quota limits, timeouts, and incomplete replies have separate messages; the chat does not present canned text as an AI answer.
 
 `server/chat-context.mjs` recomputes forecast/risk/map figures from saved data instead of accepting arbitrary client totals. On-demand Open-Meteo weather is included only if already loaded, with its point location and dates. `server/riceguard-prompt.mjs` defines the farmer context: practical prevention, low-cost steps, crop stage and irrigation questions, and clear distinctions between illustrative climate inputs, forecasts, historical maps, hectares, and paddy production. It avoids invented live alerts and unsupported product/dose/planting prescriptions.
 
-Local development and preview both serve `/api/chat`, `/api/chat/status`, and `/api/analyze`. Static hosting alone does not run those routes. Before public deployment, add authentication and per-user request/spend limits to the server; the current local chat limits concurrent provider requests to two. Chat replies use React text rendering rather than injecting HTML. Network/backend tests use mocked provider responses and never spend API credits; actual model-generated recommendation quality needs checking after a valid key is supplied.
+Local development, preview, and Vercel Functions serve `/api/chat`, `/api/chat/status`, and `/api/analyze`. Static hosting alone does not run those routes. The chat limits concurrent provider requests to two per running instance; this is not a global spending limit. Authentication and per-user request/spend limits can be added for public access. Chat replies use React text rendering rather than injecting HTML. Network/backend tests use mocked provider responses and never spend API credits; actual model-generated recommendation quality needs checking after a valid key is supplied.
 
 ## Language support
 
@@ -105,7 +126,7 @@ Country risk scores use the projected decline in paddy per person, illustrative 
 
 ## Optional alternative Climate Monitor provider
 
-For a different chat-completions provider for the Climate Monitor analysis button, configure `AI_API_URL`, `AI_API_KEY`, and `AI_MODEL` in `.env` and restart Vite. The API URL must be the complete endpoint. When these are blank, the button uses the OpenAI settings described above. Secrets stay on the server; never add a `VITE_` prefix. Requests use the selected display language. Without a configured provider, this analysis button identifies its translated local-rule fallback. The floating chat always uses `OPENAI_API_KEY` with the OpenAI Responses API. Live AI has not been verified with a provider account.
+For a different chat-completions provider for the Climate Monitor analysis button, configure `AI_API_URL`, `AI_API_KEY`, and `AI_MODEL` in `.env` and restart Vite. The API URL must be the complete endpoint. When these are blank, the button uses the OpenAI settings described above. Secrets stay on the server; never add a `VITE_` prefix. Requests use the selected display language. Without a configured provider, this analysis button identifies its translated local-rule fallback. The floating chat always uses `OPENAI_API_KEY` with the OpenAI Responses API. A local GPT-6 Luna chat request was verified with the configured account; the Vercel deployment must be checked separately.
 
 ## Verification
 
