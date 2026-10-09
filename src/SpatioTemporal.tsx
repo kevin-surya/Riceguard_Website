@@ -6,6 +6,7 @@ import { geoEquirectangular, geoPath } from 'd3-geo';
 import type { FeatureCollection } from 'geojson';
 import { countries } from './model.mjs';
 import { annualRows, annualTotal, timelineSeries, timelineCsv } from './spatio-timeline.mjs';
+import type { SpatioSelection } from './RiceGuardAI';
 
 type Layer = 'mean' | 'lower' | 'upper' | 'width';
 type Row = {code:string;mean:number;lower:number|null;upper:number|null;width:number|null};
@@ -40,11 +41,12 @@ function AnnualMap({data,frame,rows,layer,selected,onSelect}:{data:Timeline;fram
  <div className="annual-map-legend"><span>{t('Smaller area')}</span><i/><span>{t('Larger area')}</span></div><p className="fine-print">{t('Map colors use a fixed scale across years. Future detail follows the 2021 rice-field pattern.')}</p></div>;
 }
 
-export default function SpatioTemporal() {
+export default function SpatioTemporal({onSelectionChange}:{onSelectionChange?:(selection:SpatioSelection)=>void}) {
  const [data,setData]=useState<Timeline|null>(null);const [failed,setFailed]=useState(false);const [reload,setReload]=useState(0);const [year,setYear]=useState(2021);const [scenario,setScenario]=useState('ssp245');const [selected,setSelected]=useState('ALL');const [layer,setLayer]=useState<Layer>('mean');const [playing,setPlaying]=useState(false);
  useEffect(()=>{let live=true;setFailed(false);fetch('/research/spatio-timeline.json').then(response=>{if(!response.ok)throw Error('timeline');return response.json()}).then(result=>{if(live)setData(result)}).catch(()=>{if(live)setFailed(true)});return()=>{live=false}},[reload]);
  useEffect(()=>{if(!playing||!data)return;const timer=setInterval(()=>setYear(previous=>previous>=data.endYear?data.startYear:previous+1),1100);return()=>clearInterval(timer)},[playing,data]);
  useEffect(()=>{if(data&&year<=data.lastHistoricalYear&&layer!=='mean')setLayer('mean')},[year,data,layer]);
+ useEffect(()=>{onSelectionChange?.({year,scenario,countryCode:selected,layer:year<=2021?'mean':layer});},[year,scenario,selected,layer,onSelectionChange]);
  const frame=useMemo(()=>data?.frames.find(frame=>frame.year===year&&(frame.kind==='historical'||frame.scenario===scenario)),[data,year,scenario]);
  const rows:Row[]=useMemo(()=>data?annualRows(data,year,scenario):[],[data,year,scenario]);const picked=rows.find(row=>row.code===selected);const regionalTotal=useMemo(()=>annualTotal(rows),[rows]);const total=picked||regionalTotal;const historical=frame?.kind==='historical';
  // Moving the year marker does not change the full historical/projected series.

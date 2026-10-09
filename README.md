@@ -19,7 +19,26 @@ npm run build
 npm run preview
 ```
 
-Preview uses http://127.0.0.1:4173. The `dist` folder can be hosted as a static site. Live AI requires a server route equivalent to `server/ai.mjs`; local recommendations also work on static deployments.
+Preview uses http://127.0.0.1:4173. The `dist` folder can be hosted as a static site. Live AI requires server routes equivalent to `server/chat.mjs` and `server/ai.mjs`; local rule-based Climate Monitor recommendations also work on static deployments.
+
+## RiceGuard AI farmer chat
+
+Open **Panel RiceGuard AI** from the floating button at the bottom right of any page. It supports follow-up questions, a new-chat button, quick questions about drought/heavy rain, and the selected interface language. The panel follows the current dashboard country/year/outlook and the spatio-temporal country/year/scenario/layer. Closing it preserves the conversation until the page reloads; conversations are kept in browser memory, not localStorage.
+
+The ignored `.env` file is ready for your own key:
+
+```dotenv
+OPENAI_API_KEY=your_api_key_here
+OPENAI_MODEL=gpt-6-luna
+```
+
+After saving your key, restart `npm run dev` (or `npm run preview`). Do not put the key in React code, chat messages, or a variable beginning with `VITE_`. If `.env` is missing, copy `.env.example` to `.env`. Existing `.env.local` settings override `.env`; operating-system environment variables override both. The existing Climate Monitor AI analysis also accepts these OpenAI settings, while its optional `AI_*` settings remain available.
+
+The chat uses the [OpenAI Responses API](https://developers.openai.com/api/docs/guides/migrate-to-responses) with `store: false`; it sends a bounded recent conversation and fresh dashboard context through the local server. The selected default is [GPT-6 Luna](https://developers.openai.com/api/docs/models/gpt-6-luna), using `reasoning.effort: none` for concise chat replies within the output budget. The model can be changed in `.env` to one available to your API account that supports Responses. API access/billing is separate from using the ChatGPT website. No API call is made just by opening the panel; the connection indicator checks local configuration, not key validity or quota. Missing keys, authentication failures, quota limits, timeouts, and incomplete replies have separate messages; the chat does not present canned text as an AI answer.
+
+`server/chat-context.mjs` recomputes forecast/risk/map figures from saved data instead of accepting arbitrary client totals. On-demand Open-Meteo weather is included only if already loaded, with its point location and dates. `server/riceguard-prompt.mjs` defines the farmer context: practical prevention, low-cost steps, crop stage and irrigation questions, and clear distinctions between illustrative climate inputs, forecasts, historical maps, hectares, and paddy production. It avoids invented live alerts and unsupported product/dose/planting prescriptions.
+
+Local development and preview both serve `/api/chat`, `/api/chat/status`, and `/api/analyze`. Static hosting alone does not run those routes. Before public deployment, add authentication and per-user request/spend limits to the server; the current local chat limits concurrent provider requests to two. Chat replies use React text rendering rather than injecting HTML. Network/backend tests use mocked provider responses and never spend API credits; actual model-generated recommendation quality needs checking after a valid key is supplied.
 
 ## Language support
 
@@ -84,9 +103,9 @@ Both the archived and annual future maps allocate coarse-grid estimates accordin
 
 Country risk scores use the projected decline in paddy per person, illustrative temperature anomalies, and rainfall changes. The formula is `min(100, 4 × max(0, -per-capita change %) + 13 × max(0, temperature anomaly) + 0.55 × abs(rainfall change %))`, with low <30, watch 30–54, high ≥55. This is an uncalibrated monitoring signal, not a food-shortage probability.
 
-## Optional AI
+## Optional alternative Climate Monitor provider
 
-Copy `.env.example` to `.env.local`, configure `AI_API_URL`, `AI_API_KEY`, and `AI_MODEL` for a chat-completions provider, and restart Vite. The API URL must be the complete endpoint. Secrets stay on the server; never add a `VITE_` prefix. Requests use the selected display language. Without a configured provider, the UI identifies the translated local-rule fallback. Live AI has not been verified with a provider account.
+For a different chat-completions provider for the Climate Monitor analysis button, configure `AI_API_URL`, `AI_API_KEY`, and `AI_MODEL` in `.env` and restart Vite. The API URL must be the complete endpoint. When these are blank, the button uses the OpenAI settings described above. Secrets stay on the server; never add a `VITE_` prefix. Requests use the selected display language. Without a configured provider, this analysis button identifies its translated local-rule fallback. The floating chat always uses `OPENAI_API_KEY` with the OpenAI Responses API. Live AI has not been verified with a provider account.
 
 ## Verification
 

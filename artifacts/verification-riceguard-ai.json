@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-09",
+  "tests": {
+    "passed": 34,
+    "failed": 0
+  },
+  "build": "passed",
+  "liveApiTested": false,
+  "providerTests": "mocked Responses API; no API credits used",
+  "browser": {
+    "floatingPanel": true,
+    "keyboardEscape": true,
+    "quickPrompts": true,
+    "conversationPreservedOnClose": true,
+    "newChat": true,
+    "quotaErrorPreservesDraft": true,
+    "spatialScope": "Indonesia · 2030 · SSP5-8.5",
+    "htmlRenderedAsText": true,
+    "indonesianTranslation": true,
+    "mobileWidths": [
+      375
+    ],
+    "shortViewportHeight": 500,
+    "composerWithinViewport": true,
+    "consoleErrors": 0
+  },
+  "configuration": {
+    "file": ".env",
+    "keyVariable": "OPENAI_API_KEY",
+    "keyLeftForUser": true,
+    "secretFileBlockedByVite": true
+  },
+  "screenshot": "artifacts/riceguard-ai-panel.png"
+}
