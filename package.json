@@ -14,7 +14,8 @@
     "spatio:prepare": "node scripts/run_spatio.mjs prepare",
     "spatio:train": "node scripts/run_spatio.mjs train",
     "spatio:render": "node scripts/run_spatio.mjs render",
-    "spatio:notebook": "node scripts/run_spatio.mjs notebook"
+    "spatio:notebook": "node scripts/run_spatio.mjs notebook",
+    "climate:refresh": "python scripts/prepare_climate.py"
   },
   "dependencies": {
     "react": "^19.1.0",

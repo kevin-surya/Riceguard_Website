@@ -23,7 +23,7 @@ test('chat status and missing-key errors never expose credentials or make extern
 });
 test('server builds forecast facts from saved data and ignores forged client totals',()=>{
  const context=buildChatContext({...selection,forecast:{rice:999999999},risk:{score:100}});
- assert.equal(context.forecast.rice,196.367174);assert.equal(context.forecast.population,695.193894);assert.equal(context.illustrativeClimate.observed,false);assert.equal(context.weather,null);
+ assert.equal(context.forecast.rice,196.367174);assert.equal(context.forecast.population,695.193894);assert.equal(context.climate,null);assert.equal(context.weather,null);
  assert.equal(context.productionPressure.thresholds.watch,5);assert.equal(context.productionPressure.thresholds.high,10);assert.ok(!Object.hasOwn(context.productionPressure,'score'));assert.equal(context.productionPressure.level,'low');
  const country=buildChatContext({...selection,countryCode:'SGP'});assert.equal(country.forecast.rice,null);
  assert.throws(()=>buildChatContext({...selection,year:2035}));assert.throws(()=>buildChatContext({...selection,stress:99}));
@@ -38,6 +38,14 @@ test('map context follows the selected year, scenario, and country with appropri
 test('weather context retains point location, dates, units and missing values',()=>{
  const context=buildChatContext({...selection,weather:{countryCode:'IDN',days:[{date:'2026-10-09',maxTemperatureC:36,rainMm:null},{date:'bad',maxTemperatureC:999,rainMm:12}]}});
  assert.equal(context.weather.location,'Karawang, Jawa Barat');assert.deepEqual(context.weather.days,[{date:'2026-10-09',maxTemperatureC:36,rainMm:null}]);
+});
+test('historical climate point and month stay distinct from the regional production year',()=>{
+ const context=buildChatContext({...selection,climate:{countryCode:'MYS',period:'2024-02',temperature:999}});
+ assert.equal(context.forecastYear,2030);assert.equal(context.country,'Southeast Asia');
+ assert.equal(context.climate.countryCode,'MYS');assert.equal(context.climate.period,'2024-02');
+ assert.equal(context.climate.location,'Alor Setar, Kedah');assert.equal(context.climate.baseline.startYear,1991);
+ assert.notEqual(context.climate.temperatureAnomalyC,999);assert.equal(context.climate.kind,'gridded reanalysis');assert.match(context.climate.units.rainfallChangePercent,/percent/);
+ assert.throws(()=>buildChatContext({...selection,climate:{countryCode:'MYS',period:'2030-02'}}));
 });
 test('Responses request uses server key, bounded history, selected language and stateless farmer context',async()=>{
  let captured;const middleware=chatConnector({OPENAI_API_KEY:'test-only-secret',OPENAI_MODEL:'custom-model'}, {fetchImpl:async(url,options)=>{captured={url,...options,body:JSON.parse(options.body)};return completed('Check your irrigation channels.');}});

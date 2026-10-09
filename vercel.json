@@ -6,13 +6,14 @@
   "functions": {
     "api/chat.js": {
       "maxDuration": 60,
-      "includeFiles": "{src/data.json,src/research.json,public/research/spatio-timeline.json}"
+      "includeFiles": "{src/data.json,src/research.json,public/research/spatio-timeline.json,src/climate.json}"
     },
     "api/chat/status.js": {
       "maxDuration": 10
     },
     "api/analyze.js": {
-      "maxDuration": 60
+      "maxDuration": 60,
+      "includeFiles": "src/climate.json"
     }
   }
 }

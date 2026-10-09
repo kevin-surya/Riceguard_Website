@@ -1,17 +1,17 @@
 import { t, formatNumber } from './i18n-core.mjs';
 /** Baseline models. These are exploratory indicators, not food-security classifications. */
 export const countries = [
-  { code: 'IDN', name: 'Indonesia', flag: '🇮🇩', location: 'Karawang, Jawa Barat', lat: -6.30, lon: 107.30, label: [118, -4], temperature: 1.4, rain: -18 },
-  { code: 'VNM', name: 'Vietnam', flag: '🇻🇳', location: 'Can Tho, Delta Mekong', lat: 10.04, lon: 105.79, label: [109.5, 16], temperature: 1.2, rain: -12 },
-  { code: 'THA', name: 'Thailand', flag: '🇹🇭', location: 'Suphan Buri', lat: 14.47, lon: 100.12, label: [100, 17], temperature: 1.8, rain: -28 },
-  { code: 'MMR', name: 'Myanmar', flag: '🇲🇲', location: 'Pathein, Ayeyarwady', lat: 16.78, lon: 94.73, label: [95, 22], temperature: 1.6, rain: -22 },
-  { code: 'PHL', name: 'Filipina', flag: '🇵🇭', location: 'Muñoz, Nueva Ecija', lat: 15.72, lon: 120.90, label: [125, 14], temperature: 1.5, rain: 24 },
-  { code: 'KHM', name: 'Kamboja', flag: '🇰🇭', location: 'Battambang', lat: 13.10, lon: 103.20, label: [104.5, 11], temperature: 1.3, rain: -15 },
-  { code: 'LAO', name: 'Laos', flag: '🇱🇦', location: 'Savannakhet', lat: 16.57, lon: 104.75, label: [103.5, 20], temperature: 1.0, rain: -8 },
-  { code: 'MYS', name: 'Malaysia', flag: '🇲🇾', location: 'Alor Setar, Kedah', lat: 6.12, lon: 100.37, label: [109, 4], temperature: 0.9, rain: 5 },
-  { code: 'SGP', name: 'Singapura', flag: '🇸🇬', location: 'Singapura', lat: 1.35, lon: 103.82, label: [104, 0], temperature: 1.1, rain: 8 },
-  { code: 'BRN', name: 'Brunei', flag: '🇧🇳', location: 'Bandar Seri Begawan', lat: 4.90, lon: 114.94, label: [115, 6], temperature: 0.8, rain: 3 },
-  { code: 'TLS', name: 'Timor-Leste', flag: '🇹🇱', location: 'Baucau', lat: -8.47, lon: 126.45, label: [127, -10], temperature: 1.2, rain: -16 },
+  { code: 'IDN', name: 'Indonesia', flag: '🇮🇩', location: 'Karawang, Jawa Barat', lat: -6.30, lon: 107.30, label: [118, -4] },
+  { code: 'VNM', name: 'Vietnam', flag: '🇻🇳', location: 'Can Tho, Delta Mekong', lat: 10.04, lon: 105.79, label: [109.5, 16] },
+  { code: 'THA', name: 'Thailand', flag: '🇹🇭', location: 'Suphan Buri', lat: 14.47, lon: 100.12, label: [100, 17] },
+  { code: 'MMR', name: 'Myanmar', flag: '🇲🇲', location: 'Pathein, Ayeyarwady', lat: 16.78, lon: 94.73, label: [95, 22] },
+  { code: 'PHL', name: 'Filipina', flag: '🇵🇭', location: 'Muñoz, Nueva Ecija', lat: 15.72, lon: 120.90, label: [125, 14] },
+  { code: 'KHM', name: 'Kamboja', flag: '🇰🇭', location: 'Battambang', lat: 13.10, lon: 103.20, label: [104.5, 11] },
+  { code: 'LAO', name: 'Laos', flag: '🇱🇦', location: 'Savannakhet', lat: 16.57, lon: 104.75, label: [103.5, 20] },
+  { code: 'MYS', name: 'Malaysia', flag: '🇲🇾', location: 'Alor Setar, Kedah', lat: 6.12, lon: 100.37, label: [109, 4] },
+  { code: 'SGP', name: 'Singapura', flag: '🇸🇬', location: 'Singapura', lat: 1.35, lon: 103.82, label: [104, 0] },
+  { code: 'BRN', name: 'Brunei', flag: '🇧🇳', location: 'Bandar Seri Begawan', lat: 4.90, lon: 114.94, label: [115, 6] },
+  { code: 'TLS', name: 'Timor-Leste', flag: '🇹🇱', location: 'Baucau', lat: -8.47, lon: 126.45, label: [127, -10] },
 ];
 
 export function seriesFor(snapshot, code) {
@@ -77,13 +77,7 @@ export function pressureReason(risk) {
   return t(risk.change < 0 ? 'Paddy production per person is projected to fall {p0}% from 2024.' : 'Paddy production per person is projected to rise {p0}% from 2024.', {p0:formatNumber(Math.abs(risk.change),2)});
 }
 
-export function climateFor(code) {
-  const rows = code === 'SEA' ? countries : countries.filter(country => country.code === code);
-  return {
-    temperature: rows.reduce((sum, country) => sum + country.temperature, 0) / rows.length,
-    rain: rows.reduce((sum, country) => sum + country.rain, 0) / rows.length,
-  };
-}
+export { climateFor } from './climate-model.mjs';
 
 export function changePercent(current, previous) {
   return previous > 0 && current != null ? (current / previous - 1) * 100 : null;
@@ -91,9 +85,9 @@ export function changePercent(current, previous) {
 
 export function insights(country, risk, climate, year) {
   const actions = [];
-  if (climate.temperature >= 1.3) actions.push(t("Evaluasi kalender tanam dan varietas toleran panas bersama penyuluh setempat."));
-  if (climate.rain < -15) actions.push(t("Prioritaskan audit ketersediaan air, efisiensi irigasi, dan cadangan air di sentra produksi."));
-  if (climate.rain > 15) actions.push(t("Periksa drainase dan kesiapan penanganan genangan di lahan yang rentan banjir."));
+  if (climate?.available && climate.temperature != null && climate.temperature > 0) actions.push(t("Evaluasi kalender tanam dan varietas toleran panas bersama penyuluh setempat."));
+  if (climate?.available && climate.rain != null && climate.rain < 0) actions.push(t("Prioritaskan audit ketersediaan air, efisiensi irigasi, dan cadangan air di sentra produksi."));
+  if (climate?.available && climate.rain != null && climate.rain > 0) actions.push(t("Periksa drainase dan kesiapan penanganan genangan di lahan yang rentan banjir."));
   if (risk.change != null && risk.change < 0) actions.push(t("Tinjau cadangan serta distribusi pangan; proyeksi produksi padi per kapita menurun."));
   if (!actions.length) actions.push(t("Lanjutkan pemantauan hasil panen, kondisi air, dan distribusi pangan secara berkala."));
   return {

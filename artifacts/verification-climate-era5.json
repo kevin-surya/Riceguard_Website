@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-09",
+  "source": "ERA5 via Open-Meteo Historical Weather API",
+  "baseline": "1991–2020, same calendar month, 30 complete years",
+  "monitoringPeriod": "2021-01 through 2026-09",
+  "monitoringPoints": 11,
+  "regionalMeanClaimed": false,
+  "rawDataCacheIgnored": true,
+  "climateChunkGzipKB": 11.96,
+  "fullSuitePassed": 51,
+  "affectedServerTestsRerunAfterUnitsFix": 24,
+  "buildPassed": true,
+  "dailyAggregationChecks": [
+    "leap February",
+    "missing value excluded",
+    "duplicate day excluded"
+  ],
+  "browserChecks": [
+    "point and month selection",
+    "production forecast year does not change climate month",
+    "390px viewport without overflow",
+    "Indonesian translation",
+    "English restored",
+    "no console errors"
+  ],
+  "realAIAnalysisVerified": true,
+  "aiUnitsVerified": {
+    "productionDeclinePercent": 0.33,
+    "temperatureAnomalyC": 1.1393333333333437,
+    "rainfallChangePercent": -72.89258053653609
+  },
+  "hostedVercelVerified": false,
+  "refresh": "npm run climate:refresh",
+  "screenshot": "artifacts/climate-monitor-era5.png"
+}

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { countries, seriesFor, forecast, slope, indicator, climateFor, pressureThresholds, pressureReason } from '../src/model.mjs';
+import { countries, seriesFor, forecast, slope, indicator, pressureThresholds, pressureReason } from '../src/model.mjs';
 const data = JSON.parse(readFileSync(new URL('../src/data.json', import.meta.url), 'utf-8'));
 
 test('snapshot has 64 annual population observations across all 11 countries', () => {
@@ -61,9 +61,8 @@ test('missing rice stays missing in projections and risk classification', () => 
 
 test('production pressure increases with harvest loss and a zero future harvest is a 100% decline', () => {
   const history = seriesFor(data, 'IDN');
-  const climate = climateFor('IDN');
-  const base = indicator(history, forecast(history, 2030), climate);
-  const stressed = indicator(history, forecast(history, 2030, 'trend', 30), climate);
+  const base = indicator(history, forecast(history, 2030));
+  const stressed = indicator(history, forecast(history, 2030, 'trend', 30));
   assert.ok(stressed.decline >= base.decline);
   assert.ok(stressed.supply < base.supply);
   const extreme = [{ year: 2030, rice: 0, population: 1000 }];

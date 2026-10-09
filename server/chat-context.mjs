@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
-import { countries, seriesFor, forecast, indicator, climateFor, pressureThresholds } from '../src/model.mjs';
+import { countries, seriesFor, forecast, indicator, pressureThresholds } from '../src/model.mjs';
+import { climateContext } from './climate-context.mjs';
 import { notebookForecast, recommendedModels } from '../src/research-model.mjs';
 import { annualRows, annualTotal } from '../src/spatio-timeline.mjs';
 
@@ -20,11 +21,11 @@ export function buildChatContext(selection) {
  if (regional && year>2030) throw Error('Unavailable regional forecast');
  const history = seriesFor(snapshot,countryCode).map(row => regional && row.year===2024 ? {...row,rice:research.forecast.baseline2024.rice/1e6,population:research.forecast.baseline2024.population/1e6} : row);
  const projected = regional ? notebookForecast(research,year,models.riceModel,models.populationModel,stress) : forecast(history,year,scenario==='notebook'?'trend':scenario,stress);
- const climate = climateFor(countryCode);
+ const climate = climateContext(selection.climate, countryCode);
  const context = {
   page:selection.page,country:names[countryCode],forecastYear:year,outlook:regional?'selected regional forecast':'exploratory country/regional trend scenario',harvestLossScenarioPercent:stress,
   units:{rice:'million tonnes of unmilled paddy',population:'million people'},baseline:history.at(-1),forecast:projected.at(-1),
-  productionPressure:{...indicator(history,projected),thresholds:pressureThresholds,classificationBasis:'Percentage decline in paddy production per person from 2024; prototype planning tolerances, not validated food-shortage thresholds; climate excluded'},illustrativeClimate:{...climate,observed:false},weather:null,spatioTemporal:null,
+  productionPressure:{...indicator(history,projected),units:{change:'percent change, already multiplied by 100',decline:'percent decline, already multiplied by 100',supply:'kg of unmilled paddy produced per person'},thresholds:pressureThresholds,classificationBasis:'Percentage decline in paddy production per person from 2024; prototype planning tolerances, not validated food-shortage thresholds; climate excluded'},climate,weather:null,spatioTemporal:null,
  };
  const weather=selection.weather;
  if (weather && countries.some(country=>country.code===weather.countryCode) && Array.isArray(weather.days) && weather.days.length>0 && weather.days.length<=7) {

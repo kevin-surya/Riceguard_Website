@@ -88,7 +88,7 @@ test('server functions load from an isolated deployment directory without .env o
  const included=config.functions['api/chat.js'].includeFiles.slice(1,-1).split(',');
  const temp=mkdtempSync(join(tmpdir(),'riceguard-vercel-'));
  try{
-  const files=['package.json','api/chat.js','api/chat/status.js','api/analyze.js','server/chat.mjs','server/chat-config.mjs','server/chat-context.mjs','server/ai.mjs','server/http.mjs','server/riceguard-prompt.mjs','src/model.mjs','src/i18n-core.mjs','src/research-model.mjs','src/spatio-timeline.mjs',...included];
+  const files=['package.json','api/chat.js','api/chat/status.js','api/analyze.js','server/chat.mjs','server/chat-config.mjs','server/chat-context.mjs','server/climate-context.mjs','server/ai.mjs','server/http.mjs','server/riceguard-prompt.mjs','src/model.mjs','src/climate-model.mjs','src/i18n-core.mjs','src/research-model.mjs','src/spatio-timeline.mjs',...included];
   for(const file of files){const destination=join(temp,file);mkdirSync(dirname(destination),{recursive:true});copyFileSync(new URL(`../${file}`,import.meta.url),destination);}
   const otherCwd=join(temp,'unrelated-cwd');mkdirSync(otherCwd);
   const root=pathToFileURL(temp+sep).href;

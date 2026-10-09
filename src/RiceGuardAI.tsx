@@ -5,7 +5,7 @@ import { recentChat } from './chat-history.mjs';
 import './chat.css';
 
 export type SpatioSelection = {year:number;scenario:string;countryCode:string;layer:string};
-export type ChatSelection = {page:string;countryCode:string;year:number;scenario:string;stress:number;spatio:SpatioSelection|null;weather:{countryCode:string;days:{date:string;maxTemperatureC:number|null;rainMm:number|null}[]}|null};
+export type ChatSelection = {page:string;countryCode:string;year:number;scenario:string;stress:number;spatio:SpatioSelection|null;climate?:{countryCode:string;period:string};weather:{countryCode:string;days:{date:string;maxTemperatureC:number|null;rainMm:number|null}[]}|null};
 type Message={role:'user'|'assistant';content:string;scope:string};
 const prompts=['How can I prepare for drought?','How can I reduce losses from heavy rain?','What should I do based on this outlook?'];
 const errors:Record<string,string>={NOT_CONFIGURED:'AI is not connected yet. Add your API key in .env and restart the server.',INVALID_KEY:'The API key could not be used. Check your OpenAI key and model access.',RATE_LIMITED:'The AI usage limit was reached. Check your API quota, then try again.',BUSY:'AI is handling another request. Try again shortly.',TIMEOUT:'The reply took too long. Please try again.',INCOMPLETE_RESPONSE:'The reply was incomplete. Please try again.'};

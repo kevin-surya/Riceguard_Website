@@ -9,6 +9,6 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), { name: 'riceguard-ai', configureServer(server) { server.middlewares.use(middleware); server.middlewares.use(chat); }, configurePreviewServer(server) { server.middlewares.use(middleware); server.middlewares.use(chat); } }],
     server: { port: 5173, strictPort: true },
-    build: { rollupOptions: { output: { manualChunks: { charts: ['recharts'], geography: ['d3-geo'] } } } },
+    build: { rollupOptions: { output: { manualChunks: { charts: ['recharts'], geography: ['d3-geo'], climate: ['./src/climate.json'] } } } },
   };
 });

@@ -1,0 +1,4679 @@
+{
+  "schemaVersion": 1,
+  "retrievedAt": "2026-10-09T12:43:42.803715+00:00",
+  "asOf": "2026-10-09",
+  "latestPeriod": "2026-09",
+  "periods": [
+    "2021-01",
+    "2021-02",
+    "2021-03",
+    "2021-04",
+    "2021-05",
+    "2021-06",
+    "2021-07",
+    "2021-08",
+    "2021-09",
+    "2021-10",
+    "2021-11",
+    "2021-12",
+    "2022-01",
+    "2022-02",
+    "2022-03",
+    "2022-04",
+    "2022-05",
+    "2022-06",
+    "2022-07",
+    "2022-08",
+    "2022-09",
+    "2022-10",
+    "2022-11",
+    "2022-12",
+    "2023-01",
+    "2023-02",
+    "2023-03",
+    "2023-04",
+    "2023-05",
+    "2023-06",
+    "2023-07",
+    "2023-08",
+    "2023-09",
+    "2023-10",
+    "2023-11",
+    "2023-12",
+    "2024-01",
+    "2024-02",
+    "2024-03",
+    "2024-04",
+    "2024-05",
+    "2024-06",
+    "2024-07",
+    "2024-08",
+    "2024-09",
+    "2024-10",
+    "2024-11",
+    "2024-12",
+    "2025-01",
+    "2025-02",
+    "2025-03",
+    "2025-04",
+    "2025-05",
+    "2025-06",
+    "2025-07",
+    "2025-08",
+    "2025-09",
+    "2025-10",
+    "2025-11",
+    "2025-12",
+    "2026-01",
+    "2026-02",
+    "2026-03",
+    "2026-04",
+    "2026-05",
+    "2026-06",
+    "2026-07",
+    "2026-08",
+    "2026-09"
+  ],
+  "baseline": {
+    "startYear": 1991,
+    "endYear": 2020,
+    "years": 30
+  },
+  "source": {
+    "name": "ERA5 via Open-Meteo",
+    "model": "era5",
+    "url": "https://open-meteo.com/en/docs/historical-weather-api",
+    "normalsUrl": "https://wmo.int/wmo-climatological-normals",
+    "kind": "gridded reanalysis",
+    "resolutionDegrees": 0.25
+  },
+  "points": {
+    "IDN": {
+      "location": "Karawang, Jawa Barat",
+      "latitude": -6.3,
+      "longitude": 107.3,
+      "gridLatitude": -6.25,
+      "gridLongitude": 107.25,
+      "timezone": "Asia/Jakarta",
+      "normals": {
+        "01": {
+          "temperatureMeanC": 26.527096774193545,
+          "precipitationMm": 343.75,
+          "completeYears": 30
+        },
+        "02": {
+          "temperatureMeanC": 26.4576395730706,
+          "precipitationMm": 329.92000000000013,
+          "completeYears": 30
+        },
+        "03": {
+          "temperatureMeanC": 26.88763440860215,
+          "precipitationMm": 299.62000000000006,
+          "completeYears": 30
+        },
+        "04": {
+          "temperatureMeanC": 27.234222222222222,
+          "precipitationMm": 235.82,
+          "completeYears": 30
+        },
+        "05": {
+          "temperatureMeanC": 27.477634408602153,
+          "precipitationMm": 135.15666666666667,
+          "completeYears": 30
+        },
+        "06": {
+          "temperatureMeanC": 27.158888888888885,
+          "precipitationMm": 89.12666666666664,
+          "completeYears": 30
+        },
+        "07": {
+          "temperatureMeanC": 26.868494623655916,
+          "precipitationMm": 65.64999999999999,
+          "completeYears": 30
+        },
+        "08": {
+          "temperatureMeanC": 27.10236559139785,
+          "precipitationMm": 37.57000000000001,
+          "completeYears": 30
+        },
+        "09": {
+          "temperatureMeanC": 27.497333333333327,
+          "precipitationMm": 59.39333333333334,
+          "completeYears": 30
+        },
+        "10": {
+          "temperatureMeanC": 27.627204301075267,
+          "precipitationMm": 157.1533333333333,
+          "completeYears": 30
+        },
+        "11": {
+          "temperatureMeanC": 27.24466666666667,
+          "precipitationMm": 270.56666666666666,
+          "completeYears": 30
+        },
+        "12": {
+          "temperatureMeanC": 26.933440860215057,
+          "precipitationMm": 301.6733333333334,
+          "completeYears": 30
+        }
+      },
+      "months": {
+        "2021-01": {
+          "temperatureMeanC": 26.35483870967742,
+          "precipitationMm": 371.6,
+          "days": 31
+        },
+        "2021-02": {
+          "temperatureMeanC": 26.37142857142857,
+          "precipitationMm": 445.9,
+          "days": 28
+        },
+        "2021-03": {
+          "temperatureMeanC": 27.087096774193547,
+          "precipitationMm": 280.99999999999994,
+          "days": 31
+        },
+        "2021-04": {
+          "temperatureMeanC": 27.41,
+          "precipitationMm": 205.5,
+          "days": 30
+        },
+        "2021-05": {
+          "temperatureMeanC": 27.954838709677418,
+          "precipitationMm": 101.1,
+          "days": 31
+        },
+        "2021-06": {
+          "temperatureMeanC": 27.1,
+          "precipitationMm": 151.99999999999997,
+          "days": 30
+        },
+        "2021-07": {
+          "temperatureMeanC": 27.070967741935487,
+          "precipitationMm": 56.20000000000001,
+          "days": 31
+        },
+        "2021-08": {
+          "temperatureMeanC": 27.329032258064522,
+          "precipitationMm": 108.3,
+          "days": 31
+        },
+        "2021-09": {
+          "temperatureMeanC": 27.846666666666668,
+          "precipitationMm": 117.90000000000002,
+          "days": 30
+        },
+        "2021-10": {
+          "temperatureMeanC": 27.790322580645153,
+          "precipitationMm": 172.29999999999998,
+          "days": 31
+        },
+        "2021-11": {
+          "temperatureMeanC": 27.370000000000008,
+          "precipitationMm": 360.8999999999999,
+          "days": 30
+        },
+        "2021-12": {
+          "temperatureMeanC": 27.235483870967737,
+          "precipitationMm": 249.8,
+          "days": 31
+        },
+        "2022-01": {
+          "temperatureMeanC": 27.016129032258068,
+          "precipitationMm": 234.20000000000002,
+          "days": 31
+        },
+        "2022-02": {
+          "temperatureMeanC": 26.860714285714284,
+          "precipitationMm": 226.60000000000002,
+          "days": 28
+        },
+        "2022-03": {
+          "temperatureMeanC": 27.383870967741935,
+          "precipitationMm": 211.09999999999997,
+          "days": 31
+        },
+        "2022-04": {
+          "temperatureMeanC": 27.516666666666662,
+          "precipitationMm": 220.29999999999998,
+          "days": 30
+        },
+        "2022-05": {
+          "temperatureMeanC": 27.567741935483873,
+          "precipitationMm": 154.00000000000003,
+          "days": 31
+        },
+        "2022-06": {
+          "temperatureMeanC": 26.756666666666668,
+          "precipitationMm": 172.70000000000002,
+          "days": 30
+        },
+        "2022-07": {
+          "temperatureMeanC": 27.264516129032256,
+          "precipitationMm": 100.4,
+          "days": 31
+        },
+        "2022-08": {
+          "temperatureMeanC": 27.403225806451612,
+          "precipitationMm": 77.8,
+          "days": 31
+        },
+        "2022-09": {
+          "temperatureMeanC": 27.416666666666664,
+          "precipitationMm": 117.60000000000001,
+          "days": 30
+        },
+        "2022-10": {
+          "temperatureMeanC": 27.170967741935478,
+          "precipitationMm": 335.49999999999994,
+          "days": 31
+        },
+        "2022-11": {
+          "temperatureMeanC": 27.22000000000001,
+          "precipitationMm": 224.10000000000002,
+          "days": 30
+        },
+        "2022-12": {
+          "temperatureMeanC": 26.854838709677423,
+          "precipitationMm": 290.4,
+          "days": 31
+        },
+        "2023-01": {
+          "temperatureMeanC": 27.009677419354833,
+          "precipitationMm": 211.09999999999997,
+          "days": 31
+        },
+        "2023-02": {
+          "temperatureMeanC": 26.425,
+          "precipitationMm": 328.59999999999997,
+          "days": 28
+        },
+        "2023-03": {
+          "temperatureMeanC": 27.0,
+          "precipitationMm": 227.19999999999993,
+          "days": 31
+        },
+        "2023-04": {
+          "temperatureMeanC": 27.859999999999996,
+          "precipitationMm": 125.60000000000001,
+          "days": 30
+        },
+        "2023-05": {
+          "temperatureMeanC": 28.30645161290322,
+          "precipitationMm": 119.00000000000001,
+          "days": 31
+        },
+        "2023-06": {
+          "temperatureMeanC": 27.790000000000003,
+          "precipitationMm": 74.60000000000001,
+          "days": 30
+        },
+        "2023-07": {
+          "temperatureMeanC": 27.39032258064515,
+          "precipitationMm": 67.50000000000001,
+          "days": 31
+        },
+        "2023-08": {
+          "temperatureMeanC": 27.561290322580643,
+          "precipitationMm": 8.899999999999999,
+          "days": 31
+        },
+        "2023-09": {
+          "temperatureMeanC": 28.120000000000005,
+          "precipitationMm": 3.9,
+          "days": 30
+        },
+        "2023-10": {
+          "temperatureMeanC": 29.067741935483873,
+          "precipitationMm": 41.2,
+          "days": 31
+        },
+        "2023-11": {
+          "temperatureMeanC": 28.233333333333327,
+          "precipitationMm": 231.49999999999997,
+          "days": 30
+        },
+        "2023-12": {
+          "temperatureMeanC": 28.074193548387097,
+          "precipitationMm": 194.39999999999998,
+          "days": 31
+        },
+        "2024-01": {
+          "temperatureMeanC": 27.509677419354844,
+          "precipitationMm": 362.8,
+          "days": 31
+        },
+        "2024-02": {
+          "temperatureMeanC": 27.572413793103454,
+          "precipitationMm": 359.90000000000003,
+          "days": 29
+        },
+        "2024-03": {
+          "temperatureMeanC": 27.606451612903218,
+          "precipitationMm": 283.89999999999986,
+          "days": 31
+        },
+        "2024-04": {
+          "temperatureMeanC": 28.27,
+          "precipitationMm": 270.29999999999995,
+          "days": 30
+        },
+        "2024-05": {
+          "temperatureMeanC": 28.777419354838717,
+          "precipitationMm": 111.5,
+          "days": 31
+        },
+        "2024-06": {
+          "temperatureMeanC": 27.849999999999998,
+          "precipitationMm": 121.10000000000002,
+          "days": 30
+        },
+        "2024-07": {
+          "temperatureMeanC": 27.232258064516127,
+          "precipitationMm": 104.59999999999998,
+          "days": 31
+        },
+        "2024-08": {
+          "temperatureMeanC": 27.732258064516135,
+          "precipitationMm": 22.900000000000006,
+          "days": 31
+        },
+        "2024-09": {
+          "temperatureMeanC": 28.28666666666667,
+          "precipitationMm": 75.0,
+          "days": 30
+        },
+        "2024-10": {
+          "temperatureMeanC": 28.670967741935478,
+          "precipitationMm": 73.80000000000001,
+          "days": 31
+        },
+        "2024-11": {
+          "temperatureMeanC": 28.020000000000007,
+          "precipitationMm": 300.99999999999994,
+          "days": 30
+        },
+        "2024-12": {
+          "temperatureMeanC": 27.625806451612902,
+          "precipitationMm": 343.09999999999997,
+          "days": 31
+        },
+        "2025-01": {
+          "temperatureMeanC": 27.222580645161283,
+          "precipitationMm": 406.50000000000006,
+          "days": 31
+        },
+        "2025-02": {
+          "temperatureMeanC": 27.210714285714282,
+          "precipitationMm": 250.79999999999998,
+          "days": 28
+        },
+        "2025-03": {
+          "temperatureMeanC": 27.519354838709674,
+          "precipitationMm": 386.29999999999995,
+          "days": 31
+        },
+        "2025-04": {
+          "temperatureMeanC": 27.590000000000007,
+          "precipitationMm": 253.3,
+          "days": 30
+        },
+        "2025-05": {
+          "temperatureMeanC": 27.799999999999997,
+          "precipitationMm": 218.09999999999994,
+          "days": 31
+        },
+        "2025-06": {
+          "temperatureMeanC": 27.440000000000005,
+          "precipitationMm": 126.20000000000002,
+          "days": 30
+        },
+        "2025-07": {
+          "temperatureMeanC": 27.40967741935484,
+          "precipitationMm": 50.0,
+          "days": 31
+        },
+        "2025-08": {
+          "temperatureMeanC": 27.203225806451613,
+          "precipitationMm": 117.79999999999998,
+          "days": 31
+        },
+        "2025-09": {
+          "temperatureMeanC": 27.846666666666657,
+          "precipitationMm": 134.50000000000003,
+          "days": 30
+        },
+        "2025-10": {
+          "temperatureMeanC": 27.91612903225806,
+          "precipitationMm": 217.89999999999998,
+          "days": 31
+        },
+        "2025-11": {
+          "temperatureMeanC": 27.61,
+          "precipitationMm": 231.69999999999993,
+          "days": 30
+        },
+        "2025-12": {
+          "temperatureMeanC": 27.361290322580647,
+          "precipitationMm": 267.20000000000005,
+          "days": 31
+        },
+        "2026-01": {
+          "temperatureMeanC": 26.25483870967742,
+          "precipitationMm": 404.09999999999997,
+          "days": 31
+        },
+        "2026-02": {
+          "temperatureMeanC": 26.664285714285707,
+          "precipitationMm": 259.09999999999997,
+          "days": 28
+        },
+        "2026-03": {
+          "temperatureMeanC": 27.135483870967743,
+          "precipitationMm": 260.7,
+          "days": 31
+        },
+        "2026-04": {
+          "temperatureMeanC": 27.85,
+          "precipitationMm": 211.19999999999993,
+          "days": 30
+        },
+        "2026-05": {
+          "temperatureMeanC": 27.91612903225806,
+          "precipitationMm": 160.6,
+          "days": 31
+        },
+        "2026-06": {
+          "temperatureMeanC": 28.013333333333332,
+          "precipitationMm": 17.7,
+          "days": 30
+        },
+        "2026-07": {
+          "temperatureMeanC": 27.712903225806453,
+          "precipitationMm": 2.3000000000000003,
+          "days": 31
+        },
+        "2026-08": {
+          "temperatureMeanC": 28.003225806451614,
+          "precipitationMm": 9.2,
+          "days": 31
+        },
+        "2026-09": {
+          "temperatureMeanC": 28.63666666666667,
+          "precipitationMm": 16.1,
+          "days": 30
+        }
+      }
+    },
+    "VNM": {
+      "location": "Can Tho, Delta Mekong",
+      "latitude": 10.04,
+      "longitude": 105.79,
+      "gridLatitude": 10.0,
+      "gridLongitude": 105.75,
+      "timezone": "Asia/Ho_Chi_Minh",
+      "normals": {
+        "01": {
+          "temperatureMeanC": 25.78688172043011,
+          "precipitationMm": 26.94333333333333,
+          "completeYears": 30
+        },
+        "02": {
+          "temperatureMeanC": 26.546744663382597,
+          "precipitationMm": 11.133333333333333,
+          "completeYears": 30
+        },
+        "03": {
+          "temperatureMeanC": 28.00462365591398,
+          "precipitationMm": 35.236666666666665,
+          "completeYears": 30
+        },
+        "04": {
+          "temperatureMeanC": 29.038444444444444,
+          "precipitationMm": 81.19333333333336,
+          "completeYears": 30
+        },
+        "05": {
+          "temperatureMeanC": 28.59129032258064,
+          "precipitationMm": 197.54333333333335,
+          "completeYears": 30
+        },
+        "06": {
+          "temperatureMeanC": 27.672111111111114,
+          "precipitationMm": 227.16333333333333,
+          "completeYears": 30
+        },
+        "07": {
+          "temperatureMeanC": 27.18537634408602,
+          "precipitationMm": 236.95666666666665,
+          "completeYears": 30
+        },
+        "08": {
+          "temperatureMeanC": 27.1847311827957,
+          "precipitationMm": 240.54000000000002,
+          "completeYears": 30
+        },
+        "09": {
+          "temperatureMeanC": 27.056777777777782,
+          "precipitationMm": 263.0233333333333,
+          "completeYears": 30
+        },
+        "10": {
+          "temperatureMeanC": 26.99612903225806,
+          "precipitationMm": 288.33333333333326,
+          "completeYears": 30
+        },
+        "11": {
+          "temperatureMeanC": 26.93933333333333,
+          "precipitationMm": 153.51000000000005,
+          "completeYears": 30
+        },
+        "12": {
+          "temperatureMeanC": 26.079032258064522,
+          "precipitationMm": 76.11999999999998,
+          "completeYears": 30
+        }
+      },
+      "months": {
+        "2021-01": {
+          "temperatureMeanC": 25.241935483870968,
+          "precipitationMm": 11.700000000000001,
+          "days": 31
+        },
+        "2021-02": {
+          "temperatureMeanC": 25.689285714285713,
+          "precipitationMm": 4.1,
+          "days": 28
+        },
+        "2021-03": {
+          "temperatureMeanC": 28.016129032258068,
+          "precipitationMm": 4.1,
+          "days": 31
+        },
+        "2021-04": {
+          "temperatureMeanC": 28.173333333333336,
+          "precipitationMm": 181.3,
+          "days": 30
+        },
+        "2021-05": {
+          "temperatureMeanC": 28.37741935483871,
+          "precipitationMm": 203.4,
+          "days": 31
+        },
+        "2021-06": {
+          "temperatureMeanC": 28.186666666666664,
+          "precipitationMm": 119.49999999999999,
+          "days": 30
+        },
+        "2021-07": {
+          "temperatureMeanC": 27.648387096774186,
+          "precipitationMm": 263.7,
+          "days": 31
+        },
+        "2021-08": {
+          "temperatureMeanC": 27.77741935483871,
+          "precipitationMm": 267.7,
+          "days": 31
+        },
+        "2021-09": {
+          "temperatureMeanC": 27.216666666666665,
+          "precipitationMm": 328.5,
+          "days": 30
+        },
+        "2021-10": {
+          "temperatureMeanC": 27.045161290322582,
+          "precipitationMm": 338.6000000000001,
+          "days": 31
+        },
+        "2021-11": {
+          "temperatureMeanC": 27.10333333333333,
+          "precipitationMm": 391.09999999999997,
+          "days": 30
+        },
+        "2021-12": {
+          "temperatureMeanC": 26.370967741935484,
+          "precipitationMm": 29.5,
+          "days": 31
+        },
+        "2022-01": {
+          "temperatureMeanC": 26.451612903225804,
+          "precipitationMm": 11.2,
+          "days": 31
+        },
+        "2022-02": {
+          "temperatureMeanC": 27.600000000000005,
+          "precipitationMm": 21.8,
+          "days": 28
+        },
+        "2022-03": {
+          "temperatureMeanC": 28.138709677419357,
+          "precipitationMm": 135.0,
+          "days": 31
+        },
+        "2022-04": {
+          "temperatureMeanC": 28.156666666666663,
+          "precipitationMm": 162.70000000000005,
+          "days": 30
+        },
+        "2022-05": {
+          "temperatureMeanC": 27.996774193548383,
+          "precipitationMm": 330.6,
+          "days": 31
+        },
+        "2022-06": {
+          "temperatureMeanC": 28.139999999999993,
+          "precipitationMm": 217.4,
+          "days": 30
+        },
+        "2022-07": {
+          "temperatureMeanC": 27.38064516129032,
+          "precipitationMm": 234.60000000000002,
+          "days": 31
+        },
+        "2022-08": {
+          "temperatureMeanC": 27.3741935483871,
+          "precipitationMm": 202.09999999999997,
+          "days": 31
+        },
+        "2022-09": {
+          "temperatureMeanC": 27.076666666666668,
+          "precipitationMm": 362.4999999999999,
+          "days": 30
+        },
+        "2022-10": {
+          "temperatureMeanC": 27.096774193548388,
+          "precipitationMm": 245.90000000000003,
+          "days": 31
+        },
+        "2022-11": {
+          "temperatureMeanC": 27.230000000000004,
+          "precipitationMm": 240.20000000000002,
+          "days": 30
+        },
+        "2022-12": {
+          "temperatureMeanC": 26.135483870967743,
+          "precipitationMm": 71.79999999999998,
+          "days": 31
+        },
+        "2023-01": {
+          "temperatureMeanC": 25.719354838709677,
+          "precipitationMm": 93.80000000000001,
+          "days": 31
+        },
+        "2023-02": {
+          "temperatureMeanC": 26.517857142857142,
+          "precipitationMm": 15.2,
+          "days": 28
+        },
+        "2023-03": {
+          "temperatureMeanC": 27.122580645161293,
+          "precipitationMm": 2.0,
+          "days": 31
+        },
+        "2023-04": {
+          "temperatureMeanC": 29.473333333333333,
+          "precipitationMm": 50.40000000000001,
+          "days": 30
+        },
+        "2023-05": {
+          "temperatureMeanC": 29.08064516129033,
+          "precipitationMm": 208.79999999999998,
+          "days": 31
+        },
+        "2023-06": {
+          "temperatureMeanC": 28.33333333333333,
+          "precipitationMm": 239.60000000000005,
+          "days": 30
+        },
+        "2023-07": {
+          "temperatureMeanC": 27.690322580645155,
+          "precipitationMm": 280.8999999999999,
+          "days": 31
+        },
+        "2023-08": {
+          "temperatureMeanC": 28.380645161290317,
+          "precipitationMm": 162.10000000000002,
+          "days": 31
+        },
+        "2023-09": {
+          "temperatureMeanC": 27.41,
+          "precipitationMm": 306.90000000000003,
+          "days": 30
+        },
+        "2023-10": {
+          "temperatureMeanC": 27.87096774193548,
+          "precipitationMm": 313.1000000000001,
+          "days": 31
+        },
+        "2023-11": {
+          "temperatureMeanC": 27.606666666666666,
+          "precipitationMm": 155.70000000000002,
+          "days": 30
+        },
+        "2023-12": {
+          "temperatureMeanC": 27.42903225806452,
+          "precipitationMm": 32.60000000000001,
+          "days": 31
+        },
+        "2024-01": {
+          "temperatureMeanC": 26.95161290322582,
+          "precipitationMm": 6.7,
+          "days": 31
+        },
+        "2024-02": {
+          "temperatureMeanC": 27.903448275862075,
+          "precipitationMm": 1.9,
+          "days": 29
+        },
+        "2024-03": {
+          "temperatureMeanC": 28.970967741935475,
+          "precipitationMm": 4.2,
+          "days": 31
+        },
+        "2024-04": {
+          "temperatureMeanC": 30.463333333333335,
+          "precipitationMm": 5.9,
+          "days": 30
+        },
+        "2024-05": {
+          "temperatureMeanC": 29.916129032258066,
+          "precipitationMm": 206.29999999999995,
+          "days": 31
+        },
+        "2024-06": {
+          "temperatureMeanC": 28.946666666666665,
+          "precipitationMm": 211.29999999999998,
+          "days": 30
+        },
+        "2024-07": {
+          "temperatureMeanC": 27.651612903225804,
+          "precipitationMm": 374.2,
+          "days": 31
+        },
+        "2024-08": {
+          "temperatureMeanC": 28.40645161290323,
+          "precipitationMm": 266.0,
+          "days": 31
+        },
+        "2024-09": {
+          "temperatureMeanC": 27.80666666666666,
+          "precipitationMm": 295.59999999999997,
+          "days": 30
+        },
+        "2024-10": {
+          "temperatureMeanC": 27.900000000000002,
+          "precipitationMm": 354.7,
+          "days": 31
+        },
+        "2024-11": {
+          "temperatureMeanC": 28.016666666666662,
+          "precipitationMm": 127.69999999999999,
+          "days": 30
+        },
+        "2024-12": {
+          "temperatureMeanC": 26.358064516129033,
+          "precipitationMm": 167.5,
+          "days": 31
+        },
+        "2025-01": {
+          "temperatureMeanC": 25.53870967741935,
+          "precipitationMm": 6.7,
+          "days": 31
+        },
+        "2025-02": {
+          "temperatureMeanC": 26.83928571428572,
+          "precipitationMm": 40.800000000000004,
+          "days": 28
+        },
+        "2025-03": {
+          "temperatureMeanC": 28.109677419354842,
+          "precipitationMm": 10.6,
+          "days": 31
+        },
+        "2025-04": {
+          "temperatureMeanC": 28.826666666666664,
+          "precipitationMm": 118.9,
+          "days": 30
+        },
+        "2025-05": {
+          "temperatureMeanC": 28.56774193548387,
+          "precipitationMm": 302.3,
+          "days": 31
+        },
+        "2025-06": {
+          "temperatureMeanC": 27.993333333333332,
+          "precipitationMm": 212.9,
+          "days": 30
+        },
+        "2025-07": {
+          "temperatureMeanC": 28.13225806451613,
+          "precipitationMm": 141.7,
+          "days": 31
+        },
+        "2025-08": {
+          "temperatureMeanC": 27.79677419354838,
+          "precipitationMm": 210.79999999999998,
+          "days": 31
+        },
+        "2025-09": {
+          "temperatureMeanC": 27.536666666666665,
+          "precipitationMm": 307.09999999999997,
+          "days": 30
+        },
+        "2025-10": {
+          "temperatureMeanC": 27.7,
+          "precipitationMm": 307.70000000000005,
+          "days": 31
+        },
+        "2025-11": {
+          "temperatureMeanC": 26.866666666666667,
+          "precipitationMm": 184.2,
+          "days": 30
+        },
+        "2025-12": {
+          "temperatureMeanC": 26.900000000000002,
+          "precipitationMm": 110.00000000000001,
+          "days": 31
+        },
+        "2026-01": {
+          "temperatureMeanC": 24.86774193548387,
+          "precipitationMm": 19.200000000000006,
+          "days": 31
+        },
+        "2026-02": {
+          "temperatureMeanC": 26.71428571428571,
+          "precipitationMm": 57.6,
+          "days": 28
+        },
+        "2026-03": {
+          "temperatureMeanC": 27.503225806451614,
+          "precipitationMm": 14.499999999999996,
+          "days": 31
+        },
+        "2026-04": {
+          "temperatureMeanC": 29.356666666666673,
+          "precipitationMm": 4.8,
+          "days": 30
+        },
+        "2026-05": {
+          "temperatureMeanC": 29.200000000000003,
+          "precipitationMm": 210.4,
+          "days": 31
+        },
+        "2026-06": {
+          "temperatureMeanC": 28.65666666666667,
+          "precipitationMm": 238.29999999999998,
+          "days": 30
+        },
+        "2026-07": {
+          "temperatureMeanC": 27.806451612903228,
+          "precipitationMm": 284.80000000000007,
+          "days": 31
+        },
+        "2026-08": {
+          "temperatureMeanC": 28.338709677419356,
+          "precipitationMm": 188.20000000000002,
+          "days": 31
+        },
+        "2026-09": {
+          "temperatureMeanC": 27.94666666666667,
+          "precipitationMm": 297.3,
+          "days": 30
+        }
+      }
+    },
+    "THA": {
+      "location": "Suphan Buri",
+      "latitude": 14.47,
+      "longitude": 100.12,
+      "gridLatitude": 14.5,
+      "gridLongitude": 100.0,
+      "timezone": "Asia/Bangkok",
+      "normals": {
+        "01": {
+          "temperatureMeanC": 26.759677419354837,
+          "precipitationMm": 12.769999999999998,
+          "completeYears": 30
+        },
+        "02": {
+          "temperatureMeanC": 28.47654761904762,
+          "precipitationMm": 14.153333333333336,
+          "completeYears": 30
+        },
+        "03": {
+          "temperatureMeanC": 30.38193548387096,
+          "precipitationMm": 41.79666666666665,
+          "completeYears": 30
+        },
+        "04": {
+          "temperatureMeanC": 31.54699999999999,
+          "precipitationMm": 83.16000000000001,
+          "completeYears": 30
+        },
+        "05": {
+          "temperatureMeanC": 30.82354838709677,
+          "precipitationMm": 144.82666666666665,
+          "completeYears": 30
+        },
+        "06": {
+          "temperatureMeanC": 30.296000000000006,
+          "precipitationMm": 120.23333333333332,
+          "completeYears": 30
+        },
+        "07": {
+          "temperatureMeanC": 29.734086021505377,
+          "precipitationMm": 125.04000000000002,
+          "completeYears": 30
+        },
+        "08": {
+          "temperatureMeanC": 29.393655913978495,
+          "precipitationMm": 141.90333333333334,
+          "completeYears": 30
+        },
+        "09": {
+          "temperatureMeanC": 28.95333333333334,
+          "precipitationMm": 236.2766666666667,
+          "completeYears": 30
+        },
+        "10": {
+          "temperatureMeanC": 28.29086021505375,
+          "precipitationMm": 182.26333333333332,
+          "completeYears": 30
+        },
+        "11": {
+          "temperatureMeanC": 27.89800000000001,
+          "precipitationMm": 38.89000000000001,
+          "completeYears": 30
+        },
+        "12": {
+          "temperatureMeanC": 26.570752688172043,
+          "precipitationMm": 11.763333333333332,
+          "completeYears": 30
+        }
+      },
+      "months": {
+        "2021-01": {
+          "temperatureMeanC": 25.364516129032257,
+          "precipitationMm": 0.1,
+          "days": 31
+        },
+        "2021-02": {
+          "temperatureMeanC": 28.54285714285714,
+          "precipitationMm": 3.0999999999999996,
+          "days": 28
+        },
+        "2021-03": {
+          "temperatureMeanC": 31.3967741935484,
+          "precipitationMm": 20.0,
+          "days": 31
+        },
+        "2021-04": {
+          "temperatureMeanC": 30.036666666666665,
+          "precipitationMm": 209.0,
+          "days": 30
+        },
+        "2021-05": {
+          "temperatureMeanC": 31.448387096774187,
+          "precipitationMm": 106.80000000000001,
+          "days": 31
+        },
+        "2021-06": {
+          "temperatureMeanC": 31.09333333333333,
+          "precipitationMm": 70.9,
+          "days": 30
+        },
+        "2021-07": {
+          "temperatureMeanC": 29.67096774193549,
+          "precipitationMm": 161.19999999999996,
+          "days": 31
+        },
+        "2021-08": {
+          "temperatureMeanC": 29.929032258064517,
+          "precipitationMm": 156.3,
+          "days": 31
+        },
+        "2021-09": {
+          "temperatureMeanC": 28.269999999999992,
+          "precipitationMm": 382.7000000000001,
+          "days": 30
+        },
+        "2021-10": {
+          "temperatureMeanC": 28.283870967741937,
+          "precipitationMm": 234.5,
+          "days": 31
+        },
+        "2021-11": {
+          "temperatureMeanC": 27.919999999999995,
+          "precipitationMm": 100.90000000000002,
+          "days": 30
+        },
+        "2021-12": {
+          "temperatureMeanC": 25.509677419354844,
+          "precipitationMm": 3.4000000000000004,
+          "days": 31
+        },
+        "2022-01": {
+          "temperatureMeanC": 27.022580645161288,
+          "precipitationMm": 6.1000000000000005,
+          "days": 31
+        },
+        "2022-02": {
+          "temperatureMeanC": 27.650000000000002,
+          "precipitationMm": 62.9,
+          "days": 28
+        },
+        "2022-03": {
+          "temperatureMeanC": 29.661290322580644,
+          "precipitationMm": 146.2,
+          "days": 31
+        },
+        "2022-04": {
+          "temperatureMeanC": 30.290000000000003,
+          "precipitationMm": 50.20000000000001,
+          "days": 30
+        },
+        "2022-05": {
+          "temperatureMeanC": 29.119354838709675,
+          "precipitationMm": 205.39999999999998,
+          "days": 31
+        },
+        "2022-06": {
+          "temperatureMeanC": 30.52333333333333,
+          "precipitationMm": 58.0,
+          "days": 30
+        },
+        "2022-07": {
+          "temperatureMeanC": 29.89677419354839,
+          "precipitationMm": 178.10000000000002,
+          "days": 31
+        },
+        "2022-08": {
+          "temperatureMeanC": 29.161290322580644,
+          "precipitationMm": 157.89999999999998,
+          "days": 31
+        },
+        "2022-09": {
+          "temperatureMeanC": 28.45,
+          "precipitationMm": 273.2,
+          "days": 30
+        },
+        "2022-10": {
+          "temperatureMeanC": 27.88064516129032,
+          "precipitationMm": 142.99999999999994,
+          "days": 31
+        },
+        "2022-11": {
+          "temperatureMeanC": 28.18,
+          "precipitationMm": 129.4,
+          "days": 30
+        },
+        "2022-12": {
+          "temperatureMeanC": 25.732258064516138,
+          "precipitationMm": 2.6999999999999997,
+          "days": 31
+        },
+        "2023-01": {
+          "temperatureMeanC": 25.83548387096774,
+          "precipitationMm": 1.4000000000000001,
+          "days": 31
+        },
+        "2023-02": {
+          "temperatureMeanC": 28.05714285714286,
+          "precipitationMm": 18.5,
+          "days": 28
+        },
+        "2023-03": {
+          "temperatureMeanC": 30.03548387096775,
+          "precipitationMm": 5.3,
+          "days": 31
+        },
+        "2023-04": {
+          "temperatureMeanC": 32.626666666666665,
+          "precipitationMm": 30.8,
+          "days": 30
+        },
+        "2023-05": {
+          "temperatureMeanC": 32.43548387096774,
+          "precipitationMm": 92.29999999999998,
+          "days": 31
+        },
+        "2023-06": {
+          "temperatureMeanC": 31.52,
+          "precipitationMm": 76.1,
+          "days": 30
+        },
+        "2023-07": {
+          "temperatureMeanC": 30.64193548387097,
+          "precipitationMm": 135.99999999999997,
+          "days": 31
+        },
+        "2023-08": {
+          "temperatureMeanC": 31.016129032258057,
+          "precipitationMm": 54.7,
+          "days": 31
+        },
+        "2023-09": {
+          "temperatureMeanC": 29.429999999999993,
+          "precipitationMm": 224.2,
+          "days": 30
+        },
+        "2023-10": {
+          "temperatureMeanC": 28.954838709677425,
+          "precipitationMm": 231.9,
+          "days": 31
+        },
+        "2023-11": {
+          "temperatureMeanC": 28.216666666666658,
+          "precipitationMm": 72.69999999999999,
+          "days": 30
+        },
+        "2023-12": {
+          "temperatureMeanC": 28.41612903225806,
+          "precipitationMm": 4.5,
+          "days": 31
+        },
+        "2024-01": {
+          "temperatureMeanC": 28.10967741935484,
+          "precipitationMm": 11.499999999999998,
+          "days": 31
+        },
+        "2024-02": {
+          "temperatureMeanC": 29.724137931034488,
+          "precipitationMm": 6.199999999999998,
+          "days": 29
+        },
+        "2024-03": {
+          "temperatureMeanC": 31.44193548387097,
+          "precipitationMm": 36.1,
+          "days": 31
+        },
+        "2024-04": {
+          "temperatureMeanC": 33.64000000000001,
+          "precipitationMm": 4.199999999999999,
+          "days": 30
+        },
+        "2024-05": {
+          "temperatureMeanC": 31.49354838709677,
+          "precipitationMm": 164.7,
+          "days": 31
+        },
+        "2024-06": {
+          "temperatureMeanC": 30.939999999999998,
+          "precipitationMm": 92.30000000000001,
+          "days": 30
+        },
+        "2024-07": {
+          "temperatureMeanC": 29.512903225806454,
+          "precipitationMm": 161.3,
+          "days": 31
+        },
+        "2024-08": {
+          "temperatureMeanC": 30.167741935483875,
+          "precipitationMm": 150.29999999999998,
+          "days": 31
+        },
+        "2024-09": {
+          "temperatureMeanC": 29.659999999999993,
+          "precipitationMm": 186.20000000000005,
+          "days": 30
+        },
+        "2024-10": {
+          "temperatureMeanC": 29.135483870967743,
+          "precipitationMm": 221.49999999999997,
+          "days": 31
+        },
+        "2024-11": {
+          "temperatureMeanC": 29.070000000000004,
+          "precipitationMm": 26.5,
+          "days": 30
+        },
+        "2024-12": {
+          "temperatureMeanC": 27.119354838709683,
+          "precipitationMm": 11.9,
+          "days": 31
+        },
+        "2025-01": {
+          "temperatureMeanC": 25.277419354838706,
+          "precipitationMm": 0.0,
+          "days": 31
+        },
+        "2025-02": {
+          "temperatureMeanC": 28.257142857142867,
+          "precipitationMm": 33.49999999999999,
+          "days": 28
+        },
+        "2025-03": {
+          "temperatureMeanC": 30.329032258064515,
+          "precipitationMm": 48.0,
+          "days": 31
+        },
+        "2025-04": {
+          "temperatureMeanC": 31.339999999999993,
+          "precipitationMm": 69.90000000000002,
+          "days": 30
+        },
+        "2025-05": {
+          "temperatureMeanC": 29.867741935483863,
+          "precipitationMm": 268.99999999999994,
+          "days": 31
+        },
+        "2025-06": {
+          "temperatureMeanC": 29.95333333333333,
+          "precipitationMm": 111.50000000000001,
+          "days": 30
+        },
+        "2025-07": {
+          "temperatureMeanC": 29.51290322580645,
+          "precipitationMm": 128.5,
+          "days": 31
+        },
+        "2025-08": {
+          "temperatureMeanC": 29.938709677419347,
+          "precipitationMm": 148.29999999999993,
+          "days": 31
+        },
+        "2025-09": {
+          "temperatureMeanC": 28.71333333333333,
+          "precipitationMm": 286.09999999999997,
+          "days": 30
+        },
+        "2025-10": {
+          "temperatureMeanC": 28.677419354838705,
+          "precipitationMm": 198.00000000000003,
+          "days": 31
+        },
+        "2025-11": {
+          "temperatureMeanC": 26.170000000000005,
+          "precipitationMm": 173.0,
+          "days": 30
+        },
+        "2025-12": {
+          "temperatureMeanC": 26.56774193548387,
+          "precipitationMm": 7.000000000000001,
+          "days": 31
+        },
+        "2026-01": {
+          "temperatureMeanC": 25.609677419354846,
+          "precipitationMm": 0.7,
+          "days": 31
+        },
+        "2026-02": {
+          "temperatureMeanC": 28.803571428571423,
+          "precipitationMm": 34.39999999999999,
+          "days": 28
+        },
+        "2026-03": {
+          "temperatureMeanC": 30.412903225806453,
+          "precipitationMm": 15.0,
+          "days": 31
+        },
+        "2026-04": {
+          "temperatureMeanC": 32.97333333333333,
+          "precipitationMm": 7.9,
+          "days": 30
+        },
+        "2026-05": {
+          "temperatureMeanC": 30.764516129032263,
+          "precipitationMm": 143.0,
+          "days": 31
+        },
+        "2026-06": {
+          "temperatureMeanC": 30.63,
+          "precipitationMm": 109.8,
+          "days": 30
+        },
+        "2026-07": {
+          "temperatureMeanC": 30.36451612903227,
+          "precipitationMm": 152.09999999999997,
+          "days": 31
+        },
+        "2026-08": {
+          "temperatureMeanC": 29.335483870967746,
+          "precipitationMm": 147.29999999999998,
+          "days": 31
+        },
+        "2026-09": {
+          "temperatureMeanC": 28.606666666666666,
+          "precipitationMm": 432.70000000000005,
+          "days": 30
+        }
+      }
+    },
+    "MMR": {
+      "location": "Pathein, Ayeyarwady",
+      "latitude": 16.78,
+      "longitude": 94.73,
+      "gridLatitude": 16.75,
+      "gridLongitude": 94.75,
+      "timezone": "Asia/Yangon",
+      "normals": {
+        "01": {
+          "temperatureMeanC": 24.224516129032263,
+          "precipitationMm": 6.1,
+          "completeYears": 30
+        },
+        "02": {
+          "temperatureMeanC": 25.804486863711002,
+          "precipitationMm": 1.3333333333333333,
+          "completeYears": 30
+        },
+        "03": {
+          "temperatureMeanC": 27.848602150537637,
+          "precipitationMm": 9.54666666666667,
+          "completeYears": 30
+        },
+        "04": {
+          "temperatureMeanC": 29.79788888888888,
+          "precipitationMm": 29.293333333333337,
+          "completeYears": 30
+        },
+        "05": {
+          "temperatureMeanC": 29.114516129032257,
+          "precipitationMm": 220.17000000000002,
+          "completeYears": 30
+        },
+        "06": {
+          "temperatureMeanC": 27.28488888888889,
+          "precipitationMm": 451.60666666666674,
+          "completeYears": 30
+        },
+        "07": {
+          "temperatureMeanC": 26.833333333333336,
+          "precipitationMm": 475.26666666666677,
+          "completeYears": 30
+        },
+        "08": {
+          "temperatureMeanC": 26.65204301075269,
+          "precipitationMm": 489.38999999999993,
+          "completeYears": 30
+        },
+        "09": {
+          "temperatureMeanC": 26.917666666666662,
+          "precipitationMm": 366.00666666666655,
+          "completeYears": 30
+        },
+        "10": {
+          "temperatureMeanC": 27.225698924731187,
+          "precipitationMm": 181.4133333333333,
+          "completeYears": 30
+        },
+        "11": {
+          "temperatureMeanC": 26.516555555555552,
+          "precipitationMm": 41.86999999999999,
+          "completeYears": 30
+        },
+        "12": {
+          "temperatureMeanC": 24.58860215053763,
+          "precipitationMm": 6.676666666666667,
+          "completeYears": 30
+        }
+      },
+      "months": {
+        "2021-01": {
+          "temperatureMeanC": 25.132258064516126,
+          "precipitationMm": 8.7,
+          "days": 31
+        },
+        "2021-02": {
+          "temperatureMeanC": 25.632142857142863,
+          "precipitationMm": 0.7,
+          "days": 28
+        },
+        "2021-03": {
+          "temperatureMeanC": 28.28064516129032,
+          "precipitationMm": 4.1,
+          "days": 31
+        },
+        "2021-04": {
+          "temperatureMeanC": 28.553333333333335,
+          "precipitationMm": 143.0,
+          "days": 30
+        },
+        "2021-05": {
+          "temperatureMeanC": 29.619354838709672,
+          "precipitationMm": 146.5,
+          "days": 31
+        },
+        "2021-06": {
+          "temperatureMeanC": 27.303333333333335,
+          "precipitationMm": 427.69999999999993,
+          "days": 30
+        },
+        "2021-07": {
+          "temperatureMeanC": 27.258064516129036,
+          "precipitationMm": 382.4,
+          "days": 31
+        },
+        "2021-08": {
+          "temperatureMeanC": 27.33870967741936,
+          "precipitationMm": 361.4,
+          "days": 31
+        },
+        "2021-09": {
+          "temperatureMeanC": 26.880000000000003,
+          "precipitationMm": 539.1,
+          "days": 30
+        },
+        "2021-10": {
+          "temperatureMeanC": 27.3774193548387,
+          "precipitationMm": 270.59999999999997,
+          "days": 31
+        },
+        "2021-11": {
+          "temperatureMeanC": 27.663333333333338,
+          "precipitationMm": 66.50000000000001,
+          "days": 30
+        },
+        "2021-12": {
+          "temperatureMeanC": 24.516129032258057,
+          "precipitationMm": 1.7999999999999998,
+          "days": 31
+        },
+        "2022-01": {
+          "temperatureMeanC": 24.64516129032259,
+          "precipitationMm": 6.3999999999999995,
+          "days": 31
+        },
+        "2022-02": {
+          "temperatureMeanC": 25.014285714285716,
+          "precipitationMm": 0.9,
+          "days": 28
+        },
+        "2022-03": {
+          "temperatureMeanC": 28.480645161290322,
+          "precipitationMm": 24.1,
+          "days": 31
+        },
+        "2022-04": {
+          "temperatureMeanC": 29.91,
+          "precipitationMm": 16.299999999999997,
+          "days": 30
+        },
+        "2022-05": {
+          "temperatureMeanC": 28.109677419354846,
+          "precipitationMm": 331.6,
+          "days": 31
+        },
+        "2022-06": {
+          "temperatureMeanC": 27.423333333333336,
+          "precipitationMm": 357.6,
+          "days": 30
+        },
+        "2022-07": {
+          "temperatureMeanC": 27.283870967741937,
+          "precipitationMm": 517.0000000000001,
+          "days": 31
+        },
+        "2022-08": {
+          "temperatureMeanC": 26.822580645161292,
+          "precipitationMm": 666.0,
+          "days": 31
+        },
+        "2022-09": {
+          "temperatureMeanC": 27.2,
+          "precipitationMm": 333.8,
+          "days": 30
+        },
+        "2022-10": {
+          "temperatureMeanC": 27.22903225806452,
+          "precipitationMm": 153.9,
+          "days": 31
+        },
+        "2022-11": {
+          "temperatureMeanC": 27.213333333333328,
+          "precipitationMm": 40.0,
+          "days": 30
+        },
+        "2022-12": {
+          "temperatureMeanC": 26.438709677419357,
+          "precipitationMm": 10.299999999999999,
+          "days": 31
+        },
+        "2023-01": {
+          "temperatureMeanC": 24.525806451612908,
+          "precipitationMm": 0.0,
+          "days": 31
+        },
+        "2023-02": {
+          "temperatureMeanC": 26.03571428571429,
+          "precipitationMm": 4.699999999999999,
+          "days": 28
+        },
+        "2023-03": {
+          "temperatureMeanC": 27.951612903225808,
+          "precipitationMm": 25.099999999999998,
+          "days": 31
+        },
+        "2023-04": {
+          "temperatureMeanC": 30.040000000000003,
+          "precipitationMm": 2.3,
+          "days": 30
+        },
+        "2023-05": {
+          "temperatureMeanC": 30.006451612903223,
+          "precipitationMm": 89.39999999999999,
+          "days": 31
+        },
+        "2023-06": {
+          "temperatureMeanC": 27.50333333333333,
+          "precipitationMm": 535.4,
+          "days": 30
+        },
+        "2023-07": {
+          "temperatureMeanC": 27.377419354838715,
+          "precipitationMm": 516.6999999999999,
+          "days": 31
+        },
+        "2023-08": {
+          "temperatureMeanC": 27.516129032258064,
+          "precipitationMm": 316.2,
+          "days": 31
+        },
+        "2023-09": {
+          "temperatureMeanC": 27.139999999999993,
+          "precipitationMm": 461.8999999999999,
+          "days": 30
+        },
+        "2023-10": {
+          "temperatureMeanC": 27.474193548387102,
+          "precipitationMm": 242.20000000000002,
+          "days": 31
+        },
+        "2023-11": {
+          "temperatureMeanC": 27.886666666666663,
+          "precipitationMm": 34.2,
+          "days": 30
+        },
+        "2023-12": {
+          "temperatureMeanC": 26.516129032258068,
+          "precipitationMm": 12.899999999999999,
+          "days": 31
+        },
+        "2024-01": {
+          "temperatureMeanC": 24.735483870967744,
+          "precipitationMm": 3.7,
+          "days": 31
+        },
+        "2024-02": {
+          "temperatureMeanC": 26.15172413793104,
+          "precipitationMm": 0.0,
+          "days": 29
+        },
+        "2024-03": {
+          "temperatureMeanC": 27.680645161290318,
+          "precipitationMm": 0.9,
+          "days": 31
+        },
+        "2024-04": {
+          "temperatureMeanC": 30.576666666666664,
+          "precipitationMm": 0.7000000000000001,
+          "days": 30
+        },
+        "2024-05": {
+          "temperatureMeanC": 30.54193548387096,
+          "precipitationMm": 190.40000000000003,
+          "days": 31
+        },
+        "2024-06": {
+          "temperatureMeanC": 27.393333333333327,
+          "precipitationMm": 613.7999999999998,
+          "days": 30
+        },
+        "2024-07": {
+          "temperatureMeanC": 27.13548387096774,
+          "precipitationMm": 583.3000000000001,
+          "days": 31
+        },
+        "2024-08": {
+          "temperatureMeanC": 27.180645161290325,
+          "precipitationMm": 434.5000000000001,
+          "days": 31
+        },
+        "2024-09": {
+          "temperatureMeanC": 27.389999999999997,
+          "precipitationMm": 397.40000000000003,
+          "days": 30
+        },
+        "2024-10": {
+          "temperatureMeanC": 27.81935483870968,
+          "precipitationMm": 223.7,
+          "days": 31
+        },
+        "2024-11": {
+          "temperatureMeanC": 26.700000000000003,
+          "precipitationMm": 154.49999999999997,
+          "days": 30
+        },
+        "2024-12": {
+          "temperatureMeanC": 26.13870967741936,
+          "precipitationMm": 0.6,
+          "days": 31
+        },
+        "2025-01": {
+          "temperatureMeanC": 24.632258064516137,
+          "precipitationMm": 0.9,
+          "days": 31
+        },
+        "2025-02": {
+          "temperatureMeanC": 26.507142857142856,
+          "precipitationMm": 5.6,
+          "days": 28
+        },
+        "2025-03": {
+          "temperatureMeanC": 28.387096774193548,
+          "precipitationMm": 0.1,
+          "days": 31
+        },
+        "2025-04": {
+          "temperatureMeanC": 28.953333333333333,
+          "precipitationMm": 137.2,
+          "days": 30
+        },
+        "2025-05": {
+          "temperatureMeanC": 28.445161290322588,
+          "precipitationMm": 282.6000000000001,
+          "days": 31
+        },
+        "2025-06": {
+          "temperatureMeanC": 27.156666666666663,
+          "precipitationMm": 533.1,
+          "days": 30
+        },
+        "2025-07": {
+          "temperatureMeanC": 27.032258064516128,
+          "precipitationMm": 441.8999999999999,
+          "days": 31
+        },
+        "2025-08": {
+          "temperatureMeanC": 27.148387096774194,
+          "precipitationMm": 406.1000000000001,
+          "days": 31
+        },
+        "2025-09": {
+          "temperatureMeanC": 26.946666666666662,
+          "precipitationMm": 438.5,
+          "days": 30
+        },
+        "2025-10": {
+          "temperatureMeanC": 27.60967741935484,
+          "precipitationMm": 174.59999999999994,
+          "days": 31
+        },
+        "2025-11": {
+          "temperatureMeanC": 26.196666666666665,
+          "precipitationMm": 79.10000000000001,
+          "days": 30
+        },
+        "2025-12": {
+          "temperatureMeanC": 24.929032258064517,
+          "precipitationMm": 0.0,
+          "days": 31
+        },
+        "2026-01": {
+          "temperatureMeanC": 25.07741935483871,
+          "precipitationMm": 0.6000000000000001,
+          "days": 31
+        },
+        "2026-02": {
+          "temperatureMeanC": 26.446428571428562,
+          "precipitationMm": 2.1,
+          "days": 28
+        },
+        "2026-03": {
+          "temperatureMeanC": 27.551612903225802,
+          "precipitationMm": 6.3,
+          "days": 31
+        },
+        "2026-04": {
+          "temperatureMeanC": 29.39666666666667,
+          "precipitationMm": 1.6,
+          "days": 30
+        },
+        "2026-05": {
+          "temperatureMeanC": 28.416129032258063,
+          "precipitationMm": 344.1,
+          "days": 31
+        },
+        "2026-06": {
+          "temperatureMeanC": 27.233333333333334,
+          "precipitationMm": 563.2,
+          "days": 30
+        },
+        "2026-07": {
+          "temperatureMeanC": 27.10322580645162,
+          "precipitationMm": 510.99999999999994,
+          "days": 31
+        },
+        "2026-08": {
+          "temperatureMeanC": 26.99677419354839,
+          "precipitationMm": 530.9,
+          "days": 31
+        },
+        "2026-09": {
+          "temperatureMeanC": 27.293333333333337,
+          "precipitationMm": 390.1000000000001,
+          "days": 30
+        }
+      }
+    },
+    "PHL": {
+      "location": "Muñoz, Nueva Ecija",
+      "latitude": 15.72,
+      "longitude": 120.9,
+      "gridLatitude": 15.75,
+      "gridLongitude": 121.0,
+      "timezone": "Asia/Manila",
+      "normals": {
+        "01": {
+          "temperatureMeanC": 25.583870967741927,
+          "precipitationMm": 26.526666666666667,
+          "completeYears": 30
+        },
+        "02": {
+          "temperatureMeanC": 26.154490968801316,
+          "precipitationMm": 30.006666666666668,
+          "completeYears": 30
+        },
+        "03": {
+          "temperatureMeanC": 27.47817204301075,
+          "precipitationMm": 35.086666666666666,
+          "completeYears": 30
+        },
+        "04": {
+          "temperatureMeanC": 28.992666666666665,
+          "precipitationMm": 48.21666666666667,
+          "completeYears": 30
+        },
+        "05": {
+          "temperatureMeanC": 29.172043010752688,
+          "precipitationMm": 198.0566666666667,
+          "completeYears": 30
+        },
+        "06": {
+          "temperatureMeanC": 28.380666666666666,
+          "precipitationMm": 281.5466666666667,
+          "completeYears": 30
+        },
+        "07": {
+          "temperatureMeanC": 27.51086021505377,
+          "precipitationMm": 440.0066666666667,
+          "completeYears": 30
+        },
+        "08": {
+          "temperatureMeanC": 27.198817204301072,
+          "precipitationMm": 425.2966666666665,
+          "completeYears": 30
+        },
+        "09": {
+          "temperatureMeanC": 27.25633333333333,
+          "precipitationMm": 346.79333333333335,
+          "completeYears": 30
+        },
+        "10": {
+          "temperatureMeanC": 27.375591397849462,
+          "precipitationMm": 248.91000000000003,
+          "completeYears": 30
+        },
+        "11": {
+          "temperatureMeanC": 27.02477777777778,
+          "precipitationMm": 93.26333333333332,
+          "completeYears": 30
+        },
+        "12": {
+          "temperatureMeanC": 26.134408602150547,
+          "precipitationMm": 80.16666666666667,
+          "completeYears": 30
+        }
+      },
+      "months": {
+        "2021-01": {
+          "temperatureMeanC": 25.89677419354839,
+          "precipitationMm": 134.6,
+          "days": 31
+        },
+        "2021-02": {
+          "temperatureMeanC": 26.192857142857147,
+          "precipitationMm": 55.50000000000001,
+          "days": 28
+        },
+        "2021-03": {
+          "temperatureMeanC": 27.709677419354836,
+          "precipitationMm": 94.1,
+          "days": 31
+        },
+        "2021-04": {
+          "temperatureMeanC": 28.68333333333333,
+          "precipitationMm": 10.999999999999998,
+          "days": 30
+        },
+        "2021-05": {
+          "temperatureMeanC": 31.05806451612903,
+          "precipitationMm": 25.0,
+          "days": 31
+        },
+        "2021-06": {
+          "temperatureMeanC": 28.716666666666676,
+          "precipitationMm": 253.89999999999998,
+          "days": 30
+        },
+        "2021-07": {
+          "temperatureMeanC": 27.877419354838707,
+          "precipitationMm": 435.5,
+          "days": 31
+        },
+        "2021-08": {
+          "temperatureMeanC": 27.76774193548387,
+          "precipitationMm": 377.99999999999994,
+          "days": 31
+        },
+        "2021-09": {
+          "temperatureMeanC": 27.88333333333333,
+          "precipitationMm": 278.59999999999997,
+          "days": 30
+        },
+        "2021-10": {
+          "temperatureMeanC": 27.609677419354835,
+          "precipitationMm": 242.0,
+          "days": 31
+        },
+        "2021-11": {
+          "temperatureMeanC": 28.203333333333333,
+          "precipitationMm": 45.00000000000001,
+          "days": 30
+        },
+        "2021-12": {
+          "temperatureMeanC": 26.16774193548387,
+          "precipitationMm": 67.50000000000001,
+          "days": 31
+        },
+        "2022-01": {
+          "temperatureMeanC": 25.880645161290325,
+          "precipitationMm": 34.199999999999996,
+          "days": 31
+        },
+        "2022-02": {
+          "temperatureMeanC": 27.24285714285715,
+          "precipitationMm": 8.3,
+          "days": 28
+        },
+        "2022-03": {
+          "temperatureMeanC": 28.89354838709677,
+          "precipitationMm": 49.7,
+          "days": 31
+        },
+        "2022-04": {
+          "temperatureMeanC": 29.300000000000008,
+          "precipitationMm": 44.8,
+          "days": 30
+        },
+        "2022-05": {
+          "temperatureMeanC": 29.564516129032253,
+          "precipitationMm": 285.6,
+          "days": 31
+        },
+        "2022-06": {
+          "temperatureMeanC": 28.780000000000005,
+          "precipitationMm": 285.30000000000007,
+          "days": 30
+        },
+        "2022-07": {
+          "temperatureMeanC": 28.41290322580645,
+          "precipitationMm": 387.0,
+          "days": 31
+        },
+        "2022-08": {
+          "temperatureMeanC": 27.47096774193549,
+          "precipitationMm": 475.09999999999997,
+          "days": 31
+        },
+        "2022-09": {
+          "temperatureMeanC": 27.52666666666666,
+          "precipitationMm": 322.20000000000005,
+          "days": 30
+        },
+        "2022-10": {
+          "temperatureMeanC": 27.861290322580643,
+          "precipitationMm": 351.79999999999995,
+          "days": 31
+        },
+        "2022-11": {
+          "temperatureMeanC": 27.866666666666667,
+          "precipitationMm": 95.69999999999997,
+          "days": 30
+        },
+        "2022-12": {
+          "temperatureMeanC": 26.829032258064515,
+          "precipitationMm": 33.4,
+          "days": 31
+        },
+        "2023-01": {
+          "temperatureMeanC": 26.270967741935483,
+          "precipitationMm": 32.7,
+          "days": 31
+        },
+        "2023-02": {
+          "temperatureMeanC": 27.189285714285713,
+          "precipitationMm": 46.7,
+          "days": 28
+        },
+        "2023-03": {
+          "temperatureMeanC": 28.274193548387093,
+          "precipitationMm": 3.8000000000000003,
+          "days": 31
+        },
+        "2023-04": {
+          "temperatureMeanC": 29.613333333333337,
+          "precipitationMm": 93.8,
+          "days": 30
+        },
+        "2023-05": {
+          "temperatureMeanC": 29.948387096774194,
+          "precipitationMm": 202.49999999999997,
+          "days": 31
+        },
+        "2023-06": {
+          "temperatureMeanC": 28.786666666666672,
+          "precipitationMm": 326.29999999999995,
+          "days": 30
+        },
+        "2023-07": {
+          "temperatureMeanC": 28.187096774193552,
+          "precipitationMm": 551.6999999999999,
+          "days": 31
+        },
+        "2023-08": {
+          "temperatureMeanC": 28.299999999999994,
+          "precipitationMm": 223.2,
+          "days": 31
+        },
+        "2023-09": {
+          "temperatureMeanC": 28.143333333333334,
+          "precipitationMm": 297.20000000000005,
+          "days": 30
+        },
+        "2023-10": {
+          "temperatureMeanC": 28.090322580645157,
+          "precipitationMm": 187.2,
+          "days": 31
+        },
+        "2023-11": {
+          "temperatureMeanC": 28.04000000000001,
+          "precipitationMm": 70.29999999999998,
+          "days": 30
+        },
+        "2023-12": {
+          "temperatureMeanC": 27.72903225806452,
+          "precipitationMm": 35.300000000000004,
+          "days": 31
+        },
+        "2024-01": {
+          "temperatureMeanC": 26.6,
+          "precipitationMm": 7.299999999999999,
+          "days": 31
+        },
+        "2024-02": {
+          "temperatureMeanC": 27.293103448275865,
+          "precipitationMm": 0.4,
+          "days": 29
+        },
+        "2024-03": {
+          "temperatureMeanC": 28.538709677419355,
+          "precipitationMm": 13.5,
+          "days": 31
+        },
+        "2024-04": {
+          "temperatureMeanC": 30.75333333333334,
+          "precipitationMm": 20.1,
+          "days": 30
+        },
+        "2024-05": {
+          "temperatureMeanC": 30.600000000000005,
+          "precipitationMm": 175.40000000000003,
+          "days": 31
+        },
+        "2024-06": {
+          "temperatureMeanC": 29.459999999999997,
+          "precipitationMm": 266.6,
+          "days": 30
+        },
+        "2024-07": {
+          "temperatureMeanC": 28.338709677419356,
+          "precipitationMm": 484.90000000000003,
+          "days": 31
+        },
+        "2024-08": {
+          "temperatureMeanC": 28.390322580645165,
+          "precipitationMm": 301.99999999999994,
+          "days": 31
+        },
+        "2024-09": {
+          "temperatureMeanC": 27.363333333333333,
+          "precipitationMm": 582.2,
+          "days": 30
+        },
+        "2024-10": {
+          "temperatureMeanC": 27.851612903225817,
+          "precipitationMm": 343.90000000000003,
+          "days": 31
+        },
+        "2024-11": {
+          "temperatureMeanC": 27.88333333333333,
+          "precipitationMm": 250.60000000000002,
+          "days": 30
+        },
+        "2024-12": {
+          "temperatureMeanC": 27.080645161290324,
+          "precipitationMm": 193.79999999999998,
+          "days": 31
+        },
+        "2025-01": {
+          "temperatureMeanC": 26.470967741935485,
+          "precipitationMm": 49.2,
+          "days": 31
+        },
+        "2025-02": {
+          "temperatureMeanC": 26.967857142857138,
+          "precipitationMm": 56.79999999999999,
+          "days": 28
+        },
+        "2025-03": {
+          "temperatureMeanC": 28.425806451612907,
+          "precipitationMm": 33.20000000000001,
+          "days": 31
+        },
+        "2025-04": {
+          "temperatureMeanC": 30.360000000000007,
+          "precipitationMm": 29.6,
+          "days": 30
+        },
+        "2025-05": {
+          "temperatureMeanC": 30.080645161290324,
+          "precipitationMm": 183.19999999999996,
+          "days": 31
+        },
+        "2025-06": {
+          "temperatureMeanC": 28.259999999999994,
+          "precipitationMm": 390.99999999999994,
+          "days": 30
+        },
+        "2025-07": {
+          "temperatureMeanC": 27.132258064516126,
+          "precipitationMm": 602.7,
+          "days": 31
+        },
+        "2025-08": {
+          "temperatureMeanC": 27.661290322580648,
+          "precipitationMm": 507.7999999999999,
+          "days": 31
+        },
+        "2025-09": {
+          "temperatureMeanC": 27.020000000000007,
+          "precipitationMm": 500.8,
+          "days": 30
+        },
+        "2025-10": {
+          "temperatureMeanC": 28.02258064516129,
+          "precipitationMm": 384.0999999999999,
+          "days": 31
+        },
+        "2025-11": {
+          "temperatureMeanC": 27.629999999999995,
+          "precipitationMm": 300.09999999999997,
+          "days": 30
+        },
+        "2025-12": {
+          "temperatureMeanC": 26.738709677419354,
+          "precipitationMm": 91.4,
+          "days": 31
+        },
+        "2026-01": {
+          "temperatureMeanC": 25.332258064516132,
+          "precipitationMm": 80.39999999999996,
+          "days": 31
+        },
+        "2026-02": {
+          "temperatureMeanC": 26.21071428571428,
+          "precipitationMm": 33.5,
+          "days": 28
+        },
+        "2026-03": {
+          "temperatureMeanC": 27.04516129032258,
+          "precipitationMm": 10.099999999999998,
+          "days": 31
+        },
+        "2026-04": {
+          "temperatureMeanC": 29.54,
+          "precipitationMm": 4.1000000000000005,
+          "days": 30
+        },
+        "2026-05": {
+          "temperatureMeanC": 30.912903225806446,
+          "precipitationMm": 66.89999999999999,
+          "days": 31
+        },
+        "2026-06": {
+          "temperatureMeanC": 28.783333333333335,
+          "precipitationMm": 296.70000000000005,
+          "days": 30
+        },
+        "2026-07": {
+          "temperatureMeanC": 28.406451612903222,
+          "precipitationMm": 302.4,
+          "days": 31
+        },
+        "2026-08": {
+          "temperatureMeanC": 26.658064516129027,
+          "precipitationMm": 870.6,
+          "days": 31
+        },
+        "2026-09": {
+          "temperatureMeanC": 27.670000000000005,
+          "precipitationMm": 432.2000000000001,
+          "days": 30
+        }
+      }
+    },
+    "KHM": {
+      "location": "Battambang",
+      "latitude": 13.1,
+      "longitude": 103.2,
+      "gridLatitude": 13.0,
+      "gridLongitude": 103.25,
+      "timezone": "Asia/Phnom_Penh",
+      "normals": {
+        "01": {
+          "temperatureMeanC": 26.833333333333332,
+          "precipitationMm": 12.163333333333332,
+          "completeYears": 30
+        },
+        "02": {
+          "temperatureMeanC": 28.51009031198686,
+          "precipitationMm": 14.836666666666668,
+          "completeYears": 30
+        },
+        "03": {
+          "temperatureMeanC": 30.151935483870968,
+          "precipitationMm": 47.36666666666668,
+          "completeYears": 30
+        },
+        "04": {
+          "temperatureMeanC": 30.47533333333333,
+          "precipitationMm": 82.67333333333336,
+          "completeYears": 30
+        },
+        "05": {
+          "temperatureMeanC": 30.146559139784948,
+          "precipitationMm": 115.32666666666665,
+          "completeYears": 30
+        },
+        "06": {
+          "temperatureMeanC": 29.657555555555557,
+          "precipitationMm": 105.01333333333334,
+          "completeYears": 30
+        },
+        "07": {
+          "temperatureMeanC": 29.167956989247315,
+          "precipitationMm": 104.77666666666667,
+          "completeYears": 30
+        },
+        "08": {
+          "temperatureMeanC": 29.004838709677422,
+          "precipitationMm": 123.80666666666667,
+          "completeYears": 30
+        },
+        "09": {
+          "temperatureMeanC": 28.27533333333333,
+          "precipitationMm": 191.56000000000003,
+          "completeYears": 30
+        },
+        "10": {
+          "temperatureMeanC": 27.571827956989246,
+          "precipitationMm": 190.34666666666666,
+          "completeYears": 30
+        },
+        "11": {
+          "temperatureMeanC": 27.139333333333337,
+          "precipitationMm": 51.7,
+          "completeYears": 30
+        },
+        "12": {
+          "temperatureMeanC": 26.32322580645162,
+          "precipitationMm": 12.833333333333334,
+          "completeYears": 30
+        }
+      },
+      "months": {
+        "2021-01": {
+          "temperatureMeanC": 25.38064516129032,
+          "precipitationMm": 0.0,
+          "days": 31
+        },
+        "2021-02": {
+          "temperatureMeanC": 27.05,
+          "precipitationMm": 14.799999999999999,
+          "days": 28
+        },
+        "2021-03": {
+          "temperatureMeanC": 30.845161290322572,
+          "precipitationMm": 11.2,
+          "days": 31
+        },
+        "2021-04": {
+          "temperatureMeanC": 29.963333333333335,
+          "precipitationMm": 87.00000000000003,
+          "days": 30
+        },
+        "2021-05": {
+          "temperatureMeanC": 30.667741935483864,
+          "precipitationMm": 106.09999999999997,
+          "days": 31
+        },
+        "2021-06": {
+          "temperatureMeanC": 30.206666666666667,
+          "precipitationMm": 63.99999999999999,
+          "days": 30
+        },
+        "2021-07": {
+          "temperatureMeanC": 29.732258064516124,
+          "precipitationMm": 111.39999999999998,
+          "days": 31
+        },
+        "2021-08": {
+          "temperatureMeanC": 30.22903225806452,
+          "precipitationMm": 116.80000000000003,
+          "days": 31
+        },
+        "2021-09": {
+          "temperatureMeanC": 27.77333333333333,
+          "precipitationMm": 271.1,
+          "days": 30
+        },
+        "2021-10": {
+          "temperatureMeanC": 27.383870967741935,
+          "precipitationMm": 233.8,
+          "days": 31
+        },
+        "2021-11": {
+          "temperatureMeanC": 27.093333333333337,
+          "precipitationMm": 85.2,
+          "days": 30
+        },
+        "2021-12": {
+          "temperatureMeanC": 25.480645161290326,
+          "precipitationMm": 11.0,
+          "days": 31
+        },
+        "2022-01": {
+          "temperatureMeanC": 26.816129032258065,
+          "precipitationMm": 6.3999999999999995,
+          "days": 31
+        },
+        "2022-02": {
+          "temperatureMeanC": 28.060714285714287,
+          "precipitationMm": 33.2,
+          "days": 28
+        },
+        "2022-03": {
+          "temperatureMeanC": 30.11935483870968,
+          "precipitationMm": 72.2,
+          "days": 31
+        },
+        "2022-04": {
+          "temperatureMeanC": 30.316666666666666,
+          "precipitationMm": 62.80000000000001,
+          "days": 30
+        },
+        "2022-05": {
+          "temperatureMeanC": 28.990322580645167,
+          "precipitationMm": 149.90000000000006,
+          "days": 31
+        },
+        "2022-06": {
+          "temperatureMeanC": 30.569999999999997,
+          "precipitationMm": 76.3,
+          "days": 30
+        },
+        "2022-07": {
+          "temperatureMeanC": 28.700000000000006,
+          "precipitationMm": 219.30000000000007,
+          "days": 31
+        },
+        "2022-08": {
+          "temperatureMeanC": 28.19677419354839,
+          "precipitationMm": 210.69999999999996,
+          "days": 31
+        },
+        "2022-09": {
+          "temperatureMeanC": 27.563333333333333,
+          "precipitationMm": 245.60000000000002,
+          "days": 30
+        },
+        "2022-10": {
+          "temperatureMeanC": 27.129032258064512,
+          "precipitationMm": 258.09999999999997,
+          "days": 31
+        },
+        "2022-11": {
+          "temperatureMeanC": 27.256666666666668,
+          "precipitationMm": 140.50000000000006,
+          "days": 30
+        },
+        "2022-12": {
+          "temperatureMeanC": 24.870967741935488,
+          "precipitationMm": 26.2,
+          "days": 31
+        },
+        "2023-01": {
+          "temperatureMeanC": 25.07741935483871,
+          "precipitationMm": 46.1,
+          "days": 31
+        },
+        "2023-02": {
+          "temperatureMeanC": 27.61428571428571,
+          "precipitationMm": 31.8,
+          "days": 28
+        },
+        "2023-03": {
+          "temperatureMeanC": 29.322580645161285,
+          "precipitationMm": 20.1,
+          "days": 31
+        },
+        "2023-04": {
+          "temperatureMeanC": 31.489999999999995,
+          "precipitationMm": 94.39999999999999,
+          "days": 30
+        },
+        "2023-05": {
+          "temperatureMeanC": 31.25161290322581,
+          "precipitationMm": 83.2,
+          "days": 31
+        },
+        "2023-06": {
+          "temperatureMeanC": 31.000000000000004,
+          "precipitationMm": 48.099999999999994,
+          "days": 30
+        },
+        "2023-07": {
+          "temperatureMeanC": 30.093548387096774,
+          "precipitationMm": 222.79999999999998,
+          "days": 31
+        },
+        "2023-08": {
+          "temperatureMeanC": 30.448387096774194,
+          "precipitationMm": 87.4,
+          "days": 31
+        },
+        "2023-09": {
+          "temperatureMeanC": 28.766666666666666,
+          "precipitationMm": 217.79999999999998,
+          "days": 30
+        },
+        "2023-10": {
+          "temperatureMeanC": 28.432258064516127,
+          "precipitationMm": 234.0,
+          "days": 31
+        },
+        "2023-11": {
+          "temperatureMeanC": 27.166666666666664,
+          "precipitationMm": 129.4,
+          "days": 30
+        },
+        "2023-12": {
+          "temperatureMeanC": 26.709677419354836,
+          "precipitationMm": 38.6,
+          "days": 31
+        },
+        "2024-01": {
+          "temperatureMeanC": 26.993548387096773,
+          "precipitationMm": 2.8,
+          "days": 31
+        },
+        "2024-02": {
+          "temperatureMeanC": 29.7551724137931,
+          "precipitationMm": 10.2,
+          "days": 29
+        },
+        "2024-03": {
+          "temperatureMeanC": 31.54193548387097,
+          "precipitationMm": 26.100000000000005,
+          "days": 31
+        },
+        "2024-04": {
+          "temperatureMeanC": 34.07,
+          "precipitationMm": 8.999999999999998,
+          "days": 30
+        },
+        "2024-05": {
+          "temperatureMeanC": 31.60967741935484,
+          "precipitationMm": 126.89999999999998,
+          "days": 31
+        },
+        "2024-06": {
+          "temperatureMeanC": 30.53666666666667,
+          "precipitationMm": 128.9,
+          "days": 30
+        },
+        "2024-07": {
+          "temperatureMeanC": 28.93548387096774,
+          "precipitationMm": 192.3,
+          "days": 31
+        },
+        "2024-08": {
+          "temperatureMeanC": 30.029032258064515,
+          "precipitationMm": 107.89999999999996,
+          "days": 31
+        },
+        "2024-09": {
+          "temperatureMeanC": 28.796666666666667,
+          "precipitationMm": 181.1,
+          "days": 30
+        },
+        "2024-10": {
+          "temperatureMeanC": 28.238709677419354,
+          "precipitationMm": 181.29999999999998,
+          "days": 31
+        },
+        "2024-11": {
+          "temperatureMeanC": 28.09,
+          "precipitationMm": 46.49999999999999,
+          "days": 30
+        },
+        "2024-12": {
+          "temperatureMeanC": 26.522580645161288,
+          "precipitationMm": 26.900000000000002,
+          "days": 31
+        },
+        "2025-01": {
+          "temperatureMeanC": 25.058064516129033,
+          "precipitationMm": 0.0,
+          "days": 31
+        },
+        "2025-02": {
+          "temperatureMeanC": 28.692857142857147,
+          "precipitationMm": 9.299999999999999,
+          "days": 28
+        },
+        "2025-03": {
+          "temperatureMeanC": 29.912903225806456,
+          "precipitationMm": 44.2,
+          "days": 31
+        },
+        "2025-04": {
+          "temperatureMeanC": 30.633333333333333,
+          "precipitationMm": 84.6,
+          "days": 30
+        },
+        "2025-05": {
+          "temperatureMeanC": 29.432258064516123,
+          "precipitationMm": 183.9,
+          "days": 31
+        },
+        "2025-06": {
+          "temperatureMeanC": 29.04666666666666,
+          "precipitationMm": 137.70000000000002,
+          "days": 30
+        },
+        "2025-07": {
+          "temperatureMeanC": 29.112903225806456,
+          "precipitationMm": 135.80000000000004,
+          "days": 31
+        },
+        "2025-08": {
+          "temperatureMeanC": 29.167741935483875,
+          "precipitationMm": 109.69999999999999,
+          "days": 31
+        },
+        "2025-09": {
+          "temperatureMeanC": 27.990000000000002,
+          "precipitationMm": 253.49999999999997,
+          "days": 30
+        },
+        "2025-10": {
+          "temperatureMeanC": 27.767741935483865,
+          "precipitationMm": 178.3,
+          "days": 31
+        },
+        "2025-11": {
+          "temperatureMeanC": 25.959999999999997,
+          "precipitationMm": 120.8,
+          "days": 30
+        },
+        "2025-12": {
+          "temperatureMeanC": 26.58709677419355,
+          "precipitationMm": 6.1,
+          "days": 31
+        },
+        "2026-01": {
+          "temperatureMeanC": 25.154838709677428,
+          "precipitationMm": 0.9,
+          "days": 31
+        },
+        "2026-02": {
+          "temperatureMeanC": 28.853571428571428,
+          "precipitationMm": 7.699999999999999,
+          "days": 28
+        },
+        "2026-03": {
+          "temperatureMeanC": 30.551612903225802,
+          "precipitationMm": 29.200000000000003,
+          "days": 31
+        },
+        "2026-04": {
+          "temperatureMeanC": 32.26666666666667,
+          "precipitationMm": 40.7,
+          "days": 30
+        },
+        "2026-05": {
+          "temperatureMeanC": 30.819354838709682,
+          "precipitationMm": 80.19999999999999,
+          "days": 31
+        },
+        "2026-06": {
+          "temperatureMeanC": 30.496666666666666,
+          "precipitationMm": 81.59999999999997,
+          "days": 30
+        },
+        "2026-07": {
+          "temperatureMeanC": 29.35161290322581,
+          "precipitationMm": 190.2,
+          "days": 31
+        },
+        "2026-08": {
+          "temperatureMeanC": 29.416129032258066,
+          "precipitationMm": 118.2,
+          "days": 31
+        },
+        "2026-09": {
+          "temperatureMeanC": 28.246666666666663,
+          "precipitationMm": 246.7,
+          "days": 30
+        }
+      }
+    },
+    "LAO": {
+      "location": "Savannakhet",
+      "latitude": 16.57,
+      "longitude": 104.75,
+      "gridLatitude": 16.5,
+      "gridLongitude": 104.75,
+      "timezone": "Asia/Vientiane",
+      "normals": {
+        "01": {
+          "temperatureMeanC": 22.678709677419356,
+          "precipitationMm": 4.39,
+          "completeYears": 30
+        },
+        "02": {
+          "temperatureMeanC": 24.546128899835796,
+          "precipitationMm": 12.68,
+          "completeYears": 30
+        },
+        "03": {
+          "temperatureMeanC": 27.371397849462365,
+          "precipitationMm": 33.79333333333334,
+          "completeYears": 30
+        },
+        "04": {
+          "temperatureMeanC": 29.036,
+          "precipitationMm": 65.52000000000001,
+          "completeYears": 30
+        },
+        "05": {
+          "temperatureMeanC": 28.73225806451613,
+          "precipitationMm": 188.54,
+          "completeYears": 30
+        },
+        "06": {
+          "temperatureMeanC": 28.261555555555557,
+          "precipitationMm": 208.74000000000004,
+          "completeYears": 30
+        },
+        "07": {
+          "temperatureMeanC": 27.574838709677422,
+          "precipitationMm": 277.88666666666666,
+          "completeYears": 30
+        },
+        "08": {
+          "temperatureMeanC": 27.272795698924725,
+          "precipitationMm": 294.3966666666666,
+          "completeYears": 30
+        },
+        "09": {
+          "temperatureMeanC": 27.161222222222225,
+          "precipitationMm": 257.47999999999996,
+          "completeYears": 30
+        },
+        "10": {
+          "temperatureMeanC": 26.544086021505386,
+          "precipitationMm": 108.66000000000001,
+          "completeYears": 30
+        },
+        "11": {
+          "temperatureMeanC": 25.06522222222223,
+          "precipitationMm": 21.21,
+          "completeYears": 30
+        },
+        "12": {
+          "temperatureMeanC": 22.67645161290322,
+          "precipitationMm": 4.87,
+          "completeYears": 30
+        }
+      },
+      "months": {
+        "2021-01": {
+          "temperatureMeanC": 20.56451612903226,
+          "precipitationMm": 0.0,
+          "days": 31
+        },
+        "2021-02": {
+          "temperatureMeanC": 24.375000000000004,
+          "precipitationMm": 14.899999999999999,
+          "days": 28
+        },
+        "2021-03": {
+          "temperatureMeanC": 28.23225806451613,
+          "precipitationMm": 18.700000000000003,
+          "days": 31
+        },
+        "2021-04": {
+          "temperatureMeanC": 29.279999999999994,
+          "precipitationMm": 111.79999999999998,
+          "days": 30
+        },
+        "2021-05": {
+          "temperatureMeanC": 30.083870967741934,
+          "precipitationMm": 90.69999999999999,
+          "days": 31
+        },
+        "2021-06": {
+          "temperatureMeanC": 29.113333333333333,
+          "precipitationMm": 180.4,
+          "days": 30
+        },
+        "2021-07": {
+          "temperatureMeanC": 28.361290322580643,
+          "precipitationMm": 281.09999999999997,
+          "days": 31
+        },
+        "2021-08": {
+          "temperatureMeanC": 28.64838709677419,
+          "precipitationMm": 157.0,
+          "days": 31
+        },
+        "2021-09": {
+          "temperatureMeanC": 27.300000000000004,
+          "precipitationMm": 377.7,
+          "days": 30
+        },
+        "2021-10": {
+          "temperatureMeanC": 26.400000000000002,
+          "precipitationMm": 185.49999999999994,
+          "days": 31
+        },
+        "2021-11": {
+          "temperatureMeanC": 24.886666666666674,
+          "precipitationMm": 2.0,
+          "days": 30
+        },
+        "2021-12": {
+          "temperatureMeanC": 22.403225806451612,
+          "precipitationMm": 4.8,
+          "days": 31
+        },
+        "2022-01": {
+          "temperatureMeanC": 23.91290322580645,
+          "precipitationMm": 3.2,
+          "days": 31
+        },
+        "2022-02": {
+          "temperatureMeanC": 22.957142857142856,
+          "precipitationMm": 29.599999999999998,
+          "days": 28
+        },
+        "2022-03": {
+          "temperatureMeanC": 27.635483870967747,
+          "precipitationMm": 78.19999999999999,
+          "days": 31
+        },
+        "2022-04": {
+          "temperatureMeanC": 27.116666666666667,
+          "precipitationMm": 92.50000000000001,
+          "days": 30
+        },
+        "2022-05": {
+          "temperatureMeanC": 26.76774193548387,
+          "precipitationMm": 337.80000000000007,
+          "days": 31
+        },
+        "2022-06": {
+          "temperatureMeanC": 28.830000000000002,
+          "precipitationMm": 136.4,
+          "days": 30
+        },
+        "2022-07": {
+          "temperatureMeanC": 28.312903225806448,
+          "precipitationMm": 298.3,
+          "days": 31
+        },
+        "2022-08": {
+          "temperatureMeanC": 27.55483870967742,
+          "precipitationMm": 320.7999999999999,
+          "days": 31
+        },
+        "2022-09": {
+          "temperatureMeanC": 27.25,
+          "precipitationMm": 336.3999999999999,
+          "days": 30
+        },
+        "2022-10": {
+          "temperatureMeanC": 25.66451612903225,
+          "precipitationMm": 117.79999999999998,
+          "days": 31
+        },
+        "2022-11": {
+          "temperatureMeanC": 26.736666666666668,
+          "precipitationMm": 36.5,
+          "days": 30
+        },
+        "2022-12": {
+          "temperatureMeanC": 22.125806451612902,
+          "precipitationMm": 0.6000000000000001,
+          "days": 31
+        },
+        "2023-01": {
+          "temperatureMeanC": 20.970967741935482,
+          "precipitationMm": 48.900000000000006,
+          "days": 31
+        },
+        "2023-02": {
+          "temperatureMeanC": 25.321428571428573,
+          "precipitationMm": 6.0,
+          "days": 28
+        },
+        "2023-03": {
+          "temperatureMeanC": 27.509677419354833,
+          "precipitationMm": 7.1,
+          "days": 31
+        },
+        "2023-04": {
+          "temperatureMeanC": 30.96,
+          "precipitationMm": 26.6,
+          "days": 30
+        },
+        "2023-05": {
+          "temperatureMeanC": 30.474193548387092,
+          "precipitationMm": 166.19999999999996,
+          "days": 31
+        },
+        "2023-06": {
+          "temperatureMeanC": 28.62,
+          "precipitationMm": 211.30000000000007,
+          "days": 30
+        },
+        "2023-07": {
+          "temperatureMeanC": 28.480645161290322,
+          "precipitationMm": 291.59999999999997,
+          "days": 31
+        },
+        "2023-08": {
+          "temperatureMeanC": 28.051612903225806,
+          "precipitationMm": 301.69999999999993,
+          "days": 31
+        },
+        "2023-09": {
+          "temperatureMeanC": 27.26666666666666,
+          "precipitationMm": 475.09999999999997,
+          "days": 30
+        },
+        "2023-10": {
+          "temperatureMeanC": 27.483870967741936,
+          "precipitationMm": 95.10000000000001,
+          "days": 31
+        },
+        "2023-11": {
+          "temperatureMeanC": 26.396666666666665,
+          "precipitationMm": 7.4,
+          "days": 30
+        },
+        "2023-12": {
+          "temperatureMeanC": 24.154838709677424,
+          "precipitationMm": 0.7,
+          "days": 31
+        },
+        "2024-01": {
+          "temperatureMeanC": 24.28064516129032,
+          "precipitationMm": 0.0,
+          "days": 31
+        },
+        "2024-02": {
+          "temperatureMeanC": 26.98620689655172,
+          "precipitationMm": 1.0,
+          "days": 29
+        },
+        "2024-03": {
+          "temperatureMeanC": 28.57096774193549,
+          "precipitationMm": 23.9,
+          "days": 31
+        },
+        "2024-04": {
+          "temperatureMeanC": 33.71333333333333,
+          "precipitationMm": 1.0,
+          "days": 30
+        },
+        "2024-05": {
+          "temperatureMeanC": 30.174193548387095,
+          "precipitationMm": 196.00000000000006,
+          "days": 31
+        },
+        "2024-06": {
+          "temperatureMeanC": 29.013333333333332,
+          "precipitationMm": 185.89999999999998,
+          "days": 30
+        },
+        "2024-07": {
+          "temperatureMeanC": 27.812903225806455,
+          "precipitationMm": 436.1,
+          "days": 31
+        },
+        "2024-08": {
+          "temperatureMeanC": 28.396774193548385,
+          "precipitationMm": 153.1,
+          "days": 31
+        },
+        "2024-09": {
+          "temperatureMeanC": 27.53333333333334,
+          "precipitationMm": 338.6,
+          "days": 30
+        },
+        "2024-10": {
+          "temperatureMeanC": 27.209677419354836,
+          "precipitationMm": 85.5,
+          "days": 31
+        },
+        "2024-11": {
+          "temperatureMeanC": 25.716666666666665,
+          "precipitationMm": 9.7,
+          "days": 30
+        },
+        "2024-12": {
+          "temperatureMeanC": 22.72903225806451,
+          "precipitationMm": 0.4,
+          "days": 31
+        },
+        "2025-01": {
+          "temperatureMeanC": 21.17096774193549,
+          "precipitationMm": 0.0,
+          "days": 31
+        },
+        "2025-02": {
+          "temperatureMeanC": 24.51071428571429,
+          "precipitationMm": 0.6000000000000001,
+          "days": 28
+        },
+        "2025-03": {
+          "temperatureMeanC": 26.938709677419364,
+          "precipitationMm": 17.5,
+          "days": 31
+        },
+        "2025-04": {
+          "temperatureMeanC": 29.38333333333333,
+          "precipitationMm": 57.3,
+          "days": 30
+        },
+        "2025-05": {
+          "temperatureMeanC": 28.693548387096765,
+          "precipitationMm": 217.8,
+          "days": 31
+        },
+        "2025-06": {
+          "temperatureMeanC": 28.31,
+          "precipitationMm": 233.90000000000003,
+          "days": 30
+        },
+        "2025-07": {
+          "temperatureMeanC": 27.516129032258064,
+          "precipitationMm": 353.3,
+          "days": 31
+        },
+        "2025-08": {
+          "temperatureMeanC": 27.88387096774194,
+          "precipitationMm": 305.20000000000005,
+          "days": 31
+        },
+        "2025-09": {
+          "temperatureMeanC": 27.230000000000004,
+          "precipitationMm": 295.1,
+          "days": 30
+        },
+        "2025-10": {
+          "temperatureMeanC": 26.764516129032263,
+          "precipitationMm": 174.29999999999998,
+          "days": 31
+        },
+        "2025-11": {
+          "temperatureMeanC": 23.673333333333332,
+          "precipitationMm": 104.69999999999999,
+          "days": 30
+        },
+        "2025-12": {
+          "temperatureMeanC": 23.854838709677416,
+          "precipitationMm": 0.4,
+          "days": 31
+        },
+        "2026-01": {
+          "temperatureMeanC": 22.403225806451612,
+          "precipitationMm": 0.0,
+          "days": 31
+        },
+        "2026-02": {
+          "temperatureMeanC": 26.26428571428571,
+          "precipitationMm": 10.8,
+          "days": 28
+        },
+        "2026-03": {
+          "temperatureMeanC": 28.038709677419355,
+          "precipitationMm": 10.9,
+          "days": 31
+        },
+        "2026-04": {
+          "temperatureMeanC": 31.113333333333333,
+          "precipitationMm": 33.6,
+          "days": 30
+        },
+        "2026-05": {
+          "temperatureMeanC": 29.554838709677416,
+          "precipitationMm": 142.5,
+          "days": 31
+        },
+        "2026-06": {
+          "temperatureMeanC": 29.560000000000002,
+          "precipitationMm": 220.60000000000002,
+          "days": 30
+        },
+        "2026-07": {
+          "temperatureMeanC": 27.30645161290322,
+          "precipitationMm": 367.20000000000005,
+          "days": 31
+        },
+        "2026-08": {
+          "temperatureMeanC": 27.60645161290323,
+          "precipitationMm": 347.3,
+          "days": 31
+        },
+        "2026-09": {
+          "temperatureMeanC": 27.03666666666667,
+          "precipitationMm": 419.0000000000001,
+          "days": 30
+        }
+      }
+    },
+    "MYS": {
+      "location": "Alor Setar, Kedah",
+      "latitude": 6.12,
+      "longitude": 100.37,
+      "gridLatitude": 6.25,
+      "gridLongitude": 100.25,
+      "timezone": "Asia/Kuala_Lumpur",
+      "normals": {
+        "01": {
+          "temperatureMeanC": 27.3541935483871,
+          "precipitationMm": 43.25000000000001,
+          "completeYears": 30
+        },
+        "02": {
+          "temperatureMeanC": 28.2059236453202,
+          "precipitationMm": 51.29999999999998,
+          "completeYears": 30
+        },
+        "03": {
+          "temperatureMeanC": 28.375268817204297,
+          "precipitationMm": 129.51666666666668,
+          "completeYears": 30
+        },
+        "04": {
+          "temperatureMeanC": 28.104,
+          "precipitationMm": 190.9833333333333,
+          "completeYears": 30
+        },
+        "05": {
+          "temperatureMeanC": 28.05645161290323,
+          "precipitationMm": 236.4733333333334,
+          "completeYears": 30
+        },
+        "06": {
+          "temperatureMeanC": 27.994000000000007,
+          "precipitationMm": 182.31666666666666,
+          "completeYears": 30
+        },
+        "07": {
+          "temperatureMeanC": 27.644838709677423,
+          "precipitationMm": 190.6633333333334,
+          "completeYears": 30
+        },
+        "08": {
+          "temperatureMeanC": 27.436774193548388,
+          "precipitationMm": 228.54666666666668,
+          "completeYears": 30
+        },
+        "09": {
+          "temperatureMeanC": 27.113777777777774,
+          "precipitationMm": 251.40999999999994,
+          "completeYears": 30
+        },
+        "10": {
+          "temperatureMeanC": 26.772473118279567,
+          "precipitationMm": 293.61000000000007,
+          "completeYears": 30
+        },
+        "11": {
+          "temperatureMeanC": 26.68155555555556,
+          "precipitationMm": 208.42000000000002,
+          "completeYears": 30
+        },
+        "12": {
+          "temperatureMeanC": 26.615053763440862,
+          "precipitationMm": 116.43666666666667,
+          "completeYears": 30
+        }
+      },
+      "months": {
+        "2021-01": {
+          "temperatureMeanC": 27.090322580645157,
+          "precipitationMm": 16.3,
+          "days": 31
+        },
+        "2021-02": {
+          "temperatureMeanC": 28.48571428571429,
+          "precipitationMm": 0.7,
+          "days": 28
+        },
+        "2021-03": {
+          "temperatureMeanC": 28.777419354838703,
+          "precipitationMm": 83.6,
+          "days": 31
+        },
+        "2021-04": {
+          "temperatureMeanC": 27.893333333333334,
+          "precipitationMm": 258.5,
+          "days": 30
+        },
+        "2021-05": {
+          "temperatureMeanC": 28.158064516129034,
+          "precipitationMm": 227.6,
+          "days": 31
+        },
+        "2021-06": {
+          "temperatureMeanC": 28.023333333333326,
+          "precipitationMm": 135.9,
+          "days": 30
+        },
+        "2021-07": {
+          "temperatureMeanC": 28.18064516129031,
+          "precipitationMm": 175.0,
+          "days": 31
+        },
+        "2021-08": {
+          "temperatureMeanC": 27.319354838709682,
+          "precipitationMm": 356.69999999999993,
+          "days": 31
+        },
+        "2021-09": {
+          "temperatureMeanC": 27.42666666666667,
+          "precipitationMm": 256.7,
+          "days": 30
+        },
+        "2021-10": {
+          "temperatureMeanC": 27.716129032258063,
+          "precipitationMm": 200.3,
+          "days": 31
+        },
+        "2021-11": {
+          "temperatureMeanC": 26.59666666666667,
+          "precipitationMm": 350.40000000000003,
+          "days": 30
+        },
+        "2021-12": {
+          "temperatureMeanC": 26.941935483870967,
+          "precipitationMm": 77.6,
+          "days": 31
+        },
+        "2022-01": {
+          "temperatureMeanC": 28.24516129032258,
+          "precipitationMm": 10.2,
+          "days": 31
+        },
+        "2022-02": {
+          "temperatureMeanC": 27.88571428571429,
+          "precipitationMm": 207.60000000000002,
+          "days": 28
+        },
+        "2022-03": {
+          "temperatureMeanC": 27.85806451612903,
+          "precipitationMm": 190.50000000000006,
+          "days": 31
+        },
+        "2022-04": {
+          "temperatureMeanC": 27.906666666666663,
+          "precipitationMm": 190.89999999999998,
+          "days": 30
+        },
+        "2022-05": {
+          "temperatureMeanC": 28.39354838709678,
+          "precipitationMm": 205.9,
+          "days": 31
+        },
+        "2022-06": {
+          "temperatureMeanC": 27.529999999999994,
+          "precipitationMm": 311.00000000000006,
+          "days": 30
+        },
+        "2022-07": {
+          "temperatureMeanC": 28.009677419354837,
+          "precipitationMm": 159.9,
+          "days": 31
+        },
+        "2022-08": {
+          "temperatureMeanC": 27.70645161290323,
+          "precipitationMm": 213.09999999999997,
+          "days": 31
+        },
+        "2022-09": {
+          "temperatureMeanC": 27.32,
+          "precipitationMm": 178.5,
+          "days": 30
+        },
+        "2022-10": {
+          "temperatureMeanC": 26.88064516129032,
+          "precipitationMm": 262.2,
+          "days": 31
+        },
+        "2022-11": {
+          "temperatureMeanC": 26.826666666666668,
+          "precipitationMm": 260.5,
+          "days": 30
+        },
+        "2022-12": {
+          "temperatureMeanC": 26.19677419354839,
+          "precipitationMm": 298.29999999999995,
+          "days": 31
+        },
+        "2023-01": {
+          "temperatureMeanC": 26.64838709677419,
+          "precipitationMm": 88.69999999999999,
+          "days": 31
+        },
+        "2023-02": {
+          "temperatureMeanC": 27.99642857142857,
+          "precipitationMm": 31.80000000000001,
+          "days": 28
+        },
+        "2023-03": {
+          "temperatureMeanC": 28.558064516129033,
+          "precipitationMm": 44.3,
+          "days": 31
+        },
+        "2023-04": {
+          "temperatureMeanC": 28.750000000000004,
+          "precipitationMm": 177.0,
+          "days": 30
+        },
+        "2023-05": {
+          "temperatureMeanC": 28.741935483870968,
+          "precipitationMm": 213.29999999999993,
+          "days": 31
+        },
+        "2023-06": {
+          "temperatureMeanC": 28.526666666666664,
+          "precipitationMm": 212.40000000000003,
+          "days": 30
+        },
+        "2023-07": {
+          "temperatureMeanC": 28.293548387096767,
+          "precipitationMm": 390.0,
+          "days": 31
+        },
+        "2023-08": {
+          "temperatureMeanC": 27.729032258064517,
+          "precipitationMm": 320.7,
+          "days": 31
+        },
+        "2023-09": {
+          "temperatureMeanC": 27.50666666666667,
+          "precipitationMm": 356.09999999999997,
+          "days": 30
+        },
+        "2023-10": {
+          "temperatureMeanC": 27.60967741935484,
+          "precipitationMm": 301.0,
+          "days": 31
+        },
+        "2023-11": {
+          "temperatureMeanC": 26.913333333333334,
+          "precipitationMm": 295.80000000000007,
+          "days": 30
+        },
+        "2023-12": {
+          "temperatureMeanC": 27.387096774193544,
+          "precipitationMm": 152.9,
+          "days": 31
+        },
+        "2024-01": {
+          "temperatureMeanC": 27.65806451612903,
+          "precipitationMm": 65.40000000000002,
+          "days": 31
+        },
+        "2024-02": {
+          "temperatureMeanC": 29.241379310344833,
+          "precipitationMm": 14.299999999999999,
+          "days": 29
+        },
+        "2024-03": {
+          "temperatureMeanC": 29.74516129032258,
+          "precipitationMm": 70.8,
+          "days": 31
+        },
+        "2024-04": {
+          "temperatureMeanC": 29.56,
+          "precipitationMm": 104.1,
+          "days": 30
+        },
+        "2024-05": {
+          "temperatureMeanC": 29.054838709677412,
+          "precipitationMm": 455.3,
+          "days": 31
+        },
+        "2024-06": {
+          "temperatureMeanC": 28.769999999999996,
+          "precipitationMm": 149.49999999999997,
+          "days": 30
+        },
+        "2024-07": {
+          "temperatureMeanC": 28.835483870967746,
+          "precipitationMm": 92.00000000000001,
+          "days": 31
+        },
+        "2024-08": {
+          "temperatureMeanC": 27.806451612903224,
+          "precipitationMm": 556.2,
+          "days": 31
+        },
+        "2024-09": {
+          "temperatureMeanC": 27.58,
+          "precipitationMm": 308.59999999999997,
+          "days": 30
+        },
+        "2024-10": {
+          "temperatureMeanC": 27.529032258064515,
+          "precipitationMm": 302.80000000000007,
+          "days": 31
+        },
+        "2024-11": {
+          "temperatureMeanC": 27.110000000000007,
+          "precipitationMm": 386.79999999999995,
+          "days": 30
+        },
+        "2024-12": {
+          "temperatureMeanC": 27.109677419354842,
+          "precipitationMm": 206.39999999999995,
+          "days": 31
+        },
+        "2025-01": {
+          "temperatureMeanC": 27.364516129032257,
+          "precipitationMm": 50.6,
+          "days": 31
+        },
+        "2025-02": {
+          "temperatureMeanC": 28.260714285714283,
+          "precipitationMm": 47.20000000000001,
+          "days": 28
+        },
+        "2025-03": {
+          "temperatureMeanC": 28.709677419354836,
+          "precipitationMm": 82.7,
+          "days": 31
+        },
+        "2025-04": {
+          "temperatureMeanC": 28.136666666666663,
+          "precipitationMm": 264.8,
+          "days": 30
+        },
+        "2025-05": {
+          "temperatureMeanC": 28.358064516129026,
+          "precipitationMm": 273.79999999999995,
+          "days": 31
+        },
+        "2025-06": {
+          "temperatureMeanC": 28.326666666666664,
+          "precipitationMm": 161.69999999999996,
+          "days": 30
+        },
+        "2025-07": {
+          "temperatureMeanC": 28.838709677419356,
+          "precipitationMm": 75.7,
+          "days": 31
+        },
+        "2025-08": {
+          "temperatureMeanC": 27.780645161290316,
+          "precipitationMm": 195.7,
+          "days": 31
+        },
+        "2025-09": {
+          "temperatureMeanC": 27.70666666666667,
+          "precipitationMm": 230.59999999999997,
+          "days": 30
+        },
+        "2025-10": {
+          "temperatureMeanC": 27.212903225806453,
+          "precipitationMm": 250.10000000000002,
+          "days": 31
+        },
+        "2025-11": {
+          "temperatureMeanC": 26.59,
+          "precipitationMm": 631.7,
+          "days": 30
+        },
+        "2025-12": {
+          "temperatureMeanC": 27.332258064516132,
+          "precipitationMm": 23.500000000000004,
+          "days": 31
+        },
+        "2026-01": {
+          "temperatureMeanC": 28.048387096774185,
+          "precipitationMm": 1.6,
+          "days": 31
+        },
+        "2026-02": {
+          "temperatureMeanC": 28.692857142857147,
+          "precipitationMm": 30.60000000000001,
+          "days": 28
+        },
+        "2026-03": {
+          "temperatureMeanC": 29.416129032258056,
+          "precipitationMm": 53.39999999999999,
+          "days": 31
+        },
+        "2026-04": {
+          "temperatureMeanC": 28.993333333333336,
+          "precipitationMm": 113.29999999999998,
+          "days": 30
+        },
+        "2026-05": {
+          "temperatureMeanC": 28.55806451612903,
+          "precipitationMm": 247.69999999999996,
+          "days": 31
+        },
+        "2026-06": {
+          "temperatureMeanC": 28.093333333333323,
+          "precipitationMm": 285.3,
+          "days": 30
+        },
+        "2026-07": {
+          "temperatureMeanC": 28.200000000000003,
+          "precipitationMm": 189.79999999999998,
+          "days": 31
+        },
+        "2026-08": {
+          "temperatureMeanC": 28.66451612903226,
+          "precipitationMm": 108.1,
+          "days": 31
+        },
+        "2026-09": {
+          "temperatureMeanC": 28.053333333333335,
+          "precipitationMm": 250.50000000000003,
+          "days": 30
+        }
+      }
+    },
+    "SGP": {
+      "location": "Singapura",
+      "latitude": 1.35,
+      "longitude": 103.82,
+      "gridLatitude": 1.5,
+      "gridLongitude": 103.75,
+      "timezone": "Asia/Singapore",
+      "normals": {
+        "01": {
+          "temperatureMeanC": 26.015913978494623,
+          "precipitationMm": 200.54333333333335,
+          "completeYears": 30
+        },
+        "02": {
+          "temperatureMeanC": 26.406736453201972,
+          "precipitationMm": 133.16666666666666,
+          "completeYears": 30
+        },
+        "03": {
+          "temperatureMeanC": 26.86172043010753,
+          "precipitationMm": 209.32333333333335,
+          "completeYears": 30
+        },
+        "04": {
+          "temperatureMeanC": 27.226666666666667,
+          "precipitationMm": 242.49333333333334,
+          "completeYears": 30
+        },
+        "05": {
+          "temperatureMeanC": 27.52494623655914,
+          "precipitationMm": 217.3666666666667,
+          "completeYears": 30
+        },
+        "06": {
+          "temperatureMeanC": 27.41866666666667,
+          "precipitationMm": 173.46,
+          "completeYears": 30
+        },
+        "07": {
+          "temperatureMeanC": 27.048279569892472,
+          "precipitationMm": 161.77666666666667,
+          "completeYears": 30
+        },
+        "08": {
+          "temperatureMeanC": 26.93720430107527,
+          "precipitationMm": 167.41999999999996,
+          "completeYears": 30
+        },
+        "09": {
+          "temperatureMeanC": 26.892444444444443,
+          "precipitationMm": 169.95666666666665,
+          "completeYears": 30
+        },
+        "10": {
+          "temperatureMeanC": 26.823333333333334,
+          "precipitationMm": 241.97333333333341,
+          "completeYears": 30
+        },
+        "11": {
+          "temperatureMeanC": 26.412999999999993,
+          "precipitationMm": 334.2366666666666,
+          "completeYears": 30
+        },
+        "12": {
+          "temperatureMeanC": 26.1,
+          "precipitationMm": 312.57000000000005,
+          "completeYears": 30
+        }
+      },
+      "months": {
+        "2021-01": {
+          "temperatureMeanC": 25.680645161290318,
+          "precipitationMm": 253.70000000000005,
+          "days": 31
+        },
+        "2021-02": {
+          "temperatureMeanC": 26.760714285714283,
+          "precipitationMm": 13.899999999999999,
+          "days": 28
+        },
+        "2021-03": {
+          "temperatureMeanC": 27.012903225806443,
+          "precipitationMm": 349.4000000000001,
+          "days": 31
+        },
+        "2021-04": {
+          "temperatureMeanC": 27.17,
+          "precipitationMm": 319.3,
+          "days": 30
+        },
+        "2021-05": {
+          "temperatureMeanC": 27.603225806451604,
+          "precipitationMm": 304.90000000000003,
+          "days": 31
+        },
+        "2021-06": {
+          "temperatureMeanC": 27.44666666666667,
+          "precipitationMm": 206.8,
+          "days": 30
+        },
+        "2021-07": {
+          "temperatureMeanC": 27.606451612903232,
+          "precipitationMm": 170.49999999999997,
+          "days": 31
+        },
+        "2021-08": {
+          "temperatureMeanC": 26.867741935483867,
+          "precipitationMm": 264.90000000000003,
+          "days": 31
+        },
+        "2021-09": {
+          "temperatureMeanC": 27.130000000000006,
+          "precipitationMm": 244.20000000000002,
+          "days": 30
+        },
+        "2021-10": {
+          "temperatureMeanC": 27.56129032258065,
+          "precipitationMm": 277.5,
+          "days": 31
+        },
+        "2021-11": {
+          "temperatureMeanC": 26.969999999999995,
+          "precipitationMm": 279.1,
+          "days": 30
+        },
+        "2021-12": {
+          "temperatureMeanC": 26.783870967741937,
+          "precipitationMm": 166.99999999999994,
+          "days": 31
+        },
+        "2022-01": {
+          "temperatureMeanC": 26.751612903225812,
+          "precipitationMm": 159.19999999999996,
+          "days": 31
+        },
+        "2022-02": {
+          "temperatureMeanC": 26.58928571428571,
+          "precipitationMm": 165.80000000000004,
+          "days": 28
+        },
+        "2022-03": {
+          "temperatureMeanC": 27.364516129032268,
+          "precipitationMm": 239.40000000000003,
+          "days": 31
+        },
+        "2022-04": {
+          "temperatureMeanC": 27.34666666666667,
+          "precipitationMm": 222.1,
+          "days": 30
+        },
+        "2022-05": {
+          "temperatureMeanC": 28.05483870967741,
+          "precipitationMm": 183.89999999999998,
+          "days": 31
+        },
+        "2022-06": {
+          "temperatureMeanC": 27.103333333333335,
+          "precipitationMm": 254.90000000000003,
+          "days": 30
+        },
+        "2022-07": {
+          "temperatureMeanC": 27.59032258064516,
+          "precipitationMm": 156.9,
+          "days": 31
+        },
+        "2022-08": {
+          "temperatureMeanC": 27.15483870967741,
+          "precipitationMm": 297.09999999999997,
+          "days": 31
+        },
+        "2022-09": {
+          "temperatureMeanC": 27.13333333333333,
+          "precipitationMm": 162.70000000000002,
+          "days": 30
+        },
+        "2022-10": {
+          "temperatureMeanC": 26.770967741935483,
+          "precipitationMm": 378.5,
+          "days": 31
+        },
+        "2022-11": {
+          "temperatureMeanC": 26.783333333333335,
+          "precipitationMm": 330.4999999999999,
+          "days": 30
+        },
+        "2022-12": {
+          "temperatureMeanC": 26.290322580645164,
+          "precipitationMm": 264.0,
+          "days": 31
+        },
+        "2023-01": {
+          "temperatureMeanC": 26.03225806451612,
+          "precipitationMm": 313.09999999999997,
+          "days": 31
+        },
+        "2023-02": {
+          "temperatureMeanC": 26.339285714285715,
+          "precipitationMm": 167.19999999999996,
+          "days": 28
+        },
+        "2023-03": {
+          "temperatureMeanC": 26.409677419354843,
+          "precipitationMm": 327.0,
+          "days": 31
+        },
+        "2023-04": {
+          "temperatureMeanC": 27.58666666666667,
+          "precipitationMm": 238.0,
+          "days": 30
+        },
+        "2023-05": {
+          "temperatureMeanC": 28.38709677419355,
+          "precipitationMm": 178.3,
+          "days": 31
+        },
+        "2023-06": {
+          "temperatureMeanC": 27.903333333333332,
+          "precipitationMm": 189.2,
+          "days": 30
+        },
+        "2023-07": {
+          "temperatureMeanC": 27.71612903225807,
+          "precipitationMm": 225.2,
+          "days": 31
+        },
+        "2023-08": {
+          "temperatureMeanC": 27.538709677419348,
+          "precipitationMm": 287.69999999999993,
+          "days": 31
+        },
+        "2023-09": {
+          "temperatureMeanC": 27.780000000000005,
+          "precipitationMm": 192.89999999999998,
+          "days": 30
+        },
+        "2023-10": {
+          "temperatureMeanC": 27.906451612903226,
+          "precipitationMm": 296.8,
+          "days": 31
+        },
+        "2023-11": {
+          "temperatureMeanC": 27.130000000000006,
+          "precipitationMm": 400.99999999999994,
+          "days": 30
+        },
+        "2023-12": {
+          "temperatureMeanC": 26.758064516129032,
+          "precipitationMm": 447.3000000000001,
+          "days": 31
+        },
+        "2024-01": {
+          "temperatureMeanC": 26.629032258064516,
+          "precipitationMm": 402.69999999999993,
+          "days": 31
+        },
+        "2024-02": {
+          "temperatureMeanC": 27.61724137931035,
+          "precipitationMm": 99.60000000000001,
+          "days": 29
+        },
+        "2024-03": {
+          "temperatureMeanC": 28.02258064516129,
+          "precipitationMm": 185.09999999999994,
+          "days": 31
+        },
+        "2024-04": {
+          "temperatureMeanC": 28.293333333333326,
+          "precipitationMm": 355.1000000000001,
+          "days": 30
+        },
+        "2024-05": {
+          "temperatureMeanC": 28.18387096774193,
+          "precipitationMm": 363.8,
+          "days": 31
+        },
+        "2024-06": {
+          "temperatureMeanC": 27.756666666666668,
+          "precipitationMm": 285.9,
+          "days": 30
+        },
+        "2024-07": {
+          "temperatureMeanC": 28.109677419354835,
+          "precipitationMm": 90.7,
+          "days": 31
+        },
+        "2024-08": {
+          "temperatureMeanC": 27.41612903225806,
+          "precipitationMm": 201.60000000000005,
+          "days": 31
+        },
+        "2024-09": {
+          "temperatureMeanC": 27.68666666666667,
+          "precipitationMm": 206.9,
+          "days": 30
+        },
+        "2024-10": {
+          "temperatureMeanC": 27.680645161290315,
+          "precipitationMm": 221.6,
+          "days": 31
+        },
+        "2024-11": {
+          "temperatureMeanC": 26.746666666666666,
+          "precipitationMm": 582.0000000000001,
+          "days": 30
+        },
+        "2024-12": {
+          "temperatureMeanC": 26.980645161290322,
+          "precipitationMm": 275.70000000000005,
+          "days": 31
+        },
+        "2025-01": {
+          "temperatureMeanC": 26.109677419354842,
+          "precipitationMm": 401.09999999999997,
+          "days": 31
+        },
+        "2025-02": {
+          "temperatureMeanC": 26.560714285714287,
+          "precipitationMm": 119.29999999999998,
+          "days": 28
+        },
+        "2025-03": {
+          "temperatureMeanC": 26.825806451612905,
+          "precipitationMm": 376.3,
+          "days": 31
+        },
+        "2025-04": {
+          "temperatureMeanC": 27.116666666666664,
+          "precipitationMm": 323.6,
+          "days": 30
+        },
+        "2025-05": {
+          "temperatureMeanC": 27.812903225806448,
+          "precipitationMm": 189.6,
+          "days": 31
+        },
+        "2025-06": {
+          "temperatureMeanC": 27.98333333333333,
+          "precipitationMm": 125.69999999999997,
+          "days": 30
+        },
+        "2025-07": {
+          "temperatureMeanC": 27.719354838709677,
+          "precipitationMm": 91.49999999999999,
+          "days": 31
+        },
+        "2025-08": {
+          "temperatureMeanC": 27.235483870967744,
+          "precipitationMm": 180.50000000000006,
+          "days": 31
+        },
+        "2025-09": {
+          "temperatureMeanC": 27.033333333333335,
+          "precipitationMm": 168.20000000000002,
+          "days": 30
+        },
+        "2025-10": {
+          "temperatureMeanC": 27.409677419354832,
+          "precipitationMm": 180.99999999999997,
+          "days": 31
+        },
+        "2025-11": {
+          "temperatureMeanC": 27.173333333333336,
+          "precipitationMm": 299.5999999999999,
+          "days": 30
+        },
+        "2025-12": {
+          "temperatureMeanC": 26.406451612903215,
+          "precipitationMm": 349.5,
+          "days": 31
+        },
+        "2026-01": {
+          "temperatureMeanC": 26.209677419354836,
+          "precipitationMm": 29.299999999999997,
+          "days": 31
+        },
+        "2026-02": {
+          "temperatureMeanC": 26.58928571428572,
+          "precipitationMm": 141.49999999999997,
+          "days": 28
+        },
+        "2026-03": {
+          "temperatureMeanC": 27.20322580645161,
+          "precipitationMm": 85.7,
+          "days": 31
+        },
+        "2026-04": {
+          "temperatureMeanC": 27.620000000000005,
+          "precipitationMm": 248.6,
+          "days": 30
+        },
+        "2026-05": {
+          "temperatureMeanC": 27.683870967741935,
+          "precipitationMm": 306.7999999999999,
+          "days": 31
+        },
+        "2026-06": {
+          "temperatureMeanC": 27.71,
+          "precipitationMm": 249.2,
+          "days": 30
+        },
+        "2026-07": {
+          "temperatureMeanC": 27.532258064516128,
+          "precipitationMm": 190.99999999999997,
+          "days": 31
+        },
+        "2026-08": {
+          "temperatureMeanC": 28.19677419354839,
+          "precipitationMm": 52.7,
+          "days": 31
+        },
+        "2026-09": {
+          "temperatureMeanC": 27.973333333333326,
+          "precipitationMm": 130.60000000000002,
+          "days": 30
+        }
+      }
+    },
+    "BRN": {
+      "location": "Bandar Seri Begawan",
+      "latitude": 4.9,
+      "longitude": 114.94,
+      "gridLatitude": 4.75,
+      "gridLongitude": 115.0,
+      "timezone": "Asia/Brunei",
+      "normals": {
+        "01": {
+          "temperatureMeanC": 26.460860215053764,
+          "precipitationMm": 193.16666666666666,
+          "completeYears": 30
+        },
+        "02": {
+          "temperatureMeanC": 26.70496305418719,
+          "precipitationMm": 143.83666666666667,
+          "completeYears": 30
+        },
+        "03": {
+          "temperatureMeanC": 27.27537634408602,
+          "precipitationMm": 137.16666666666666,
+          "completeYears": 30
+        },
+        "04": {
+          "temperatureMeanC": 27.715222222222224,
+          "precipitationMm": 168.03,
+          "completeYears": 30
+        },
+        "05": {
+          "temperatureMeanC": 27.743118279569888,
+          "precipitationMm": 177.38333333333335,
+          "completeYears": 30
+        },
+        "06": {
+          "temperatureMeanC": 27.45255555555555,
+          "precipitationMm": 175.30000000000004,
+          "completeYears": 30
+        },
+        "07": {
+          "temperatureMeanC": 27.25193548387097,
+          "precipitationMm": 168.25666666666672,
+          "completeYears": 30
+        },
+        "08": {
+          "temperatureMeanC": 27.394086021505377,
+          "precipitationMm": 169.11000000000004,
+          "completeYears": 30
+        },
+        "09": {
+          "temperatureMeanC": 27.216,
+          "precipitationMm": 179.67000000000004,
+          "completeYears": 30
+        },
+        "10": {
+          "temperatureMeanC": 26.76333333333333,
+          "precipitationMm": 241.00666666666663,
+          "completeYears": 30
+        },
+        "11": {
+          "temperatureMeanC": 26.713666666666665,
+          "precipitationMm": 240.15333333333334,
+          "completeYears": 30
+        },
+        "12": {
+          "temperatureMeanC": 26.6052688172043,
+          "precipitationMm": 233.14333333333335,
+          "completeYears": 30
+        }
+      },
+      "months": {
+        "2021-01": {
+          "temperatureMeanC": 26.22258064516129,
+          "precipitationMm": 247.60000000000002,
+          "days": 31
+        },
+        "2021-02": {
+          "temperatureMeanC": 26.37857142857143,
+          "precipitationMm": 152.59999999999997,
+          "days": 28
+        },
+        "2021-03": {
+          "temperatureMeanC": 27.119354838709683,
+          "precipitationMm": 182.4,
+          "days": 31
+        },
+        "2021-04": {
+          "temperatureMeanC": 27.553333333333327,
+          "precipitationMm": 116.3,
+          "days": 30
+        },
+        "2021-05": {
+          "temperatureMeanC": 27.9258064516129,
+          "precipitationMm": 181.39999999999998,
+          "days": 31
+        },
+        "2021-06": {
+          "temperatureMeanC": 27.633333333333333,
+          "precipitationMm": 177.5,
+          "days": 30
+        },
+        "2021-07": {
+          "temperatureMeanC": 27.612903225806452,
+          "precipitationMm": 183.29999999999998,
+          "days": 31
+        },
+        "2021-08": {
+          "temperatureMeanC": 27.19677419354839,
+          "precipitationMm": 348.9,
+          "days": 31
+        },
+        "2021-09": {
+          "temperatureMeanC": 26.926666666666666,
+          "precipitationMm": 261.4,
+          "days": 30
+        },
+        "2021-10": {
+          "temperatureMeanC": 27.448387096774198,
+          "precipitationMm": 246.00000000000003,
+          "days": 31
+        },
+        "2021-11": {
+          "temperatureMeanC": 27.026666666666667,
+          "precipitationMm": 257.29999999999995,
+          "days": 30
+        },
+        "2021-12": {
+          "temperatureMeanC": 26.909677419354836,
+          "precipitationMm": 163.3,
+          "days": 31
+        },
+        "2022-01": {
+          "temperatureMeanC": 26.65483870967741,
+          "precipitationMm": 224.7,
+          "days": 31
+        },
+        "2022-02": {
+          "temperatureMeanC": 26.742857142857137,
+          "precipitationMm": 222.7,
+          "days": 28
+        },
+        "2022-03": {
+          "temperatureMeanC": 26.809677419354845,
+          "precipitationMm": 335.8,
+          "days": 31
+        },
+        "2022-04": {
+          "temperatureMeanC": 26.976666666666667,
+          "precipitationMm": 224.8,
+          "days": 30
+        },
+        "2022-05": {
+          "temperatureMeanC": 27.816129032258065,
+          "precipitationMm": 219.8,
+          "days": 31
+        },
+        "2022-06": {
+          "temperatureMeanC": 27.289999999999996,
+          "precipitationMm": 168.79999999999998,
+          "days": 30
+        },
+        "2022-07": {
+          "temperatureMeanC": 27.416129032258066,
+          "precipitationMm": 151.59999999999997,
+          "days": 31
+        },
+        "2022-08": {
+          "temperatureMeanC": 27.361290322580643,
+          "precipitationMm": 275.90000000000003,
+          "days": 31
+        },
+        "2022-09": {
+          "temperatureMeanC": 26.969999999999995,
+          "precipitationMm": 177.99999999999994,
+          "days": 30
+        },
+        "2022-10": {
+          "temperatureMeanC": 27.032258064516135,
+          "precipitationMm": 433.90000000000003,
+          "days": 31
+        },
+        "2022-11": {
+          "temperatureMeanC": 26.896666666666665,
+          "precipitationMm": 270.1000000000001,
+          "days": 30
+        },
+        "2022-12": {
+          "temperatureMeanC": 26.222580645161287,
+          "precipitationMm": 286.5999999999999,
+          "days": 31
+        },
+        "2023-01": {
+          "temperatureMeanC": 26.41935483870968,
+          "precipitationMm": 238.49999999999997,
+          "days": 31
+        },
+        "2023-02": {
+          "temperatureMeanC": 26.56785714285714,
+          "precipitationMm": 141.60000000000002,
+          "days": 28
+        },
+        "2023-03": {
+          "temperatureMeanC": 26.909677419354836,
+          "precipitationMm": 287.20000000000005,
+          "days": 31
+        },
+        "2023-04": {
+          "temperatureMeanC": 27.676666666666673,
+          "precipitationMm": 203.0,
+          "days": 30
+        },
+        "2023-05": {
+          "temperatureMeanC": 28.261290322580646,
+          "precipitationMm": 261.79999999999995,
+          "days": 31
+        },
+        "2023-06": {
+          "temperatureMeanC": 28.12666666666667,
+          "precipitationMm": 113.50000000000001,
+          "days": 30
+        },
+        "2023-07": {
+          "temperatureMeanC": 27.42258064516129,
+          "precipitationMm": 297.40000000000003,
+          "days": 31
+        },
+        "2023-08": {
+          "temperatureMeanC": 28.15483870967742,
+          "precipitationMm": 98.1,
+          "days": 31
+        },
+        "2023-09": {
+          "temperatureMeanC": 27.76,
+          "precipitationMm": 263.09999999999997,
+          "days": 30
+        },
+        "2023-10": {
+          "temperatureMeanC": 27.86774193548387,
+          "precipitationMm": 202.9,
+          "days": 31
+        },
+        "2023-11": {
+          "temperatureMeanC": 27.68333333333333,
+          "precipitationMm": 336.70000000000005,
+          "days": 30
+        },
+        "2023-12": {
+          "temperatureMeanC": 27.822580645161292,
+          "precipitationMm": 236.5,
+          "days": 31
+        },
+        "2024-01": {
+          "temperatureMeanC": 27.709677419354843,
+          "precipitationMm": 194.1,
+          "days": 31
+        },
+        "2024-02": {
+          "temperatureMeanC": 27.927586206896546,
+          "precipitationMm": 131.29999999999998,
+          "days": 29
+        },
+        "2024-03": {
+          "temperatureMeanC": 28.700000000000003,
+          "precipitationMm": 108.8,
+          "days": 31
+        },
+        "2024-04": {
+          "temperatureMeanC": 28.843333333333323,
+          "precipitationMm": 228.60000000000002,
+          "days": 30
+        },
+        "2024-05": {
+          "temperatureMeanC": 28.506451612903223,
+          "precipitationMm": 263.3,
+          "days": 31
+        },
+        "2024-06": {
+          "temperatureMeanC": 27.79333333333333,
+          "precipitationMm": 327.6000000000001,
+          "days": 30
+        },
+        "2024-07": {
+          "temperatureMeanC": 28.067741935483873,
+          "precipitationMm": 115.99999999999999,
+          "days": 31
+        },
+        "2024-08": {
+          "temperatureMeanC": 27.435483870967737,
+          "precipitationMm": 366.7,
+          "days": 31
+        },
+        "2024-09": {
+          "temperatureMeanC": 28.02,
+          "precipitationMm": 119.49999999999999,
+          "days": 30
+        },
+        "2024-10": {
+          "temperatureMeanC": 27.577419354838714,
+          "precipitationMm": 182.00000000000003,
+          "days": 31
+        },
+        "2024-11": {
+          "temperatureMeanC": 27.773333333333337,
+          "precipitationMm": 229.10000000000002,
+          "days": 30
+        },
+        "2024-12": {
+          "temperatureMeanC": 27.44516129032259,
+          "precipitationMm": 280.2,
+          "days": 31
+        },
+        "2025-01": {
+          "temperatureMeanC": 26.951612903225815,
+          "precipitationMm": 391.29999999999995,
+          "days": 31
+        },
+        "2025-02": {
+          "temperatureMeanC": 26.842857142857138,
+          "precipitationMm": 209.8,
+          "days": 28
+        },
+        "2025-03": {
+          "temperatureMeanC": 27.380645161290314,
+          "precipitationMm": 328.7,
+          "days": 31
+        },
+        "2025-04": {
+          "temperatureMeanC": 27.640000000000004,
+          "precipitationMm": 198.60000000000002,
+          "days": 30
+        },
+        "2025-05": {
+          "temperatureMeanC": 28.099999999999998,
+          "precipitationMm": 188.39999999999992,
+          "days": 31
+        },
+        "2025-06": {
+          "temperatureMeanC": 27.783333333333324,
+          "precipitationMm": 145.79999999999998,
+          "days": 30
+        },
+        "2025-07": {
+          "temperatureMeanC": 28.187096774193545,
+          "precipitationMm": 77.89999999999999,
+          "days": 31
+        },
+        "2025-08": {
+          "temperatureMeanC": 27.16451612903226,
+          "precipitationMm": 234.29999999999998,
+          "days": 31
+        },
+        "2025-09": {
+          "temperatureMeanC": 27.243333333333332,
+          "precipitationMm": 326.79999999999995,
+          "days": 30
+        },
+        "2025-10": {
+          "temperatureMeanC": 27.24838709677419,
+          "precipitationMm": 279.50000000000006,
+          "days": 31
+        },
+        "2025-11": {
+          "temperatureMeanC": 27.130000000000006,
+          "precipitationMm": 196.59999999999997,
+          "days": 30
+        },
+        "2025-12": {
+          "temperatureMeanC": 26.896774193548392,
+          "precipitationMm": 306.8,
+          "days": 31
+        },
+        "2026-01": {
+          "temperatureMeanC": 26.064516129032253,
+          "precipitationMm": 478.5000000000001,
+          "days": 31
+        },
+        "2026-02": {
+          "temperatureMeanC": 26.51071428571429,
+          "precipitationMm": 250.79999999999998,
+          "days": 28
+        },
+        "2026-03": {
+          "temperatureMeanC": 27.406451612903222,
+          "precipitationMm": 45.4,
+          "days": 31
+        },
+        "2026-04": {
+          "temperatureMeanC": 28.419999999999998,
+          "precipitationMm": 146.9,
+          "days": 30
+        },
+        "2026-05": {
+          "temperatureMeanC": 27.92903225806452,
+          "precipitationMm": 265.00000000000006,
+          "days": 31
+        },
+        "2026-06": {
+          "temperatureMeanC": 27.92,
+          "precipitationMm": 144.3,
+          "days": 30
+        },
+        "2026-07": {
+          "temperatureMeanC": 27.89677419354839,
+          "precipitationMm": 107.2,
+          "days": 31
+        },
+        "2026-08": {
+          "temperatureMeanC": 28.729032258064514,
+          "precipitationMm": 87.8,
+          "days": 31
+        },
+        "2026-09": {
+          "temperatureMeanC": 28.223333333333333,
+          "precipitationMm": 142.20000000000002,
+          "days": 30
+        }
+      }
+    },
+    "TLS": {
+      "location": "Baucau",
+      "latitude": -8.47,
+      "longitude": 126.45,
+      "gridLatitude": -8.5,
+      "gridLongitude": 126.5,
+      "timezone": "Asia/Dili",
+      "normals": {
+        "01": {
+          "temperatureMeanC": 24.58354838709678,
+          "precipitationMm": 295.4933333333334,
+          "completeYears": 30
+        },
+        "02": {
+          "temperatureMeanC": 24.370636288998362,
+          "precipitationMm": 282.9266666666666,
+          "completeYears": 30
+        },
+        "03": {
+          "temperatureMeanC": 24.432043010752686,
+          "precipitationMm": 298.48999999999995,
+          "completeYears": 30
+        },
+        "04": {
+          "temperatureMeanC": 24.329888888888892,
+          "precipitationMm": 197.3133333333333,
+          "completeYears": 30
+        },
+        "05": {
+          "temperatureMeanC": 23.80903225806452,
+          "precipitationMm": 98.05333333333331,
+          "completeYears": 30
+        },
+        "06": {
+          "temperatureMeanC": 22.93111111111111,
+          "precipitationMm": 51.02333333333333,
+          "completeYears": 30
+        },
+        "07": {
+          "temperatureMeanC": 22.37462365591398,
+          "precipitationMm": 22.81,
+          "completeYears": 30
+        },
+        "08": {
+          "temperatureMeanC": 22.478817204301073,
+          "precipitationMm": 9.17333333333333,
+          "completeYears": 30
+        },
+        "09": {
+          "temperatureMeanC": 23.576222222222217,
+          "precipitationMm": 14.226666666666665,
+          "completeYears": 30
+        },
+        "10": {
+          "temperatureMeanC": 24.953655913978494,
+          "precipitationMm": 43.39,
+          "completeYears": 30
+        },
+        "11": {
+          "temperatureMeanC": 25.706777777777784,
+          "precipitationMm": 155.46666666666673,
+          "completeYears": 30
+        },
+        "12": {
+          "temperatureMeanC": 25.09935483870968,
+          "precipitationMm": 307.79,
+          "completeYears": 30
+        }
+      },
+      "months": {
+        "2021-01": {
+          "temperatureMeanC": 24.60322580645161,
+          "precipitationMm": 364.7,
+          "days": 31
+        },
+        "2021-02": {
+          "temperatureMeanC": 24.439285714285713,
+          "precipitationMm": 484.30000000000007,
+          "days": 28
+        },
+        "2021-03": {
+          "temperatureMeanC": 24.464516129032255,
+          "precipitationMm": 467.09999999999997,
+          "days": 31
+        },
+        "2021-04": {
+          "temperatureMeanC": 24.103333333333335,
+          "precipitationMm": 141.5,
+          "days": 30
+        },
+        "2021-05": {
+          "temperatureMeanC": 24.303225806451607,
+          "precipitationMm": 19.599999999999994,
+          "days": 31
+        },
+        "2021-06": {
+          "temperatureMeanC": 23.986666666666665,
+          "precipitationMm": 38.699999999999996,
+          "days": 30
+        },
+        "2021-07": {
+          "temperatureMeanC": 23.5258064516129,
+          "precipitationMm": 10.799999999999999,
+          "days": 31
+        },
+        "2021-08": {
+          "temperatureMeanC": 24.07741935483871,
+          "precipitationMm": 15.8,
+          "days": 31
+        },
+        "2021-09": {
+          "temperatureMeanC": 24.506666666666664,
+          "precipitationMm": 32.5,
+          "days": 30
+        },
+        "2021-10": {
+          "temperatureMeanC": 26.593548387096774,
+          "precipitationMm": 38.4,
+          "days": 31
+        },
+        "2021-11": {
+          "temperatureMeanC": 25.283333333333335,
+          "precipitationMm": 420.79999999999995,
+          "days": 30
+        },
+        "2021-12": {
+          "temperatureMeanC": 24.941935483870967,
+          "precipitationMm": 400.2000000000001,
+          "days": 31
+        },
+        "2022-01": {
+          "temperatureMeanC": 24.674193548387095,
+          "precipitationMm": 276.4000000000001,
+          "days": 31
+        },
+        "2022-02": {
+          "temperatureMeanC": 24.253571428571433,
+          "precipitationMm": 437.5,
+          "days": 28
+        },
+        "2022-03": {
+          "temperatureMeanC": 24.680645161290325,
+          "precipitationMm": 441.7999999999999,
+          "days": 31
+        },
+        "2022-04": {
+          "temperatureMeanC": 24.87,
+          "precipitationMm": 112.1,
+          "days": 30
+        },
+        "2022-05": {
+          "temperatureMeanC": 24.664516129032258,
+          "precipitationMm": 61.100000000000016,
+          "days": 31
+        },
+        "2022-06": {
+          "temperatureMeanC": 23.663333333333338,
+          "precipitationMm": 231.99999999999997,
+          "days": 30
+        },
+        "2022-07": {
+          "temperatureMeanC": 22.258064516129032,
+          "precipitationMm": 24.099999999999994,
+          "days": 31
+        },
+        "2022-08": {
+          "temperatureMeanC": 23.319354838709675,
+          "precipitationMm": 15.799999999999997,
+          "days": 31
+        },
+        "2022-09": {
+          "temperatureMeanC": 24.6,
+          "precipitationMm": 63.199999999999996,
+          "days": 30
+        },
+        "2022-10": {
+          "temperatureMeanC": 25.13225806451613,
+          "precipitationMm": 208.90000000000006,
+          "days": 31
+        },
+        "2022-11": {
+          "temperatureMeanC": 25.009999999999998,
+          "precipitationMm": 312.59999999999997,
+          "days": 30
+        },
+        "2022-12": {
+          "temperatureMeanC": 24.806451612903228,
+          "precipitationMm": 286.6,
+          "days": 31
+        },
+        "2023-01": {
+          "temperatureMeanC": 24.716129032258063,
+          "precipitationMm": 230.59999999999994,
+          "days": 31
+        },
+        "2023-02": {
+          "temperatureMeanC": 24.31071428571428,
+          "precipitationMm": 330.60000000000014,
+          "days": 28
+        },
+        "2023-03": {
+          "temperatureMeanC": 24.477419354838712,
+          "precipitationMm": 298.09999999999997,
+          "days": 31
+        },
+        "2023-04": {
+          "temperatureMeanC": 24.313333333333333,
+          "precipitationMm": 225.29999999999998,
+          "days": 30
+        },
+        "2023-05": {
+          "temperatureMeanC": 23.69677419354839,
+          "precipitationMm": 64.80000000000001,
+          "days": 31
+        },
+        "2023-06": {
+          "temperatureMeanC": 23.433333333333344,
+          "precipitationMm": 55.99999999999999,
+          "days": 30
+        },
+        "2023-07": {
+          "temperatureMeanC": 22.83870967741936,
+          "precipitationMm": 178.9,
+          "days": 31
+        },
+        "2023-08": {
+          "temperatureMeanC": 22.622580645161293,
+          "precipitationMm": 13.6,
+          "days": 31
+        },
+        "2023-09": {
+          "temperatureMeanC": 23.216666666666665,
+          "precipitationMm": 7.6,
+          "days": 30
+        },
+        "2023-10": {
+          "temperatureMeanC": 25.2741935483871,
+          "precipitationMm": 2.6,
+          "days": 31
+        },
+        "2023-11": {
+          "temperatureMeanC": 26.633333333333333,
+          "precipitationMm": 27.200000000000006,
+          "days": 30
+        },
+        "2023-12": {
+          "temperatureMeanC": 25.977419354838712,
+          "precipitationMm": 298.4,
+          "days": 31
+        },
+        "2024-01": {
+          "temperatureMeanC": 25.480645161290322,
+          "precipitationMm": 215.10000000000005,
+          "days": 31
+        },
+        "2024-02": {
+          "temperatureMeanC": 25.172413793103445,
+          "precipitationMm": 227.19999999999996,
+          "days": 29
+        },
+        "2024-03": {
+          "temperatureMeanC": 25.090322580645157,
+          "precipitationMm": 380.50000000000006,
+          "days": 31
+        },
+        "2024-04": {
+          "temperatureMeanC": 25.026666666666664,
+          "precipitationMm": 382.6000000000001,
+          "days": 30
+        },
+        "2024-05": {
+          "temperatureMeanC": 24.480645161290322,
+          "precipitationMm": 142.9,
+          "days": 31
+        },
+        "2024-06": {
+          "temperatureMeanC": 23.3,
+          "precipitationMm": 28.1,
+          "days": 30
+        },
+        "2024-07": {
+          "temperatureMeanC": 22.70967741935484,
+          "precipitationMm": 45.900000000000006,
+          "days": 31
+        },
+        "2024-08": {
+          "temperatureMeanC": 23.070967741935483,
+          "precipitationMm": 8.299999999999999,
+          "days": 31
+        },
+        "2024-09": {
+          "temperatureMeanC": 24.57,
+          "precipitationMm": 22.099999999999994,
+          "days": 30
+        },
+        "2024-10": {
+          "temperatureMeanC": 26.20967741935484,
+          "precipitationMm": 43.6,
+          "days": 31
+        },
+        "2024-11": {
+          "temperatureMeanC": 25.563333333333333,
+          "precipitationMm": 283.90000000000003,
+          "days": 30
+        },
+        "2024-12": {
+          "temperatureMeanC": 25.25806451612903,
+          "precipitationMm": 491.90000000000003,
+          "days": 31
+        },
+        "2025-01": {
+          "temperatureMeanC": 24.977419354838705,
+          "precipitationMm": 370.2,
+          "days": 31
+        },
+        "2025-02": {
+          "temperatureMeanC": 24.771428571428576,
+          "precipitationMm": 331.5000000000001,
+          "days": 28
+        },
+        "2025-03": {
+          "temperatureMeanC": 24.91290322580645,
+          "precipitationMm": 300.8,
+          "days": 31
+        },
+        "2025-04": {
+          "temperatureMeanC": 24.413333333333338,
+          "precipitationMm": 251.89999999999995,
+          "days": 30
+        },
+        "2025-05": {
+          "temperatureMeanC": 24.07096774193548,
+          "precipitationMm": 183.7,
+          "days": 31
+        },
+        "2025-06": {
+          "temperatureMeanC": 23.370000000000005,
+          "precipitationMm": 33.5,
+          "days": 30
+        },
+        "2025-07": {
+          "temperatureMeanC": 23.287096774193547,
+          "precipitationMm": 14.100000000000001,
+          "days": 31
+        },
+        "2025-08": {
+          "temperatureMeanC": 23.332258064516132,
+          "precipitationMm": 3.5,
+          "days": 31
+        },
+        "2025-09": {
+          "temperatureMeanC": 24.669999999999998,
+          "precipitationMm": 38.800000000000004,
+          "days": 30
+        },
+        "2025-10": {
+          "temperatureMeanC": 25.65161290322581,
+          "precipitationMm": 51.6,
+          "days": 31
+        },
+        "2025-11": {
+          "temperatureMeanC": 25.736666666666665,
+          "precipitationMm": 248.7,
+          "days": 30
+        },
+        "2025-12": {
+          "temperatureMeanC": 24.887096774193544,
+          "precipitationMm": 337.80000000000007,
+          "days": 31
+        },
+        "2026-01": {
+          "temperatureMeanC": 24.858064516129033,
+          "precipitationMm": 215.70000000000005,
+          "days": 31
+        },
+        "2026-02": {
+          "temperatureMeanC": 24.353571428571424,
+          "precipitationMm": 255.6,
+          "days": 28
+        },
+        "2026-03": {
+          "temperatureMeanC": 24.219354838709673,
+          "precipitationMm": 304.0,
+          "days": 31
+        },
+        "2026-04": {
+          "temperatureMeanC": 24.043333333333333,
+          "precipitationMm": 369.50000000000006,
+          "days": 30
+        },
+        "2026-05": {
+          "temperatureMeanC": 23.99032258064517,
+          "precipitationMm": 111.0,
+          "days": 31
+        },
+        "2026-06": {
+          "temperatureMeanC": 23.07333333333333,
+          "precipitationMm": 28.100000000000005,
+          "days": 30
+        },
+        "2026-07": {
+          "temperatureMeanC": 22.583870967741934,
+          "precipitationMm": 25.600000000000005,
+          "days": 31
+        },
+        "2026-08": {
+          "temperatureMeanC": 22.929032258064517,
+          "precipitationMm": 5.800000000000001,
+          "days": 31
+        },
+        "2026-09": {
+          "temperatureMeanC": 23.986666666666665,
+          "precipitationMm": 4.1,
+          "days": 30
+        }
+      }
+    }
+  }
+}
