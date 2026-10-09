@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-09",
+  "baselineYear": 2024,
+  "thresholds": {
+    "watchDeclinePercent": 5,
+    "highDeclinePercent": 10
+  },
+  "climateExcluded": true,
+  "compositeScoreRemoved": true,
+  "tests": {
+    "passed": 46,
+    "failed": 0
+  },
+  "productionBuild": "passed",
+  "browser": {
+    "default2030": {
+      "high": 3,
+      "watch": 1,
+      "totalWarnings": 4
+    },
+    "watchFilter": "Vietnam, 6.21% decline",
+    "missingCountry": "Singapore: Not assessed",
+    "harvestLoss30Percent": "Indonesia: 37.37% decline",
+    "reportScoreRemoved": true,
+    "indonesianWordingReviewed": true,
+    "mobileWidth": 390,
+    "mobileTableScrollable": true,
+    "consoleErrors": 0
+  },
+  "translations": "13 offline locale catalogs",
+  "screenshot": "artifacts/early-warning-production-pressure.png",
+  "thresholdsScientificallyValidated": false
+}

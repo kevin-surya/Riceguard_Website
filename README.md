@@ -93,7 +93,7 @@ Paddy means unmilled rice. Production per person is not consumption or proof of 
 - Overview: production, population, climate illustrations, and country warnings.
 - Forecasting: simplified regional and country outlooks, CSV export, and reports.
 - Climate Monitor: clearly labeled demo anomalies, recommendations, and on-demand seven-day Open-Meteo forecasts at representative points.
-- Risk Map and Early Warning: country-level exploratory scores, interactive layers, and a browser-saved watchlist. They do not send operational alerts.
+- Risk Map and Early Warning: country-level production-pressure categories, actual percentage declines from 2024, interactive layers, and a browser-saved watchlist. They do not send operational alerts.
 - Spatio-temporal: an annual slider from 1961 to 2030, play/pause, raster maps, country selection, trend chart, two climate scenarios, conditional ranges, and selected-year/all-year CSV exports.
 - Integrated Data: source attribution and coverage without source-code provenance in the UI.
 
@@ -122,7 +122,7 @@ Archived single-year outputs remain in `src/research.json` and the original PNG/
 
 Both the archived and annual future maps allocate coarse-grid estimates according to the 2021 harvested-area pattern. They are not new pixel-level inference or forecasts of new rice fields. Raw source archives, regional data, and newly fitted annual parameters are cached locally in `data/`; public website assets contain the exported annual results. The unavailable original training implementation is not claimed to have been reproduced exactly.
 
-Country risk scores use the projected decline in paddy per person, illustrative temperature anomalies, and rainfall changes. The formula is `min(100, 4 × max(0, -per-capita change %) + 13 × max(0, temperature anomaly) + 0.55 × abs(rainfall change %))`, with low <30, watch 30–54, high ≥55. This is an uncalibrated monitoring signal, not a food-shortage probability.
+Early warning compares projected paddy production per person with the fixed 2024 baseline: `change = (forecast_per_person / baseline_per_person - 1) × 100`; `decline = max(0, -change)`. Low pressure means an increase, no change, or a decline below 5%; Watch means a decline of at least 5% but below 10%; High pressure means a decline of 10% or more. Missing, zero, or unusable baseline data and missing forecasts are Not assessed. Categories use unrounded values, with a 1e-10 percentage-point tolerance only for floating-point arithmetic at exact boundaries. Watch and High countries appear in the warning list, ordered by the actual decline. Reasons, map colors, reports, notifications, and AI context use the same rule. There is no composite 0–100 score, and illustrative climate inputs do not contribute to this category. The 5% and 10% cut-offs are explicit prototype planning tolerances chosen for understandable monitoring, not journal-derived or scientifically validated food-shortage thresholds. Imports, exports, stocks, consumption, access, and rice milling remain outside this indicator. Country projections follow recent trends; the regional recommended forecast remains separate.
 
 ## Optional alternative Climate Monitor provider
 

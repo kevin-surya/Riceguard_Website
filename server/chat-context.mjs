@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { countries, seriesFor, forecast, indicator, climateFor } from '../src/model.mjs';
+import { countries, seriesFor, forecast, indicator, climateFor, pressureThresholds } from '../src/model.mjs';
 import { notebookForecast, recommendedModels } from '../src/research-model.mjs';
 import { annualRows, annualTotal } from '../src/spatio-timeline.mjs';
 
@@ -24,7 +24,7 @@ export function buildChatContext(selection) {
  const context = {
   page:selection.page,country:names[countryCode],forecastYear:year,outlook:regional?'selected regional forecast':'exploratory country/regional trend scenario',harvestLossScenarioPercent:stress,
   units:{rice:'million tonnes of unmilled paddy',population:'million people'},baseline:history.at(-1),forecast:projected.at(-1),
-  exploratoryRisk:indicator(history,projected,climate),illustrativeClimate:{...climate,observed:false},weather:null,spatioTemporal:null,
+  productionPressure:{...indicator(history,projected),thresholds:pressureThresholds,classificationBasis:'Percentage decline in paddy production per person from 2024; prototype planning tolerances, not validated food-shortage thresholds; climate excluded'},illustrativeClimate:{...climate,observed:false},weather:null,spatioTemporal:null,
  };
  const weather=selection.weather;
  if (weather && countries.some(country=>country.code===weather.countryCode) && Array.isArray(weather.days) && weather.days.length>0 && weather.days.length<=7) {

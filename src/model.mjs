@@ -56,15 +56,25 @@ export function forecast(points, endYear = 2030, scenario = 'trend', stress = 0)
   });
 }
 
-export function indicator(points, projection, climate) {
-  const base = points.at(-1);
+export const pressureThresholds = Object.freeze({ watch: 5, high: 10, baselineYear: 2024 });
+
+export function indicator(points, projection) {
+  const base = points.find(point => point.year === pressureThresholds.baselineYear);
   const end = projection.at(-1) || base;
-  if (base?.rice == null || !base.population || !end.population) return { score: null, level: 'unknown', change: null, supply: null };
+  if (!Number.isFinite(base?.rice) || base.rice <= 0 || !Number.isFinite(base.population) || base.population <= 0 || !Number.isFinite(end?.rice) || end.rice < 0 || !Number.isFinite(end.population) || end.population <= 0) return { level: 'unknown', change: null, supply: null, decline: null };
   const supply = end.rice / end.population * 1000;
   const change = (supply / (base.rice / base.population * 1000) - 1) * 100;
-  // Transparent heuristic: per-capita production decline plus illustrative climate stress.
-  const score = Math.round(Math.min(100, Math.max(0, -change * 4) + Math.max(0, climate.temperature) * 13 + Math.abs(climate.rain) * 0.55));
-  return { score, level: score >= 55 ? 'high' : score >= 30 ? 'medium' : 'low', change, supply };
+  const decline = Math.max(0, -change);
+  // Prototype planning tolerances, not validated food-shortage thresholds.
+  // A tiny tolerance corrects floating-point arithmetic at exactly 5% and 10%.
+  const level = decline >= pressureThresholds.high - 1e-10 ? 'high' : decline >= pressureThresholds.watch - 1e-10 ? 'medium' : 'low';
+  return { level, change, supply, decline };
+}
+
+export function pressureReason(risk) {
+  if (risk.change == null) return t('Production data is insufficient to assess the change from 2024.');
+  if (Math.abs(risk.change) < 1e-10) return t('Paddy production per person is projected to stay unchanged from 2024.');
+  return t(risk.change < 0 ? 'Paddy production per person is projected to fall {p0}% from 2024.' : 'Paddy production per person is projected to rise {p0}% from 2024.', {p0:formatNumber(Math.abs(risk.change),2)});
 }
 
 export function climateFor(code) {
@@ -87,8 +97,7 @@ export function insights(country, risk, climate, year) {
   if (risk.change != null && risk.change < 0) actions.push(t("Tinjau cadangan serta distribusi pangan; proyeksi produksi padi per kapita menurun."));
   if (!actions.length) actions.push(t("Lanjutkan pemantauan hasil panen, kondisi air, dan distribusi pangan secara berkala."));
   return {
-    summary: risk.score == null ? t("Data produksi padi {p0} belum tersedia. Analisis kecukupan produksi belum dapat dihitung.", {p0: country})
-      : t("Pada skenario {p0}, {p1} memiliki skor pantauan {p2}/100. Produksi padi per kapita diproyeksikan {p3} {p4}% dari 2024.", {p0: year, p1: country, p2: risk.score, p3: risk.change < 0 ? 'turun' : 'naik', p4: formatNumber(Math.abs(risk.change), 1)}),
+    summary: t('{p0} · {p1}: {p2}', {p0:country,p1:year,p2:pressureReason(risk)}),
     actions,
   };
 }

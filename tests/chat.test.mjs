@@ -24,6 +24,7 @@ test('chat status and missing-key errors never expose credentials or make extern
 test('server builds forecast facts from saved data and ignores forged client totals',()=>{
  const context=buildChatContext({...selection,forecast:{rice:999999999},risk:{score:100}});
  assert.equal(context.forecast.rice,196.367174);assert.equal(context.forecast.population,695.193894);assert.equal(context.illustrativeClimate.observed,false);assert.equal(context.weather,null);
+ assert.equal(context.productionPressure.thresholds.watch,5);assert.equal(context.productionPressure.thresholds.high,10);assert.ok(!Object.hasOwn(context.productionPressure,'score'));assert.equal(context.productionPressure.level,'low');
  const country=buildChatContext({...selection,countryCode:'SGP'});assert.equal(country.forecast.rice,null);
  assert.throws(()=>buildChatContext({...selection,year:2035}));assert.throws(()=>buildChatContext({...selection,stress:99}));
 });
@@ -75,5 +76,5 @@ test('history trimming preserves recent text and removes UI-only fields',()=>{
  const result=recentChat(messages);assert.equal(result.length,6);assert.equal(result.at(-1).role,'assistant');assert.ok(result.every(message=>Object.keys(message).join(',')==='role,content'));assert.ok(result.reduce((sum,message)=>sum+message.content.length,0)<=20000);
 });
 test('farmer instructions preserve data limitations and avoid unsupported field-specific prescriptions',()=>{
- const prompt=farmerInstructions('unsupported');assert.match(prompt,/Respond in English/);assert.match(prompt,/historical map years/i);assert.match(prompt,/not probabilities/);assert.match(prompt,/crop stage/);assert.match(prompt,/Do not request API keys/);
+ const prompt=farmerInstructions('unsupported');assert.match(prompt,/Respond in English/);assert.match(prompt,/historical map years/i);assert.match(prompt,/not probabilities/);assert.match(prompt,/crop stage/);assert.match(prompt,/Do not request API keys/);assert.match(prompt,/5%/);assert.match(prompt,/10%/);
 });
